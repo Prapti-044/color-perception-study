@@ -1,0 +1,438 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Colormap and Makeup",
+    "version": "1.0.0",
+    "authors": ["Shadmaan Hye"],
+    "date": "2025-07-09",
+    "description": "Here you will answer some questions based on the color perception of the user. This study aims to explore how individuals perceive and respond to different colors.",
+    "organizations": ["University of Utah"]
+  },
+  "uiConfig": {
+    "contactEmail": "u1452119@utah.edu",
+    "helpTextPath": "colormap-makeup/assets/help.md",
+    "logoPath": "revisitAssets/revisitLogoSquare.svg",
+    "withProgressBar": true,
+    "autoDownloadStudy": true,
+    "sidebar": true
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/introduction.md",
+      "response": []
+    },
+    "basic-questionnaire": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "name",
+          "prompt": "What is your first name?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "longText",
+          "placeholder": "Please enter your name"
+        },
+        {
+          "id": "color-deficiency",
+          "prompt": "Do you have any color vision deficiency?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": ["Yes", "No"]
+        }
+      ]
+    },
+    "color-difference": {
+      "type": "website",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Notice the two below stimuli carefully",
+      "path": "colormap-makeup/assets/color-difference.html",
+      "response": [
+        {
+          "id": "color-difference",
+          "prompt": "Are the two colors the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "ishihara-test1": {
+      "type": "image",
+      "nextButtonLocation": "belowStimulus",
+      "path": "colormap-makeup/assets/ishihara-pics/ishihara-1.png",
+      "response": [
+        {
+          "id": "ishihara-response-1",
+          "prompt": "What number do you see in the circle?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "numerical"
+        }
+      ]
+    },
+    "ishihara-test2": {
+      "type": "image",
+      "nextButtonLocation": "belowStimulus",
+      "path": "colormap-makeup/assets/ishihara-pics/ishihara-2.png",
+      "response": [
+        {
+          "id": "ishihara-response-1",
+          "prompt": "What number do you see in the circle?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "numerical"
+        }
+      ]
+    },
+    "ishihara-test3": {
+      "type": "image",
+      "nextButtonLocation": "belowStimulus",
+      "path": "colormap-makeup/assets/ishihara-pics/ishihara-3.png",
+      "response": [
+        {
+          "id": "ishihara-response-1",
+          "prompt": "What number do you see in the circle?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "numerical"
+        }
+      ]
+    },
+    "ishihara-test4": {
+      "type": "image",
+      "nextButtonLocation": "belowStimulus",
+      "path": "colormap-makeup/assets/ishihara-pics/ishihara-4.png",
+      "response": [
+        {
+          "id": "ishihara-response-1",
+          "prompt": "What number do you see in the circle?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "numerical"
+        }
+      ]
+    },
+    "same-different-color-definition": {
+      "type": "website",
+      "nextButtonLocation": "belowStimulus",
+      "path": "colormap-makeup/assets/example-color-stimuli.html",
+      "response": []
+    },
+    "scatterplot-1": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-1.json",
+      "response": [
+        {
+          "id": "scatterplot-response-1",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-2": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-2.json",
+      "response": [
+        {
+          "id": "scatterplot-response-2",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-3": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-3.json",
+      "response": [
+        {
+          "id": "scatterplot-response-3",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-4": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-4.json",
+      "response": [
+        {
+          "id": "scatterplot-response-4",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-5": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-5.json",
+      "response": [
+        {
+          "id": "scatterplot-response-5",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-6": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-6.json",
+      "response": [
+        {
+          "id": "scatterplot-response-6",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-7": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-7.json",
+      "response": [
+        {
+          "id": "scatterplot-response-7",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-8": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-8.json",
+      "response": [
+        {
+          "id": "scatterplot-response-8",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-9": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-9.json",
+      "response": [
+        {
+          "id": "scatterplot-response-9",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-10": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-10.json",
+      "response": [
+        {
+          "id": "scatterplot-response-10",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-11": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-11.json",
+      "response": [
+        {
+          "id": "scatterplot-response-11",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-12": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-12.json",
+      "response": [
+        {
+          "id": "scatterplot-response-12",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-13": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-13.json",
+      "response": [
+        {
+          "id": "scatterplot-response-13",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-14": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-14.json",
+      "response": [
+        {
+          "id": "scatterplot-response-14",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-15": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-15.json",
+      "response": [
+        {
+          "id": "scatterplot-response-15",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-16": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-16.json",
+      "response": [
+        {
+          "id": "scatterplot-response-16",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-17": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-17.json",
+      "response": [
+        {
+          "id": "scatterplot-response-17",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-18": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-18.json",
+      "response": [
+        {
+          "id": "scatterplot-response-18",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-19": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-19.json",
+      "response": [
+        {
+          "id": "scatterplot-response-19",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    },
+    "scatterplot-20": {
+      "type": "vega",
+      "path": "colormap-makeup/vega-specs/scatterplot-20.json",
+      "response": [
+        {
+          "id": "scatterplot-response-20",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": ["Same", "Different"]
+        }
+      ]
+    }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      "basic-questionnaire",
+      "color-difference",
+      "ishihara-test1",
+      "ishihara-test2",
+      "ishihara-test3",
+      "ishihara-test4",
+      "same-different-color-definition",
+      "scatterplot-1",
+      "scatterplot-2",
+      "scatterplot-3",
+      "scatterplot-4",
+      "scatterplot-5",
+      "scatterplot-6",
+      "scatterplot-7",
+      "scatterplot-8",
+      "scatterplot-9",
+      "scatterplot-10",
+      "scatterplot-11",
+      "scatterplot-12",
+      "scatterplot-13",
+      "scatterplot-14",
+      "scatterplot-15",
+      "scatterplot-16",
+      "scatterplot-17",
+      "scatterplot-18",
+      "scatterplot-19",
+      "scatterplot-20"
+    ]
+  }
+}
