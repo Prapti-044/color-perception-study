@@ -47,6 +47,7 @@
       "type": "website",
       "nextButtonLocation": "belowStimulus",
       "instruction": "Notice the two below stimuli carefully",
+      "instructionLocation": "aboveStimulus",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
         {
@@ -120,6 +121,14 @@
       "nextButtonLocation": "belowStimulus",
       "path": "colormap-makeup/assets/example-color-stimuli.html",
       "response": []
+    },
+    "color-reset": {
+      "type": "website",
+      "nextButtonLocation": "aboveStimulus",
+      "path": "colormap-makeup/assets/color-reset.html",
+      "response": [],
+      "instruction": "We are now showing a neutral gray screen (a \"null color\") to reset your eye's color perception before the next task.",
+      "instructionLocation": "aboveStimulus"
     },
     "scatterplot-1": {
       "type": "vega",
@@ -413,21 +422,25 @@
       "ishihara-test3",
       "ishihara-test4",
       "same-different-color-definition",
+      "color-reset",
       "scatterplot-1",
       "scatterplot-2",
       "scatterplot-3",
       "scatterplot-4",
       "scatterplot-5",
+      "color-reset",
       "scatterplot-6",
       "scatterplot-7",
       "scatterplot-8",
       "scatterplot-9",
       "scatterplot-10",
+      "color-reset",
       "scatterplot-11",
       "scatterplot-12",
       "scatterplot-13",
       "scatterplot-14",
       "scatterplot-15",
+      "color-reset",
       "scatterplot-16",
       "scatterplot-17",
       "scatterplot-18",
