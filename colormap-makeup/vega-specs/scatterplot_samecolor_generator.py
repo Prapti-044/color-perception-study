@@ -11,8 +11,8 @@ from colorspacious import cspace_convert
 
 # === CONFIGURATION PARAMETERS ===
 
-TOTAL_PLOTS = 79
-POINT_RADII = [200, 500, 800, 1000, 1200, 1500, 2000]
+TOTAL_PLOTS = 4
+FIXED_RADIUS = 800  # Medium fixed radius
 GRAY_COLOR = "#727972"
 CHART_WIDTH = 500
 CHART_HEIGHT = 500
@@ -98,11 +98,10 @@ def generate_random_points(n, point_size, excluded_points):
     return points
 
 def create_scatterplot_data(num_points, point_size):
-    # Sample LAB colors
+    # Sample LAB color (same for both target points)
     lab1 = sample_lab_color()
-    lab2 = adjust_lab_color(lab1, point_size)
     hex1 = lab_to_hex(lab1)
-    hex2 = lab_to_hex(lab2)
+    hex2 = hex1  # Both target points use the same color
     
     # Place fixed-distance test points
     test1, test2 = generate_test_pair(num_points, point_size)
@@ -118,7 +117,7 @@ def create_scatterplot_data(num_points, point_size):
 def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
     return {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": f"Scatterplot of {num_points} random points. 2 target colors: {hex1} vs {hex2}",
+        "description": f"Scatterplot of {num_points} random points. 2 target points with same color: {hex1}",
         "width": CHART_WIDTH,
         "height": CHART_HEIGHT,
         "data": {"values": data_values},
@@ -132,20 +131,20 @@ def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
     }
 
 def generate_scatterplots():
-    os.makedirs("scatterplots", exist_ok=True)
+    os.makedirs("scatterplots_same", exist_ok=True)
     for i in range(1, TOTAL_PLOTS + 1):
-        radius = random.choice(POINT_RADII)
+        radius = FIXED_RADIUS
         num_points = max(6, min(50, 40000 // radius))
         data_values, hex1, hex2 = create_scatterplot_data(num_points, radius)
         spec = create_vega_lite_spec(data_values, radius, num_points, hex1, hex2)
-        filename = f"scatterplots/scatterplot-{i}.json"
+        filename = f"scatterplots_same/scatterplot-{i}.json"
         with open(filename, 'w') as f:
             json.dump(spec, f, indent=4)
-        print(f"Generated {filename} — {num_points} pts, radius={radius}, colors: {hex1} vs {hex2}")
+        print(f"Generated {filename} — {num_points} pts, radius={radius}, same target color: {hex1}")
 
 if __name__ == "__main__":
     random.seed(42)
-    print("Generating scatterplots with fixed color diff and spacing...")
+    print("Generating scatterplots with same color for target points...")
     generate_scatterplots()
     print("Done.")
 

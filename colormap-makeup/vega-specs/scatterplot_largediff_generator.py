@@ -11,8 +11,8 @@ from colorspacious import cspace_convert
 
 # === CONFIGURATION PARAMETERS ===
 
-TOTAL_PLOTS = 79
-POINT_RADII = [200, 500, 800, 1000, 1200, 1500, 2000]
+TOTAL_PLOTS = 3
+FIXED_RADIUS = 800  # Medium fixed radius
 GRAY_COLOR = "#727972"
 CHART_WIDTH = 500
 CHART_HEIGHT = 500
@@ -27,8 +27,8 @@ PIXELS_PER_DEGREE = 2 * math.tan(math.radians(DEGREES / 2)) * VIEWING_DISTANCE_I
 TARGET_DISTANCE_PIXELS = PIXELS_PER_DEGREE
 TARGET_DISTANCE_COORDS = TARGET_DISTANCE_PIXELS * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
-# ND(50, size) approximate mapping (simplified, you can make this precise if needed)
-ND50_MULTIPLIERS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+# Minimum color difference for target points (CIE76 Delta E)
+MIN_DELTA_E = 20
 
 def lab_to_hex(lab):
     """Convert CIELAB to hex RGB"""
@@ -45,15 +45,27 @@ def sample_lab_color():
         if not (-5 <= a <= 5 and -5 <= b <= 5):  # discard grays
             return (L, a, b)
 
-def adjust_lab_color(lab, size_radius):
-    """Adjust a LAB color by ND(50, size) step"""
-    multiplier = random.choice(ND50_MULTIPLIERS)
-    delta = 5 + 0.02 * size_radius  # Very rough ND50(size) interpolator
-    step = multiplier * delta
-    axis = random.choice([0, 1, 2])  # L*, a*, or b*
-    sign = random.choice([-1, 1])
-    adjusted = list(lab)
-    adjusted[axis] += sign * step
+def calculate_delta_e(lab1, lab2):
+    """Calculate CIE76 Delta E between two LAB colors"""
+    return math.sqrt((lab1[0] - lab2[0])**2 + (lab1[1] - lab2[1])**2 + (lab1[2] - lab2[2])**2)
+
+def generate_large_diff_color(base_lab):
+    """Generate a color with Delta E > MIN_DELTA_E from the base color"""
+    attempts = 0
+    while attempts < 1000:
+        # Generate a random color
+        candidate_lab = sample_lab_color()
+        delta_e = calculate_delta_e(base_lab, candidate_lab)
+        if delta_e > MIN_DELTA_E:
+            return candidate_lab
+        attempts += 1
+    
+    # Fallback: force a large difference by adjusting L*, a*, b* significantly
+    adjusted = list(base_lab)
+    # Make a large change to ensure Delta E > 20
+    adjusted[0] = max(30, min(65, adjusted[0] + random.choice([-30, 30])))  # Large L* change
+    adjusted[1] = max(-36, min(48, adjusted[1] + random.choice([-25, 25])))  # Large a* change  
+    adjusted[2] = max(-48, min(48, adjusted[2] + random.choice([-25, 25])))  # Large b* change
     return tuple(adjusted)
 
 def distance_between_points(p1, p2):
@@ -98,11 +110,14 @@ def generate_random_points(n, point_size, excluded_points):
     return points
 
 def create_scatterplot_data(num_points, point_size):
-    # Sample LAB colors
+    # Sample LAB colors with large difference (Delta E > 20)
     lab1 = sample_lab_color()
-    lab2 = adjust_lab_color(lab1, point_size)
+    lab2 = generate_large_diff_color(lab1)
     hex1 = lab_to_hex(lab1)
     hex2 = lab_to_hex(lab2)
+    
+    # Verify the color difference
+    delta_e = calculate_delta_e(lab1, lab2)
     
     # Place fixed-distance test points
     test1, test2 = generate_test_pair(num_points, point_size)
@@ -113,12 +128,12 @@ def create_scatterplot_data(num_points, point_size):
     for (x, y) in distractors:
         data_values.append({"x": x, "y": y, "color": GRAY_COLOR})
     
-    return data_values, hex1, hex2
+    return data_values, hex1, hex2, delta_e
 
-def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
+def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2, delta_e):
     return {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": f"Scatterplot of {num_points} random points. 2 target colors: {hex1} vs {hex2}",
+        "description": f"Scatterplot of {num_points} random points. 2 target colors: {hex1} vs {hex2} (ΔE={delta_e:.1f})",
         "width": CHART_WIDTH,
         "height": CHART_HEIGHT,
         "data": {"values": data_values},
@@ -132,20 +147,20 @@ def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
     }
 
 def generate_scatterplots():
-    os.makedirs("scatterplots", exist_ok=True)
+    os.makedirs("scatterplots_largediff", exist_ok=True)
     for i in range(1, TOTAL_PLOTS + 1):
-        radius = random.choice(POINT_RADII)
+        radius = FIXED_RADIUS
         num_points = max(6, min(50, 40000 // radius))
-        data_values, hex1, hex2 = create_scatterplot_data(num_points, radius)
-        spec = create_vega_lite_spec(data_values, radius, num_points, hex1, hex2)
-        filename = f"scatterplots/scatterplot-{i}.json"
+        data_values, hex1, hex2, delta_e = create_scatterplot_data(num_points, radius)
+        spec = create_vega_lite_spec(data_values, radius, num_points, hex1, hex2, delta_e)
+        filename = f"scatterplots_largediff/scatterplot-{i}.json"
         with open(filename, 'w') as f:
             json.dump(spec, f, indent=4)
-        print(f"Generated {filename} — {num_points} pts, radius={radius}, colors: {hex1} vs {hex2}")
+        print(f"Generated {filename} — {num_points} pts, radius={radius}, colors: {hex1} vs {hex2} (ΔE={delta_e:.1f})")
 
 if __name__ == "__main__":
     random.seed(42)
-    print("Generating scatterplots with fixed color diff and spacing...")
+    print("Generating scatterplots with large color difference (ΔE > 20) for target points...")
     generate_scatterplots()
     print("Done.")
 
