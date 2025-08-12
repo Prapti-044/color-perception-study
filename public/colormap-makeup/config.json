@@ -539,34 +539,28 @@
           "options": ["Yes", "No"]
         },
         {
-          "id": "consider-makeup",
-          "prompt": "How seriously do you consider makeup in your daily life or routine?",
+          "id": "use-makeup",
+          "prompt": "Do you use makeup in any form or capacity?",
           "type": "radio",
-          "options": ["Not at all serious – it's just for fun occasionally", "Somewhat serious – I enjoy it and use it regularly", "Very serious – it's an important part of my self-expression or profession"]
+          "options": ["I do not use makeup", "I use it occasionally", "I use it regularly", "I use it professionally"]
         },
         {
           "id": "foundation-shade",
-          "prompt": "What shades of foundation do you typically use?",
-          "type": "radio",
-          "options": ["Fair", "Light", "Light-medium", "Medium", "Dark Tan", "I don't use foundation"]
+          "prompt": "Which foundation do you typically use? (Please specify the brand name and color shade). If not applicable, please write NA",
+          "type": "longText",
+          "placeholder": "Please name the brand and color shades of foundation you typically use."
+        },
+        {
+          "id": "makeup-products",
+          "prompt": "Which makeup products do you use? Examples include foundation, blush, eyeshadow, and lipstick.",
+          "type": "longText",
+          "placeholder": "Please name the products you use."
         },
         {
           "id": "color-theory-expertise",
           "prompt": "Have you ever taken a class or received formal instruction in color theory?",
           "type": "radio",
           "options": ["Yes", "No", "No, but I’ve learned through informal sources (e.g., YouTube, blogs, etc.)"]
-        },
-        {
-          "id": "makeup-expertise",
-          "prompt": "How would you rate your expertise in makeup?",
-          "type": "radio",
-          "options": ["Beginner", "Basic knowledge", "Intermediate", "Advanced", "Expert"]
-        },
-        {
-          "id": "makeup-artist",
-          "prompt": "Do you consider yourself a makeup artist?",
-          "type": "radio",
-          "options": ["Yes", "No"]
         }
       ]
     }
