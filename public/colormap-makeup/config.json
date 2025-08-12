@@ -104,9 +104,9 @@
         "order": "fixed",
         "skip": [
           {
-            "check": "response",
-            "responseId": "color-deficiency",
-            "value": "Yes",
+            "check": "block",
+            "condition": "numIncorrect",
+            "value": 1,
             "to": "color-blind-failed-component"
           }
         ]
