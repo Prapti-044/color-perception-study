@@ -16,8 +16,8 @@ FIXED_RADIUS = 800  # Medium fixed radius
 GRAY_COLOR = "#727972"
 CHART_WIDTH = 500
 CHART_HEIGHT = 500
-MIN_COORD = 1
-MAX_COORD = 9
+MIN_COORD = 0
+MAX_COORD = 10
 
 # Fixed distance between target points in pixels (5 degrees at 96 DPI)
 DPI = 96
@@ -27,8 +27,8 @@ PIXELS_PER_DEGREE = 2 * math.tan(math.radians(DEGREES / 2)) * VIEWING_DISTANCE_I
 TARGET_DISTANCE_PIXELS = PIXELS_PER_DEGREE
 TARGET_DISTANCE_COORDS = TARGET_DISTANCE_PIXELS * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
-# Minimum color difference for target points (CIE76 Delta E)
-MIN_DELTA_E = 20
+# Minimum color difference for target points (CIE76 Delta E) - reduced for subtler differences
+MIN_DELTA_E = 12
 
 def lab_to_hex(lab):
     """Convert CIELAB to hex RGB"""
@@ -60,12 +60,12 @@ def generate_large_diff_color(base_lab):
             return candidate_lab
         attempts += 1
     
-    # Fallback: force a large difference by adjusting L*, a*, b* significantly
+    # Fallback: force a moderate difference by adjusting L*, a*, b* moderately
     adjusted = list(base_lab)
-    # Make a large change to ensure Delta E > 20
-    adjusted[0] = max(30, min(65, adjusted[0] + random.choice([-30, 30])))  # Large L* change
-    adjusted[1] = max(-36, min(48, adjusted[1] + random.choice([-25, 25])))  # Large a* change  
-    adjusted[2] = max(-48, min(48, adjusted[2] + random.choice([-25, 25])))  # Large b* change
+    # Make a moderate change to ensure Delta E > 12
+    adjusted[0] = max(30, min(65, adjusted[0] + random.choice([-15, 15])))  # Moderate L* change
+    adjusted[1] = max(-36, min(48, adjusted[1] + random.choice([-12, 12])))  # Moderate a* change  
+    adjusted[2] = max(-48, min(48, adjusted[2] + random.choice([-12, 12])))  # Moderate b* change
     return tuple(adjusted)
 
 def distance_between_points(p1, p2):
@@ -93,7 +93,7 @@ def calculate_point_radius_in_coords(point_size):
     return pixel_radius * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
 def calculate_padding(point_size):
-    return calculate_point_radius_in_coords(point_size) * 1.5
+    return calculate_point_radius_in_coords(point_size) * 3.0
 
 def generate_random_points(n, point_size, excluded_points):
     points = []
@@ -139,11 +139,11 @@ def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2, delta
         "data": {"values": data_values},
         "mark": {"type": "point", "filled": True, "size": point_size},
         "encoding": {
-            "x": {"field": "x", "type": "quantitative", "scale": {"zero": False}, "axis": None},
-            "y": {"field": "y", "type": "quantitative", "scale": {"zero": False}, "axis": None},
+            "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "X Coordinate", "grid": False}},
+            "y": {"field": "y", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "Y Coordinate", "grid": False}},
             "color": {"field": "color", "type": "nominal", "scale": None, "legend": None}
         },
-        "padding": 30
+        "padding": 60
     }
 
 def generate_scatterplots():

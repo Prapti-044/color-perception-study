@@ -16,8 +16,8 @@ FIXED_RADIUS = 800  # Medium fixed radius
 GRAY_COLOR = "#727972"
 CHART_WIDTH = 500
 CHART_HEIGHT = 500
-MIN_COORD = 1
-MAX_COORD = 9
+MIN_COORD = 0
+MAX_COORD = 10
 
 # Fixed distance between target points in pixels (5 degrees at 96 DPI)
 DPI = 96
@@ -81,7 +81,7 @@ def calculate_point_radius_in_coords(point_size):
     return pixel_radius * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
 def calculate_padding(point_size):
-    return calculate_point_radius_in_coords(point_size) * 1.5
+    return calculate_point_radius_in_coords(point_size) * 3.0
 
 def generate_random_points(n, point_size, excluded_points):
     points = []
@@ -123,11 +123,11 @@ def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
         "data": {"values": data_values},
         "mark": {"type": "point", "filled": True, "size": point_size},
         "encoding": {
-            "x": {"field": "x", "type": "quantitative", "scale": {"zero": False}, "axis": None},
-            "y": {"field": "y", "type": "quantitative", "scale": {"zero": False}, "axis": None},
+            "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "X Coordinate", "grid": False}},
+            "y": {"field": "y", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "Y Coordinate", "grid": False}},
             "color": {"field": "color", "type": "nominal", "scale": None, "legend": None}
         },
-        "padding": 30
+        "padding": 60
     }
 
 def generate_scatterplots():
