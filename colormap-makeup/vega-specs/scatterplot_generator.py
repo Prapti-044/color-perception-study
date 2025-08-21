@@ -16,8 +16,8 @@ POINT_RADII = [200, 500, 800, 1000, 1200, 1500, 2000]
 GRAY_COLOR = "#727972"
 CHART_WIDTH = 500
 CHART_HEIGHT = 500
-MIN_COORD = 1
-MAX_COORD = 9
+MIN_COORD = 0
+MAX_COORD = 10
 
 # Fixed distance between target points in pixels (5 degrees at 96 DPI)
 DPI = 96
@@ -27,8 +27,8 @@ PIXELS_PER_DEGREE = 2 * math.tan(math.radians(DEGREES / 2)) * VIEWING_DISTANCE_I
 TARGET_DISTANCE_PIXELS = PIXELS_PER_DEGREE
 TARGET_DISTANCE_COORDS = TARGET_DISTANCE_PIXELS * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
-# ND(50, size) approximate mapping (simplified, you can make this precise if needed)
-ND50_MULTIPLIERS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+# ND(50, size) approximate mapping (simplified, you can make this precise if needed) - reduced for subtler differences
+ND50_MULTIPLIERS = [0.3, 0.5, 0.7, 0.9, 1.1, 1.3]
 
 def lab_to_hex(lab):
     """Convert CIELAB to hex RGB"""
@@ -46,9 +46,9 @@ def sample_lab_color():
             return (L, a, b)
 
 def adjust_lab_color(lab, size_radius):
-    """Adjust a LAB color by ND(50, size) step"""
+    """Adjust a LAB color by smaller step for reduced difference"""
     multiplier = random.choice(ND50_MULTIPLIERS)
-    delta = 5 + 0.02 * size_radius  # Very rough ND50(size) interpolator
+    delta = 2 + 0.01 * size_radius  # Reduced color difference
     step = multiplier * delta
     axis = random.choice([0, 1, 2])  # L*, a*, or b*
     sign = random.choice([-1, 1])
@@ -81,7 +81,7 @@ def calculate_point_radius_in_coords(point_size):
     return pixel_radius * (MAX_COORD - MIN_COORD) / CHART_WIDTH
 
 def calculate_padding(point_size):
-    return calculate_point_radius_in_coords(point_size) * 1.5
+    return calculate_point_radius_in_coords(point_size) * 3.0
 
 def generate_random_points(n, point_size, excluded_points):
     points = []
@@ -124,11 +124,11 @@ def create_vega_lite_spec(data_values, point_size, num_points, hex1, hex2):
         "data": {"values": data_values},
         "mark": {"type": "point", "filled": True, "size": point_size},
         "encoding": {
-            "x": {"field": "x", "type": "quantitative", "scale": {"zero": False}, "axis": None},
-            "y": {"field": "y", "type": "quantitative", "scale": {"zero": False}, "axis": None},
+            "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "X Coordinate", "grid": False}},
+            "y": {"field": "y", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, "axis": {"title": "Y Coordinate", "grid": False}},
             "color": {"field": "color", "type": "nominal", "scale": None, "legend": None}
         },
-        "padding": 30
+        "padding": 60
     }
 
 def generate_scatterplots():

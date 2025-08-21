@@ -3,10 +3,14 @@
   "studyMetadata": {
     "title": "Colormap and Makeup",
     "version": "1.0.0",
-    "authors": ["Shadmaan Hye"],
+    "authors": [
+      "Shadmaan Hye"
+    ],
     "date": "2025-07-09",
     "description": "Here you will answer some questions based on the color perception of the user. This study aims to explore how individuals perceive and respond to different colors.",
-    "organizations": ["University of Utah"]
+    "organizations": [
+      "University of Utah"
+    ]
   },
   "uiConfig": {
     "contactEmail": "u1452119@utah.edu",
@@ -30,7 +34,10 @@
           "required": true,
           "location": "sidebar",
           "type": "radio",
-          "options": ["Same", "Different"]
+          "options": [
+            "Same",
+            "Different"
+          ]
         }
       ],
       "provideFeedback": true,
@@ -46,7 +53,10 @@
           "required": true,
           "location": "sidebar",
           "type": "radio",
-          "options": ["Same", "Different"]
+          "options": [
+            "Same",
+            "Different"
+          ]
         }
       ],
       "nextButtonLocation": "sidebar",
@@ -66,7 +76,10 @@
           "required": true,
           "location": "sidebar",
           "type": "radio",
-          "options": ["Same", "Different"]
+          "options": [
+            "Same",
+            "Different"
+          ]
         }
       ],
       "nextButtonLocation": "sidebar",
@@ -86,7 +99,10 @@
           "required": true,
           "location": "sidebar",
           "type": "radio",
-          "options": ["Same", "Different"]
+          "options": [
+            "Same",
+            "Different"
+          ]
         }
       ],
       "nextButtonLocation": "sidebar",
@@ -103,18 +119,18 @@
       "type": "markdown",
       "path": "colormap-makeup/assets/introduction.md",
       "response": [],
-      "nextButtonLocation": "sidebar"
+      "nextButtonLocation": "belowStimulus"
     },
     "basic-questionnaire": {
       "type": "questionnaire",
       "response": [
         {
           "id": "name",
-          "prompt": "What is your first name?",
+          "prompt": "What is your Prolific ID?",
           "required": true,
           "location": "aboveStimulus",
           "type": "longText",
-          "placeholder": "Please enter your name"
+          "placeholder": "Please enter your Prolific ID"
         },
         {
           "id": "color-deficiency",
@@ -122,7 +138,10 @@
           "required": true,
           "location": "aboveStimulus",
           "type": "radio",
-          "options": ["Yes", "No"]
+          "options": [
+            "Yes",
+            "No"
+          ]
         }
       ],
       "correctAnswer": [
@@ -136,6 +155,16 @@
     "color-blind-failed-component": {
       "type": "markdown",
       "path": "colormap-makeup/assets/color-blind-failed.md",
+      "response": []
+    },
+    "consent-form": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/consent_form.md",
+      "response": []
+    },
+    "thanks": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/thanks.md",
       "response": []
     },
     "color-difference-1": {
@@ -529,20 +558,28 @@
       "baseComponent": "scatterplot-largediff-base",
       "path": "colormap-makeup/vega-specs/scatterplots_largediff/scatterplot-3.json"
     },
-    "demographic-questionnaire": {
+    "demographic-questionnaire-makeup": {
       "type": "questionnaire",
       "response": [
         {
           "id": "makeup-familiarity",
           "prompt": "Are you familiar with makeup?",
           "type": "radio",
-          "options": ["Yes", "No"]
+          "options": [
+            "Yes",
+            "No"
+          ]
         },
         {
           "id": "use-makeup",
           "prompt": "Do you use makeup in any form or capacity?",
           "type": "radio",
-          "options": ["I do not use makeup", "I use it occasionally", "I use it regularly", "I use it professionally"]
+          "options": [
+            "I do not use makeup",
+            "I use it occasionally",
+            "I use it regularly",
+            "I use it professionally"
+          ]
         },
         {
           "id": "foundation-shade",
@@ -555,12 +592,110 @@
           "prompt": "Which makeup products do you use? Examples include foundation, blush, eyeshadow, and lipstick.",
           "type": "longText",
           "placeholder": "Please name the products you use."
+        }
+      ]
+    },
+    "demographic-questionnaire-color-theory": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "color-hobby",
+          "prompt": "Which of the following activities do you enjoy as a hobby? Please select the one that fits you most.",
+          "type": "radio",
+          "options": [
+            "Painting",
+            "Drawing",
+            "Sculpting",
+            "Photography",
+            "Other"
+          ]
         },
         {
-          "id": "color-theory-expertise",
+          "id": "color-theory-class",
           "prompt": "Have you ever taken a class or received formal instruction in color theory?",
           "type": "radio",
-          "options": ["Yes", "No", "No, but I’ve learned through informal sources (e.g., YouTube, blogs, etc.)"]
+          "options": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "color-theory-knowledge",
+          "prompt": "What color do you get by mixing equal amounts of red and yellow paint? ",
+          "type": "longText",
+          "placeholder": "Please name the color you get."
+        },
+        {
+          "id": "color-theory-knowledge-2",
+          "prompt": "What is the result of mixing red, green, and blue light in equal intensity?",
+          "type": "longText",
+          "placeholder": "Please name the color you get."
+        }
+      ]
+    },
+    "attention-check-1": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check",
+          "prompt": "How many O’s are there in Tomorrow? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ]
+    },
+    "attention-check-2": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check",
+          "prompt": "How many R’s are there in Strawberry? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ]
+    },
+    "attention-check-3": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check",
+          "prompt": "How many B’s are there in Blueberry? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         }
       ]
     }
@@ -568,14 +703,16 @@
   "importedLibraries": [
     "color-blindness",
     "demographics"
-
   ],
   "sequence": {
     "order": "fixed",
     "components": [
+      "consent-form",
       "introduction",
       {
-        "components": ["basic-questionnaire"],
+        "components": [
+          "basic-questionnaire"
+        ],
         "order": "fixed",
         "skip": [
           {
@@ -585,12 +722,6 @@
             "to": "color-blind-failed-component"
           }
         ]
-      },
-      "$color-blindness.se.short-test",
-      {
-        "id": "color-blind-test-script",
-        "order": "dynamic",
-        "functionPath": "colormap-makeup/color-blind-test.ts"
       },
       "color-difference-1",
       "color-difference-2",
@@ -614,6 +745,13 @@
           "scatterplot-15",
           "scatterplot-16",
           "scatterplot-17",
+          "color-reset",
+          "scatterplot-largediff-1"
+        ],
+        "order": "random"
+      },
+      {
+        "components": [
           "scatterplot-18",
           "scatterplot-19",
           "scatterplot-20",
@@ -629,6 +767,15 @@
           "scatterplot-30",
           "scatterplot-31",
           "scatterplot-32",
+          "color-reset",
+          "scatterplot-samecolor-2",
+          "scatterplot-largediff-2",
+          "attention-check-1"
+        ],
+        "order": "random"
+      },
+      {
+        "components": [
           "scatterplot-33",
           "scatterplot-34",
           "scatterplot-35",
@@ -644,6 +791,14 @@
           "scatterplot-45",
           "scatterplot-46",
           "scatterplot-47",
+          "color-reset",
+          "scatterplot-samecolor-3",
+          "attention-check-2"
+        ],
+        "order": "random"
+      },
+      {
+        "components": [
           "scatterplot-48",
           "scatterplot-49",
           "scatterplot-50",
@@ -657,6 +812,14 @@
           "scatterplot-58",
           "scatterplot-59",
           "scatterplot-60",
+          "scatterplot-largediff-3",
+          "scatterplot-samecolor-1",
+          "color-reset"
+        ],
+        "order": "random"
+      },
+      {
+        "components": [
           "scatterplot-61",
           "scatterplot-62",
           "scatterplot-63",
@@ -676,18 +839,17 @@
           "scatterplot-77",
           "scatterplot-78",
           "scatterplot-79",
-          "scatterplot-samecolor-1",
-          "scatterplot-samecolor-2",
-          "scatterplot-samecolor-3",
           "scatterplot-samecolor-4",
-          "scatterplot-largediff-1",
-          "scatterplot-largediff-2",
-          "scatterplot-largediff-3"
+          "scatterplot-largediff-3",
+          "color-reset",
+          "attention-check-3"
         ],
         "order": "random"
       },
       "$demographics.co.demographics",
-      "demographic-questionnaire",
+      "demographic-questionnaire-color-theory",
+      "demographic-questionnaire-makeup",
+      "thanks",
       "color-blind-failed-component"
     ]
   }
