@@ -17,14 +17,17 @@
     "helpTextPath": "colormap-makeup/assets/help.md",
     "logoPath": "revisitAssets/revisitLogoSquare.svg",
     "withProgressBar": true,
-    "autoDownloadStudy": true,
-    "sidebar": true
+    "autoDownloadStudy": false,
+    "sidebar": true,
+    "nextOnEnter": true,
+    "sidebarWidth": 500,
+    "studyEndMsg": "Thank you for participating in the study!"
   },
   "baseComponents": {
     "color-difference-base": {
       "type": "website",
       "nextButtonLocation": "sidebar",
-      "instruction": "Understanding \"Same\" vs \"Different\" Colors\nIn color perception studies, it's important to understand when two colors are considered \"same\" versus \"different\". Below are three examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
+      "instruction": "In color perception studies, it's important to understand when two colors are considered \"same\" versus \"different\". Below are three examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
       "instructionLocation": "sidebar",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
@@ -153,11 +156,6 @@
       ],
       "nextButtonLocation": "sidebar"
     },
-    "color-blind-failed-component": {
-      "type": "markdown",
-      "path": "colormap-makeup/assets/color-blind-failed.md",
-      "response": []
-    },
     "consent-form": {
       "type": "markdown",
       "path": "colormap-makeup/assets/consent_form.md",
@@ -176,7 +174,7 @@
         }
       ]
     },
-    "": {
+    "thanks": {
       "type": "markdown",
       "path": "colormap-makeup/assets/thanks.md",
       "response": []
@@ -652,7 +650,7 @@
       "response": [
         {
           "id": "attention-check",
-          "prompt": "How many O’s are there in Tomorrow? Select the correct answer.",
+          "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
           "type": "radio",
           "options": [
             "1",
@@ -667,14 +665,23 @@
             "10"
           ]
         }
-      ]
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check-1",
+          "answer": "3"
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 10
     },
     "attention-check-2": {
       "type": "questionnaire",
       "response": [
         {
           "id": "attention-check",
-          "prompt": "How many R’s are there in Strawberry? Select the correct answer.",
+          "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
           "type": "radio",
           "options": [
             "1",
@@ -689,14 +696,23 @@
             "10"
           ]
         }
-      ]
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check-2",
+          "answer": "3"
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 10
     },
     "attention-check-3": {
       "type": "questionnaire",
       "response": [
         {
           "id": "attention-check",
-          "prompt": "How many B’s are there in Blueberry? Select the correct answer.",
+          "prompt": "How many b’s are there in blueberry? Select the correct answer.",
           "type": "radio",
           "options": [
             "1",
@@ -711,7 +727,16 @@
             "10"
           ]
         }
-      ]
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check-3",
+          "answer": "2"
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 10
     }
   },
   "importedLibraries": [
@@ -746,13 +771,6 @@
           "scatterplot-15",
           "scatterplot-16",
           "scatterplot-17",
-          "color-reset",
-          "scatterplot-largediff-1"
-        ],
-        "order": "random"
-      },
-      {
-        "components": [
           "scatterplot-18",
           "scatterplot-19",
           "scatterplot-20",
@@ -768,15 +786,6 @@
           "scatterplot-30",
           "scatterplot-31",
           "scatterplot-32",
-          "color-reset",
-          "scatterplot-samecolor-2",
-          "scatterplot-largediff-2",
-          "attention-check-1"
-        ],
-        "order": "random"
-      },
-      {
-        "components": [
           "scatterplot-33",
           "scatterplot-34",
           "scatterplot-35",
@@ -792,14 +801,6 @@
           "scatterplot-45",
           "scatterplot-46",
           "scatterplot-47",
-          "color-reset",
-          "scatterplot-samecolor-3",
-          "attention-check-2"
-        ],
-        "order": "random"
-      },
-      {
-        "components": [
           "scatterplot-48",
           "scatterplot-49",
           "scatterplot-50",
@@ -813,14 +814,6 @@
           "scatterplot-58",
           "scatterplot-59",
           "scatterplot-60",
-          "scatterplot-largediff-3",
-          "scatterplot-samecolor-1",
-          "color-reset"
-        ],
-        "order": "random"
-      },
-      {
-        "components": [
           "scatterplot-61",
           "scatterplot-62",
           "scatterplot-63",
@@ -840,12 +833,52 @@
           "scatterplot-77",
           "scatterplot-78",
           "scatterplot-79",
+          "scatterplot-samecolor-1",
+          "scatterplot-samecolor-2",
+          "scatterplot-samecolor-3",
           "scatterplot-samecolor-4",
-          "scatterplot-largediff-3",
-          "color-reset",
-          "attention-check-3"
+          "scatterplot-largediff-1",
+          "scatterplot-largediff-2",
+          "scatterplot-largediff-3"
         ],
-        "order": "random"
+        "order": "random",
+        "interruptions": [
+          {
+            "spacing": 99999,
+            "firstLocation": 20,
+            "components": ["attention-check-1"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 45,
+            "components": ["attention-check-2"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 65,
+            "components": ["attention-check-3"]
+          },
+          {
+            "spacing": 9999,
+            "firstLocation": 10,
+            "components": ["color-reset"]
+          },
+          {
+            "spacing": 9999,
+            "firstLocation": 33,
+            "components": ["color-reset"]
+          },
+          {
+            "spacing": 9999,
+            "firstLocation": 50,
+            "components": ["color-reset"]
+          },
+          {
+            "spacing": 9999,
+            "firstLocation": 80,
+            "components": ["color-reset"]
+          }
+        ]
       },
       "$demographics.co.demographics",
       "demographic-questionnaire-color-theory",

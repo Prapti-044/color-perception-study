@@ -18,7 +18,7 @@ By systematically analyzing responses, we aim to identify patterns in color perc
 
 This study constitutes a **replication of the research conducted by Danielle Albers Szafir**, as documented in her paper:  
 
-[Danielle Albers [Szafir], "[Modeling Color Difference for Visualization Design]," [Published in: IEEE Transactions on Visualization and Computer Graphics], [2018]](https://ieeexplore.ieee.org/document/8017604).  
+[Danielle Albers Szafir, "Modeling Color Difference for Visualization Design," Published in: IEEE Transactions on Visualization and Computer Graphics, 2018](https://ieeexplore.ieee.org/document/8017604).  
 
 The purpose of this replication is to verify and extend her findings, thereby contributing to a broader understanding of color perception across diverse populations.
 
@@ -29,4 +29,4 @@ On behalf of the research team, we express our profound appreciation for your vo
 Your contributions are invaluable to the success of this study and to the ongoing advancement of research in visual perception.  
 
 For any questions or additional information regarding this study, please contact:  
-- **Researcher:** [Shadmaan Hye], [u1452119@utah.edu]
+- **Researcher:** Shadmaan Hye, u1452119@utah.edu
