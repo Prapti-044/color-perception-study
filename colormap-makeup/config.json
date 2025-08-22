@@ -153,11 +153,6 @@
       ],
       "nextButtonLocation": "sidebar"
     },
-    "color-blind-failed-component": {
-      "type": "markdown",
-      "path": "colormap-makeup/assets/color-blind-failed.md",
-      "response": []
-    },
     "consent-form": {
       "type": "markdown",
       "path": "colormap-makeup/assets/consent_form.md",
@@ -176,7 +171,7 @@
         }
       ]
     },
-    "": {
+    "thanks": {
       "type": "markdown",
       "path": "colormap-makeup/assets/thanks.md",
       "response": []

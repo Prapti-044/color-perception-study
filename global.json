@@ -1,7 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/GlobalConfigSchema.json",
   "configsList": [
-    "ScatterJND-study",
     "colormap-makeup",
     "tutorial",
     "example-brush-interactions",
@@ -37,9 +36,6 @@
     "test-step-logic"
   ],
   "configs": {
-    "ScatterJND-study": {
-      "path": "ScatterJND-study/config.json"
-    },
     "colormap-makeup": {
       "path": "colormap-makeup/config.json"
     },
