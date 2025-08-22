@@ -126,16 +126,17 @@
       "response": [
         {
           "id": "name",
-          "prompt": "What is your Prolific ID?",
+          "prompt": "What is your Name?", 
           "required": true,
           "location": "aboveStimulus",
           "type": "longText",
-          "placeholder": "Please enter your Prolific ID"
+          "placeholder": "Please enter your Name"
         },
         {
           "id": "color-deficiency",
           "prompt": "Do you have any color vision deficiency?",
           "required": true,
+          "requiredValue": "No",
           "location": "aboveStimulus",
           "type": "radio",
           "options": [
@@ -160,9 +161,22 @@
     "consent-form": {
       "type": "markdown",
       "path": "colormap-makeup/assets/consent_form.md",
-      "response": []
+      "nextButtonText": "Agree",
+      "response": [
+        {
+          "id": "accept",
+          "prompt": "Do you consent to the study and wish to continue?",
+          "requiredValue": "Accept",
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": [
+            "Decline",
+            "Accept"
+          ]
+        }
+      ]
     },
-    "thanks": {
+    "": {
       "type": "markdown",
       "path": "colormap-makeup/assets/thanks.md",
       "response": []
@@ -709,20 +723,7 @@
     "components": [
       "consent-form",
       "introduction",
-      {
-        "components": [
-          "basic-questionnaire"
-        ],
-        "order": "fixed",
-        "skip": [
-          {
-            "check": "block",
-            "condition": "numIncorrect",
-            "value": 1,
-            "to": "color-blind-failed-component"
-          }
-        ]
-      },
+      "basic-questionnaire",
       "color-difference-1",
       "color-difference-2",
       "color-difference-3",
@@ -849,8 +850,7 @@
       "$demographics.co.demographics",
       "demographic-questionnaire-color-theory",
       "demographic-questionnaire-makeup",
-      "thanks",
-      "color-blind-failed-component"
+      "thanks"
     ]
   }
 }
