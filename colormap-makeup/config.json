@@ -752,6 +752,7 @@
       "color-difference-1",
       "color-difference-2",
       "color-difference-3",
+      "$color-blindness.se.short-test",
       {
         "components": [
           "scatterplot-1",
