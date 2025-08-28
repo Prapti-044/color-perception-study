@@ -31,7 +31,7 @@
     }
   },
   "sequence": {
-    "order": "fixed",
+    "order": "latinSquare",
     "components": [
       "introduction",
       "$color-blindness.se.short-test",
