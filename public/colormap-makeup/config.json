@@ -20,14 +20,15 @@
     "autoDownloadStudy": false,
     "sidebar": true,
     "nextOnEnter": true,
-    "sidebarWidth": 500,
-    "studyEndMsg": "Thank you for participating in the study!"
+    "sidebarWidth": 380,
+    "studyEndMsg": "Thank you for participating in the study!",
+    "participantNameField": "introduction.prolificId"
   },
   "baseComponents": {
     "color-difference-base": {
       "type": "website",
       "nextButtonLocation": "sidebar",
-      "instruction": "In color perception studies, it's important to understand when two colors are considered \"same\" versus \"different\". Below are three examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
+      "instruction": "In this study, we ask you whether two colors are considered \"same\" versus \"different\". Below are the examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
       "instructionLocation": "sidebar",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
@@ -128,12 +129,12 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "name",
-          "prompt": "What is your Name?", 
-          "required": true,
-          "location": "aboveStimulus",
-          "type": "longText",
-          "placeholder": "Please enter your Name"
+          "id": "prolificId",
+          "prompt": "Please enter your Prolific ID",
+          "location": "belowStimulus",
+          "type": "shortText",
+          "placeholder": "Prolific ID",
+          "paramCapture": "PROLIFIC_PID"
         },
         {
           "id": "color-deficiency",
@@ -154,13 +155,20 @@
           "answer": "No"
         }
       ],
-      "nextButtonLocation": "sidebar"
+      "nextButtonLocation": "belowStimulus"
     },
     "consent-form": {
       "type": "markdown",
       "path": "colormap-makeup/assets/consent_form.md",
       "nextButtonText": "Agree",
       "response": [
+        {
+          "id": "signature",
+          "prompt": "Your signature",
+          "location": "belowStimulus",
+          "type": "shortText",
+          "placeholder": "Please provide your signature"
+        },
         {
           "id": "accept",
           "prompt": "Do you consent to the study and wish to continue?",
@@ -173,6 +181,12 @@
           ]
         }
       ]
+    },
+    "color-difference-introduction": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/color-difference-introduction.md",
+      "response": [],
+      "nextButtonLocation": "belowStimulus"
     },
     "thanks": {
       "type": "markdown",
@@ -595,15 +609,26 @@
         },
         {
           "id": "foundation-shade",
-          "prompt": "Which foundation do you typically use? (Please specify the brand name and color shade). If not applicable, please write NA",
+          "prompt": "Which foundation do you typically use? Please specify the brand name and color shade. (For example, if you use the shade \"Warm Beige\" from the brand \"NARS\", please write \"NARS, Warm Beige\".) If not applicable, please write NA.",
           "type": "longText",
           "placeholder": "Please name the brand and color shades of foundation you typically use."
         },
         {
           "id": "makeup-products",
-          "prompt": "Which makeup products do you use? Examples include foundation, blush, eyeshadow, and lipstick.",
-          "type": "longText",
-          "placeholder": "Please name the products you use."
+          "prompt": "Which makeup products do you regularly use? Please select all that apply from the list below. ",
+          "type": "checkbox",
+          "options": [
+            "Foundation",
+            "Concealer",
+            "Blush",
+            "Bronzer",
+            "Eyeshadow",
+            "Eyeliner",
+            "Mascara",
+            "Lipstick",
+            "Lip Gloss",
+            "Setting Powder"
+          ]
         }
       ]
     },
@@ -613,13 +638,12 @@
         {
           "id": "color-hobby",
           "prompt": "Which of the following activities do you enjoy as a hobby? Please select the one that fits you most.",
-          "type": "radio",
+          "type": "checkbox",
           "options": [
             "Painting",
             "Drawing",
-            "Sculpting",
-            "Photography",
-            "Other"
+            "Graphic Design",
+            "Photography"
           ]
         },
         {
@@ -633,13 +657,13 @@
         },
         {
           "id": "color-theory-knowledge",
-          "prompt": "What color do you get by mixing equal amounts of red and yellow paint? ",
+          "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? ",
           "type": "longText",
           "placeholder": "Please name the color you get."
         },
         {
           "id": "color-theory-knowledge-2",
-          "prompt": "What is the result of mixing red, green, and blue light in equal intensity?",
+          "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity?",
           "type": "longText",
           "placeholder": "Please name the color you get."
         }
@@ -649,9 +673,10 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check",
+          "id": "attention-check-1",
           "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
           "type": "radio",
+          "requiredValue": "3",
           "options": [
             "1",
             "2",
@@ -664,12 +689,6 @@
             "9",
             "10"
           ]
-        }
-      ],
-      "correctAnswer": [
-        {
-          "id": "attention-check-1",
-          "answer": "3"
         }
       ],
       "provideFeedback": true,
@@ -680,9 +699,10 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check",
+          "id": "attention-check-2",
           "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
           "type": "radio",
+          "requiredValue": "3",
           "options": [
             "1",
             "2",
@@ -695,12 +715,6 @@
             "9",
             "10"
           ]
-        }
-      ],
-      "correctAnswer": [
-        {
-          "id": "attention-check-2",
-          "answer": "3"
         }
       ],
       "provideFeedback": true,
@@ -711,9 +725,10 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check",
+          "id": "attention-check-3",
           "prompt": "How many b’s are there in blueberry? Select the correct answer.",
           "type": "radio",
+          "requiredValue": "2",
           "options": [
             "1",
             "2",
@@ -726,12 +741,6 @@
             "9",
             "10"
           ]
-        }
-      ],
-      "correctAnswer": [
-        {
-          "id": "attention-check-3",
-          "answer": "2"
         }
       ],
       "provideFeedback": true,
@@ -749,10 +758,11 @@
       "consent-form",
       "introduction",
       "basic-questionnaire",
+      "$color-blindness.se.short-test",
+      "color-difference-introduction",
       "color-difference-1",
       "color-difference-2",
       "color-difference-3",
-      "$color-blindness.se.short-test",
       {
         "components": [
           "scatterplot-1",
