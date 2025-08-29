@@ -528,34 +528,6 @@
       "baseComponent": "scatterplot-base",
       "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-72.json"
     },
-    "scatterplot-73": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-73.json"
-    },
-    "scatterplot-74": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-74.json"
-    },
-    "scatterplot-75": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-75.json"
-    },
-    "scatterplot-76": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-76.json"
-    },
-    "scatterplot-77": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-77.json"
-    },
-    "scatterplot-78": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-78.json"
-    },
-    "scatterplot-79": {
-      "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-79.json"
-    },
     "scatterplot-samecolor-1": {
       "baseComponent": "scatterplot-samecolor-base",
       "path": "colormap-makeup/vega-specs/scatterplots_same/scatterplot-1.json"
@@ -668,84 +640,6 @@
           "placeholder": "Please name the color you get."
         }
       ]
-    },
-    "attention-check-1": {
-      "type": "questionnaire",
-      "response": [
-        {
-          "id": "attention-check-1",
-          "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
-          "type": "radio",
-          "requiredValue": "3",
-          "options": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"
-          ]
-        }
-      ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 10
-    },
-    "attention-check-2": {
-      "type": "questionnaire",
-      "response": [
-        {
-          "id": "attention-check-2",
-          "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
-          "type": "radio",
-          "requiredValue": "3",
-          "options": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"
-          ]
-        }
-      ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 10
-    },
-    "attention-check-3": {
-      "type": "questionnaire",
-      "response": [
-        {
-          "id": "attention-check-3",
-          "prompt": "How many b’s are there in blueberry? Select the correct answer.",
-          "type": "radio",
-          "requiredValue": "2",
-          "options": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"
-          ]
-        }
-      ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 10
     }
   },
   "importedLibraries": [
@@ -837,13 +731,6 @@
           "scatterplot-70",
           "scatterplot-71",
           "scatterplot-72",
-          "scatterplot-73",
-          "scatterplot-74",
-          "scatterplot-75",
-          "scatterplot-76",
-          "scatterplot-77",
-          "scatterplot-78",
-          "scatterplot-79",
           "scatterplot-samecolor-1",
           "scatterplot-samecolor-2",
           "scatterplot-samecolor-3",
@@ -855,38 +742,8 @@
         "order": "random",
         "interruptions": [
           {
-            "spacing": 99999,
-            "firstLocation": 20,
-            "components": ["attention-check-1"]
-          },
-          {
-            "spacing": 99999,
-            "firstLocation": 45,
-            "components": ["attention-check-2"]
-          },
-          {
-            "spacing": 99999,
-            "firstLocation": 65,
-            "components": ["attention-check-3"]
-          },
-          {
-            "spacing": 9999,
-            "firstLocation": 10,
-            "components": ["color-reset"]
-          },
-          {
-            "spacing": 9999,
-            "firstLocation": 33,
-            "components": ["color-reset"]
-          },
-          {
-            "spacing": 9999,
-            "firstLocation": 50,
-            "components": ["color-reset"]
-          },
-          {
-            "spacing": 9999,
-            "firstLocation": 80,
+            "spacing": 1,
+            "firstLocation": 1,
             "components": ["color-reset"]
           }
         ]
