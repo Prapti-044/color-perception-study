@@ -6,15 +6,6 @@ Welcome to the color difference perception study!
 
 Before we begin the  tasks, let's take a moment to understand what we're studying and how to approach these questions.
 
-## How Color Differences Work
-
-Colors that appear "the same" to one person might look "different" to another. This happens because:
-
-1. **Individual Variation**: Each person's eyes and brain process color slightly differently
-2. **Color Vision Types**: Some people have different types of color vision (like color blindness)
-3. **Environmental Factors**: Lighting conditions can affect how we see colors
-4. **Context**: Surrounding colors can influence our perception of a specific color
-
 ## What You'll Be Asked
 
 In the upcoming tasks, you'll see **pairs of colored circles** and be asked:
@@ -23,7 +14,14 @@ In the upcoming tasks, you'll see **pairs of colored circles** and be asked:
 
 You'll have two options:
 - **Same** - if the circles appear to be identical in color
-- **Different** - if you can see any difference between the colors
+- **Different** - if you can see **any** difference between the colors
+
+
+<div style="display: flex; gap: 50px;">
+  <img src="./assets/same-color.png" alt="Same Color" width="460" height="460" />
+  <img src="./assets/different-color.png" alt="Different Color" width="460" height="460" />
+</div>
+
 
 ## How to Approach the Tasks
 

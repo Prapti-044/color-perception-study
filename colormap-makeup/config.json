@@ -18,11 +18,12 @@
     "logoPath": "revisitAssets/revisitLogoSquare.svg",
     "withProgressBar": true,
     "autoDownloadStudy": false,
-    "sidebar": true,
+    "withSidebar": true,
     "nextOnEnter": true,
     "sidebarWidth": 380,
-    "studyEndMsg": "Thank you for participating in the study!",
-    "participantNameField": "introduction.prolificId"
+    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CKUV0W1L). Or you can use this completion code: CKUV0W1L",
+    "participantNameField": "introduction.prolificId",
+    "urlParticipantIdParam": "PROLIFIC_PID"
   },
   "baseComponents": {
     "color-difference-base": {
@@ -125,12 +126,15 @@
       "response": [],
       "nextButtonLocation": "belowStimulus"
     },
-    "basic-questionnaire": {
-      "type": "questionnaire",
+    "consent-form": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/consent_form.md",
+      "nextButtonText": "Agree",
       "response": [
         {
           "id": "prolificId",
           "prompt": "Please enter your Prolific ID",
+          "required": true,
           "location": "belowStimulus",
           "type": "shortText",
           "placeholder": "Prolific ID",
@@ -141,33 +145,11 @@
           "prompt": "Do you have any color vision deficiency?",
           "required": true,
           "requiredValue": "No",
-          "location": "aboveStimulus",
           "type": "radio",
           "options": [
             "Yes",
             "No"
           ]
-        }
-      ],
-      "correctAnswer": [
-        {
-          "id": "color-deficiency",
-          "answer": "No"
-        }
-      ],
-      "nextButtonLocation": "belowStimulus"
-    },
-    "consent-form": {
-      "type": "markdown",
-      "path": "colormap-makeup/assets/consent_form.md",
-      "nextButtonText": "Agree",
-      "response": [
-        {
-          "id": "signature",
-          "prompt": "Your signature",
-          "location": "belowStimulus",
-          "type": "shortText",
-          "placeholder": "Please provide your signature"
         },
         {
           "id": "accept",
@@ -232,12 +214,90 @@
         }
       ]
     },
+    "attention-check-1": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check-1",
+          "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
+          "type": "radio",
+          "requiredValue": "3",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 3
+    },
+    "attention-check-2": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check-2",
+          "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
+          "type": "radio",
+          "requiredValue": "3",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 3
+    },
+    "attention-check-3": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check-3",
+          "prompt": "How many b’s are there in blueberry? Select the correct answer.",
+          "type": "radio",
+          "requiredValue": "2",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 3
+    },
     "color-reset": {
       "type": "website",
       "nextButtonLocation": "sidebar",
       "path": "colormap-makeup/assets/color-reset.html",
       "response": [],
-      "instruction": "We are now showing a neutral gray screen (a \"null color\") to reset your eye's color perception before the next task.",
+      "instruction": "We are now displaying a neutral gray screen, also known as a 'null color,' to reset your color perception before moving on to the next task.",
       "instructionLocation": "sidebar"
     },
     "scatterplot-1": {
@@ -599,7 +659,8 @@
             "Mascara",
             "Lipstick",
             "Lip Gloss",
-            "Setting Powder"
+            "Setting Powder",
+            "None"
           ]
         }
       ]
@@ -609,13 +670,14 @@
       "response": [
         {
           "id": "color-hobby",
-          "prompt": "Which of the following activities do you enjoy as a hobby? Please select the one that fits you most.",
+          "prompt": "Which of the following activities do you enjoy as a hobby? Check any of the activities below that you enjoy as a hobby.",
           "type": "checkbox",
           "options": [
             "Painting",
             "Drawing",
             "Graphic Design",
-            "Photography"
+            "Photography",
+            "I don't participate in any of the above"
           ]
         },
         {
@@ -651,7 +713,6 @@
     "components": [
       "consent-form",
       "introduction",
-      "basic-questionnaire",
       "$color-blindness.se.short-test",
       "color-difference-introduction",
       "color-difference-1",
@@ -741,6 +802,21 @@
         ],
         "order": "random",
         "interruptions": [
+          {
+            "spacing": 99999,
+            "firstLocation": 20,
+            "components": ["attention-check-1"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 44,
+            "components": ["attention-check-2"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 65,
+            "components": ["attention-check-3"]
+          },
           {
             "spacing": 1,
             "firstLocation": 1,

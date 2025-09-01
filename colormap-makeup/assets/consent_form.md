@@ -47,6 +47,7 @@ For concerns about your rights as a participant, you may also contact the Univer
 By signing the consent form, you are giving your consent to participate in this research. 
 
 By clicking the **Agree** button, you confirm that you:  
+- You **do not** have any color vision deficiency,
 - Are at least 18 years old,  
 - Have read and understood the information above, and  
 - Voluntarily agree to participate.  
