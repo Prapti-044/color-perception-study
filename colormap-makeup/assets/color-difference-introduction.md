@@ -17,22 +17,15 @@ You'll have two options:
 - **Different** - if you can see **any** difference between the colors
 
 
-<div style="display: flex; gap: 50px;">
-  <img src="./assets/same-color.png" alt="Same Color" width="460" height="460" />
-  <img src="./assets/different-color.png" alt="Different Color" width="460" height="460" />
+<div style="display:flex; gap:20px;">
+  <img src="./assets/same-color.png" alt="Same Color" width="200" height="200">
+  <img src="./assets/different-color.png" alt="Different Color" width="200" height="200">
 </div>
-
 
 ## How to Approach the Tasks
 
 - **Look carefully** at both circles
 - **Trust your eyes** - there are no "trick questions"
-
-## Important Notes
-
-- **No right or wrong answers**: We're studying how you perceive colors, not testing your knowledge
-- **All answers are valuable**: Whether you see them as same or different, your response helps our research
-- **Take breaks if needed**: If your eyes get tired, feel free to pause briefly
 
 ## Ready to Begin?
 

@@ -20,7 +20,6 @@
     "autoDownloadStudy": false,
     "withSidebar": false,
     "nextOnEnter": true,
-    "sidebarWidth": 380,
     "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CKUV0W1L). Or you can use this completion code: CKUV0W1L",
     "participantNameField": "introduction.prolificId",
     "urlParticipantIdParam": "PROLIFIC_PID"
@@ -29,8 +28,8 @@
     "color-difference-base": {
       "type": "website",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "In this study, we ask you whether two colors are considered \"same\" versus \"different\". Below are the examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
-      "instructionLocation": "belowStimulus",
+      "instruction": "In this study, you will be asked to decide whether two colors appear the same or different. When a pair of circles is shown in the scatterplot stimuli, please select **same** if the pair of colored points looks the same and **different** if they look different, then press  **Next** button to proceed to the next stimulus.",
+      "instructionLocation": "aboveStimulus",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
         {
@@ -47,16 +46,18 @@
       ],
       "provideFeedback": true,
       "allowFailedTraining": true,
-      "trainingAttempts": 10
+      "trainingAttempts": 3
     },
     "scatterplot-base": {
       "type": "react-component",
       "path": "colormap-makeup/vega-scatterplot.tsx",
       "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instructionLocation": "aboveStimulus",
       "response": [
         {
           "id": "scatterplot-response",
-          "prompt": "Are the two colors the same or different?",
+          "prompt": "Are the two colored points the same or different?",
           "required": true,
           "location": "aboveStimulus",
           "type": "reactive",
@@ -71,47 +72,47 @@
       ]
     },
     "scatterplot-largediff-base": {
-      "type": "vega",
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instructionLocation": "aboveStimulus",
       "response": [
         {
-          "id": "scatterplot-response",
+          "id": "scatterplot-largediff-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
           "location": "belowStimulus",
-          "type": "radio",
-          "options": [
-            "Same",
-            "Different"
-          ]
+          "type": "reactive",
+          "hidden": true
         }
       ],
-      "nextButtonLocation": "belowStimulus",
       "correctAnswer": [
         {
-          "id": "scatterplot-response",
+          "id": "scatterplot-largediff-response",
           "answer": "Different"
         }
       ]
     },
     "scatterplot-samecolor-base": {
-      "type": "vega",
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instructionLocation": "aboveStimulus",
       "response": [
         {
-          "id": "scatterplot-response",
+          "id": "scatterplot-samecolor-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
           "location": "belowStimulus",
-          "type": "radio",
-          "options": [
-            "Same",
-            "Different"
-          ]
+          "type": "reactive",
+          "hidden": true
         }
       ],
-      "nextButtonLocation": "belowStimulus",
       "correctAnswer": [
         {
-          "id": "scatterplot-response",
+          "id": "scatterplot-samecolor-response", 
           "answer": "Same"
         }
       ]
@@ -181,7 +182,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference",
+          "id": "color-difference-1",
           "answer": "Same"
         }
       ]
@@ -194,7 +195,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference",
+          "id": "color-difference-2",
           "answer": "Different"
         }
       ]
@@ -207,7 +208,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference",
+          "id": "color-difference-3",
           "answer": "Different"
         }
       ]
@@ -296,8 +297,8 @@
       "nextButtonEnableTime": 500,
       "path": "colormap-makeup/assets/color-reset.html",
       "response": [],
-      "instruction": "We are now displaying a neutral gray screen, also known as a 'null color,' to reset your color perception before moving on to the next task.",
-      "instructionLocation": "belowStimulus"
+      "instruction": "A neutral gray screen (also known as a 'null color') will be shown for 0.5 seconds to reset your color perception. Press **Next** or hit **Enter** to proceed to the next stimulus.",
+      "instructionLocation": "aboveStimulus"
     },
     "scatterplot-1": {
       "baseComponent": "scatterplot-base",
@@ -732,32 +733,46 @@
       }
     },
     "scatterplot-samecolor-1": {
-      "baseComponent": "scatterplot-samecolor-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_same/scatterplot-1.json"
+        "baseComponent": "scatterplot-samecolor-base",
+        "parameters": {
+          "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-1.json"
+        }
     },
     "scatterplot-samecolor-2": {
       "baseComponent": "scatterplot-samecolor-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_same/scatterplot-2.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-2.json"
+      }
     },
     "scatterplot-samecolor-3": {
       "baseComponent": "scatterplot-samecolor-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_same/scatterplot-3.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-3.json"
+      }
     },
     "scatterplot-samecolor-4": {
       "baseComponent": "scatterplot-samecolor-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_same/scatterplot-4.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-4.json"
+      }
     },
     "scatterplot-largediff-1": {
       "baseComponent": "scatterplot-largediff-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_largediff/scatterplot-1.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_largediff/scatterplot-1.json"
+      }
     },
     "scatterplot-largediff-2": {
       "baseComponent": "scatterplot-largediff-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_largediff/scatterplot-2.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_largediff/scatterplot-2.json"
+      }
     },
     "scatterplot-largediff-3": {
       "baseComponent": "scatterplot-largediff-base",
-      "path": "colormap-makeup/vega-specs/scatterplots_largediff/scatterplot-3.json"
+        "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots_largediff/scatterplot-3.json"
+      }
     },
     "demographic-questionnaire-makeup": {
       "type": "questionnaire",
