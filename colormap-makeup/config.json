@@ -79,17 +79,17 @@
       "instructionLocation": "aboveStimulus",
       "response": [
         {
-          "id": "scatterplot-largediff-response",
+          "id": "scatterplot-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
-          "location": "belowStimulus",
+          "location": "aboveStimulus",
           "type": "reactive",
           "hidden": true
         }
       ],
       "correctAnswer": [
         {
-          "id": "scatterplot-largediff-response",
+          "id": "scatterplot-response",
           "answer": "Different"
         }
       ]
@@ -102,17 +102,17 @@
       "instructionLocation": "aboveStimulus",
       "response": [
         {
-          "id": "scatterplot-samecolor-response",
+          "id": "scatterplot-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
-          "location": "belowStimulus",
+          "location": "aboveStimulus",
           "type": "reactive",
           "hidden": true
         }
       ],
       "correctAnswer": [
         {
-          "id": "scatterplot-samecolor-response", 
+          "id": "scatterplot-response", 
           "answer": "Same"
         }
       ]
