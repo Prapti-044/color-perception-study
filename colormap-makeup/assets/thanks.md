@@ -1,3 +1,6 @@
+<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
+
+
 # Thank You for Your Participation!
 
 We would like to extend our gratitude for your participation in this research study on color perception.  
@@ -32,3 +35,5 @@ On behalf of the research team, we express our appreciation for your voluntary p
 
 For any questions or additional information regarding this study, please contact:  
 - **Researcher:** Shadmaan Hye, u1452119@utah.edu
+
+<!-- </div> -->

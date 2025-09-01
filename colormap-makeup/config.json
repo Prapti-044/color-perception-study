@@ -20,7 +20,7 @@
     "autoDownloadStudy": false,
     "withSidebar": false,
     "nextOnEnter": true,
-    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CKUV0W1L). Or you can use this completion code: CKUV0W1L",
+    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CHHYW1WW). Or you can use this completion code: CHHYW1WW",
     "participantNameField": "introduction.prolificId",
     "urlParticipantIdParam": "PROLIFIC_PID"
   },
@@ -169,6 +169,12 @@
       "response": [],
       "nextButtonLocation": "belowStimulus"
     },
+    "keyboard-manual": {
+      "type": "markdown",
+      "path": "colormap-makeup/assets/keyboard-manual.md",
+      "response": [],
+      "nextButtonLocation": "belowStimulus"
+    },
     "thanks": {
       "type": "markdown",
       "path": "colormap-makeup/assets/thanks.md",
@@ -220,7 +226,6 @@
           "id": "attention-check1",
           "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
           "type": "radio",
-          "requiredValue": "3",
           "options": [
             "1",
             "2",
@@ -235,9 +240,12 @@
           ]
         }
       ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 3
+      "correctAnswer": [
+        {
+          "id": "attention-check1",
+          "answer": "3"
+        }
+      ]
     },
     "attention-check-2": {
       "type": "questionnaire",
@@ -246,7 +254,6 @@
           "id": "attention-check2",
           "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
           "type": "radio",
-          "requiredValue": "3",
           "options": [
             "1",
             "2",
@@ -261,9 +268,12 @@
           ]
         }
       ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 3
+      "correctAnswer": [
+        {
+          "id": "attention-check2",
+          "answer": "2"
+        }
+      ]
     },
     "attention-check-3": {
       "type": "questionnaire",
@@ -272,7 +282,6 @@
           "id": "attention-check3",
           "prompt": "How many b’s are there in blueberry? Select the correct answer.",
           "type": "radio",
-          "requiredValue": "2",
           "options": [
             "1",
             "2",
@@ -287,9 +296,12 @@
           ]
         }
       ],
-      "provideFeedback": true,
-      "allowFailedTraining": true,
-      "trainingAttempts": 3
+      "correctAnswer": [
+        {
+          "id": "attention-check3",
+          "answer": "2"
+        }
+      ]
     },
     "color-reset": {
       "type": "website",
@@ -297,7 +309,7 @@
       "nextButtonEnableTime": 500,
       "path": "colormap-makeup/assets/color-reset.html",
       "response": [],
-      "instruction": "A neutral gray screen (also known as a 'null color') will be shown for 0.5 seconds to reset your color perception. Press **Next** or hit **Enter** to proceed to the next stimulus.",
+      "instruction": "The neutral gray screen is shown to reset your color perception. You can proceed to the next trial after 0.5 seconds. Press **Next** or hit **Enter** to proceed to the next stimulus.",
       "instructionLocation": "aboveStimulus"
     },
     "scatterplot-1": {
@@ -876,6 +888,7 @@
       "color-difference-1",
       "color-difference-2",
       "color-difference-3",
+      "keyboard-manual",
       {
         "components": [
           "scatterplot-1",

@@ -1,3 +1,6 @@
+<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
+
+
 # Color Difference Perception Task Tutorial
 
 ## Understanding Color Differences
@@ -17,7 +20,7 @@ You'll have two options:
 - **Different** - if you can see **any** difference between the colors
 
 
-<div style="display:flex; gap:20px;">
+<div style="display:flex; gap:40px">
   <img src="colormap-makeup/assets/same-color.png" alt="Same Color" width="200" height="200">
   <img src="colormap-makeup/assets/different-color.png" alt="Different Color" width="200" height="200">
 </div>
@@ -34,3 +37,5 @@ When you're ready, click the **Next** button below to start the color difference
 ---
 
 *This tutorial is designed to help you understand the study and feel comfortable with the tasks ahead.*
+
+<!-- </div> -->

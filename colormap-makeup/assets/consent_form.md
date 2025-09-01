@@ -1,3 +1,5 @@
+<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
+
 # IRB Consent Form
 
 **Title of Research Study:** Evaluating Perception and Efficacy in Data Visualization
@@ -9,16 +11,16 @@
 
 
 ## Introduction  
-You are invited to take part in a research study. The purpose of this research study is to develop knowledge regarding how various people perceive and interpret colors. By improving understanding of how well people can perceive colors and perform tasks given some plots, we are able to better design and recommend users insights in color perception.
+You are invited to take part in a research study. The purpose of this research study is to develop knowledge regarding how various people perceive and interpret colors. By improving understanding of how well people can perceive colors and perform tasks using data and charts, we are able to better design and recommend charts to users.
 We value your time and willingness to help us improve our understanding of visual perception.  
 
 
 ## Tasks 
-If you agree, you will participate you will complete an online survey, where you will be shown images of data visualizations and their components and then asked to answer some questions with them. The entire process should take no more than **15 minutes**. 
+If you agree, you will complete an online survey, where you will be shown images of data visualizations and then asked to answer some questions with them. The entire process should take no more than **15 minutes**. 
 
 
 ## Voluntary Participation  
-Your participation is **completely voluntary**. You are free to withdraw consent and discontinue participation in the interview at any time for any reason without penalty or loss of benefits. 
+Your participation is **completely voluntary**. You are free to withdraw consent and discontinue participation in the online study at any time for any reason without penalty or loss of benefits. 
 
 
 ## Risks and Benefits to Study Participants
@@ -44,7 +46,7 @@ For concerns about your rights as a participant, you may also contact the Univer
 
 
 ## Consent  
-By signing the consent form, you are giving your consent to participate in this research. 
+By filling out and advancing this page, you are giving your consent to participate in this research. 
 
 By clicking the **Agree** button, you confirm that you:  
 - You **do not** have any color vision deficiency,
@@ -53,5 +55,7 @@ By clicking the **Agree** button, you confirm that you:
 - Voluntarily agree to participate.  
 
 Thank you for your willingness to participate!
+
+<!-- </div> -->
 
 

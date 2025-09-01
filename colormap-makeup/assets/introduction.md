@@ -1,3 +1,6 @@
+<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
+
+
 # Welcome to the Color Perception Study!  
 
 Thank you for taking the time to participate in this research study.  
@@ -16,3 +19,6 @@ Your participation is voluntary, and your responses will remain **anonymous**.
 Please take your time and answer each question carefully.  
 
 When you are ready, you may proceed to the study. 
+
+<!-- </div> -->
+
