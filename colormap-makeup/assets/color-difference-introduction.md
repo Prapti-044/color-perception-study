@@ -18,8 +18,8 @@ You'll have two options:
 
 
 <div style="display:flex; gap:20px;">
-  <img src="./assets/same-color.png" alt="Same Color" width="200" height="200">
-  <img src="./assets/different-color.png" alt="Different Color" width="200" height="200">
+  <img src="colormap-makeup/assets/same-color.png" alt="Same Color" width="200" height="200">
+  <img src="colormap-makeup/assets/different-color.png" alt="Different Color" width="200" height="200">
 </div>
 
 ## How to Approach the Tasks
