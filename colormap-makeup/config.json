@@ -18,7 +18,7 @@
     "logoPath": "revisitAssets/revisitLogoSquare.svg",
     "withProgressBar": true,
     "autoDownloadStudy": false,
-    "withSidebar": true,
+    "withSidebar": false,
     "nextOnEnter": true,
     "sidebarWidth": 380,
     "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CKUV0W1L). Or you can use this completion code: CKUV0W1L",
@@ -28,16 +28,16 @@
   "baseComponents": {
     "color-difference-base": {
       "type": "website",
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "instruction": "In this study, we ask you whether two colors are considered \"same\" versus \"different\". Below are the examples that illustrate these concepts clearly.\nDo you see the same color in both circles?",
-      "instructionLocation": "sidebar",
+      "instructionLocation": "belowStimulus",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
         {
           "id": "color-difference",
           "prompt": "Are the two colors the same or different?",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "radio",
           "options": [
             "Same",
@@ -50,21 +50,19 @@
       "trainingAttempts": 10
     },
     "scatterplot-base": {
-      "type": "vega",
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "scatterplot-response",
-          "prompt": "Are the two colored points the same or different?",
+          "prompt": "Are the two colors the same or different?",
           "required": true,
-          "location": "sidebar",
-          "type": "radio",
-          "options": [
-            "Same",
-            "Different"
-          ]
+          "location": "aboveStimulus",
+          "type": "reactive",
+          "hidden": true
         }
       ],
-      "nextButtonLocation": "sidebar",
       "correctAnswer": [
         {
           "id": "scatterplot-response",
@@ -79,7 +77,7 @@
           "id": "scatterplot-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "radio",
           "options": [
             "Same",
@@ -87,7 +85,7 @@
           ]
         }
       ],
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "correctAnswer": [
         {
           "id": "scatterplot-response",
@@ -102,7 +100,7 @@
           "id": "scatterplot-response",
           "prompt": "Are the two colored points the same or different?",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "radio",
           "options": [
             "Same",
@@ -110,7 +108,7 @@
           ]
         }
       ],
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "correctAnswer": [
         {
           "id": "scatterplot-response",
@@ -294,299 +292,444 @@
     },
     "color-reset": {
       "type": "website",
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
+      "nextButtonEnableTime": 500,
       "path": "colormap-makeup/assets/color-reset.html",
       "response": [],
       "instruction": "We are now displaying a neutral gray screen, also known as a 'null color,' to reset your color perception before moving on to the next task.",
-      "instructionLocation": "sidebar"
+      "instructionLocation": "belowStimulus"
     },
     "scatterplot-1": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-1.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-1.json"
+      }
     },
     "scatterplot-2": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-2.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-2.json"
+      }
     },
     "scatterplot-3": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-3.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-3.json"
+      }
     },
     "scatterplot-4": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-4.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-4.json"
+      }
     },
     "scatterplot-5": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-5.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-5.json"
+      }
     },
     "scatterplot-6": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-6.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-6.json"
+      }
     },
     "scatterplot-7": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-7.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-7.json"
+      }
     },
     "scatterplot-8": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-8.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-8.json"
+      }
     },
     "scatterplot-9": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-9.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-9.json"
+      }
     },
     "scatterplot-10": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-10.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-10.json"
+      }
     },
     "scatterplot-11": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-11.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-11.json"
+      }
     },
     "scatterplot-12": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-12.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-12.json"
+      }
     },
     "scatterplot-13": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-13.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-13.json"
+      }
     },
     "scatterplot-14": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-14.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-14.json"
+      }
     },
     "scatterplot-15": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-15.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-15.json"
+      }
     },
     "scatterplot-16": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-16.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-16.json"
+      }
     },
     "scatterplot-17": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-17.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-17.json"
+      }
     },
     "scatterplot-18": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-18.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-18.json"
+      }
     },
     "scatterplot-19": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-19.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-19.json"
+      }
     },
     "scatterplot-20": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-20.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-20.json"
+      }
     },
     "scatterplot-21": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-21.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-21.json"
+      }
     },
     "scatterplot-22": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-22.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-22.json"
+      }
     },
     "scatterplot-23": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-23.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-23.json"
+      }
     },
     "scatterplot-24": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-24.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-24.json"
+      }
     },
     "scatterplot-25": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-25.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-25.json"
+      }
     },
     "scatterplot-26": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-26.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-26.json"
+      }
     },
     "scatterplot-27": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-27.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-27.json"
+      }
     },
     "scatterplot-28": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-28.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-28.json"
+      }
     },
     "scatterplot-29": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-29.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-29.json"
+      }
     },
     "scatterplot-30": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-30.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-30.json"
+      }
     },
     "scatterplot-31": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-31.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-31.json"
+      }
     },
     "scatterplot-32": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-32.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-32.json"
+      }
     },
     "scatterplot-33": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-33.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-33.json"
+      }
     },
     "scatterplot-34": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-34.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-34.json"
+      }
     },
     "scatterplot-35": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-35.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-35.json"
+      }
     },
     "scatterplot-36": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-36.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-36.json"
+      }
     },
     "scatterplot-37": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-37.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-37.json"
+      }
     },
     "scatterplot-38": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-38.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-38.json"
+      }
     },
     "scatterplot-39": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-39.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-39.json"
+      }
     },
     "scatterplot-40": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-40.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-40.json"
+      }
     },
     "scatterplot-41": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-41.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-41.json"
+      }
     },
     "scatterplot-42": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-42.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-42.json"
+      }
     },
     "scatterplot-43": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-43.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-43.json"
+      }
     },
     "scatterplot-44": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-44.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-44.json"
+      }
     },
     "scatterplot-45": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-45.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-45.json"
+      }
     },
     "scatterplot-46": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-46.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-46.json"
+      }
     },
     "scatterplot-47": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-47.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-47.json"
+      }
     },
     "scatterplot-48": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-48.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-48.json"
+      }
     },
     "scatterplot-49": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-49.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-49.json"
+      }
     },
     "scatterplot-50": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-50.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-50.json"
+      }
     },
     "scatterplot-51": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-51.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-51.json"
+      }
     },
     "scatterplot-52": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-52.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-52.json"
+      }
     },
     "scatterplot-53": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-53.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-53.json"
+      }
     },
     "scatterplot-54": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-54.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-54.json"
+      }
     },
     "scatterplot-55": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-55.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-55.json"
+      }
     },
     "scatterplot-56": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-56.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-56.json"
+      }
     },
     "scatterplot-57": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-57.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-57.json"
+      }
     },
     "scatterplot-58": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-58.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-58.json"
+      }
     },
     "scatterplot-59": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-59.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-59.json"
+      }
     },
     "scatterplot-60": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-60.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-60.json"
+      }
     },
     "scatterplot-61": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-61.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-61.json"
+      }
     },
     "scatterplot-62": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-62.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-62.json"
+      }
     },
     "scatterplot-63": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-63.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-63.json"
+      }
     },
     "scatterplot-64": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-64.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-64.json"
+      }
     },
     "scatterplot-65": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-65.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-65.json"
+      }
     },
     "scatterplot-66": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-66.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-66.json"
+      }
     },
     "scatterplot-67": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-67.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-67.json"
+      }
     },
     "scatterplot-68": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-68.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-68.json"
+      }
     },
     "scatterplot-69": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-69.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-69.json"
+      }
     },
     "scatterplot-70": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-70.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-70.json"
+      }
     },
     "scatterplot-71": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-71.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-71.json"
+      }
     },
     "scatterplot-72": {
       "baseComponent": "scatterplot-base",
-      "path": "colormap-makeup/vega-specs/scatterplots/scatterplot-72.json"
+      "parameters": {
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-72.json"
+      }
     },
     "scatterplot-samecolor-1": {
       "baseComponent": "scatterplot-samecolor-base",
