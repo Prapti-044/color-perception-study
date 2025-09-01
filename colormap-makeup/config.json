@@ -182,7 +182,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference-1",
+          "id": "color-difference",
           "answer": "Same"
         }
       ]
@@ -195,7 +195,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference-2",
+          "id": "color-difference",
           "answer": "Different"
         }
       ]
@@ -208,7 +208,7 @@
       },
       "correctAnswer": [
         {
-          "id": "color-difference-3",
+          "id": "color-difference",
           "answer": "Different"
         }
       ]
