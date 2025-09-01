@@ -3,7 +3,7 @@ name: Deploy To GitHub Pages
 on:
   push:
     branches:
-      - main
+      - color-perception-study
   workflow_dispatch:
   pull_request:
 
@@ -89,6 +89,7 @@ jobs:
     steps:
       - name: Comment on PR
         uses: hasura/comment-progress@v2.2.0
+        if: ${{ github.ref != 'refs/heads/color-perception-study' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
@@ -105,9 +106,28 @@ jobs:
 
       - run: yarn install --immutable
 
-      # Build with github environment variables
+      # If on color-perception-study without env vars, build with .env file
+      - name: Build with .env file
+        if: ${{ vars.VITE_STORAGE_ENGINE == '' && github.ref == 'refs/heads/color-perception-study' }}
+        run: yarn build
+
+      # If on color-perception-study with env vars, build with github environment variables
       - name: Build with github environment variables
-        if: ${{ vars.VITE_STORAGE_ENGINE != '' }}
+        if: ${{ vars.VITE_STORAGE_ENGINE != '' && github.ref == 'refs/heads/color-perception-study' }}
+        run: VITE_STORAGE_ENGINE=$VITE_STORAGE_ENGINE yarn build
+        env:
+          VITE_STORAGE_ENGINE: ${{ vars.VITE_STORAGE_ENGINE }}
+
+      - uses: peaceiris/actions-gh-pages@v3
+        name: Deploy
+        if: ${{ github.ref == 'refs/heads/color-perception-study' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+      # If on PR, build with github environment variables
+      - name: Build with github environment variables
+        if: ${{ vars.VITE_STORAGE_ENGINE != '' && github.ref != 'refs/heads/color-perception-study' }}
         run: VITE_STORAGE_ENGINE=$VITE_STORAGE_ENGINE VITE_BASE_PATH=$VITE_BASE_PATH yarn build
         env:
           VITE_STORAGE_ENGINE: ${{ vars.VITE_STORAGE_ENGINE }}
@@ -115,6 +135,7 @@ jobs:
 
       - name: Push PR deploy preview
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref != 'refs/heads/color-perception-study' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
@@ -122,6 +143,7 @@ jobs:
 
       - name: Update comment
         uses: hasura/comment-progress@v2.2.0
+        if: ${{ github.ref != 'refs/heads/color-perception-study' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}

@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 154.6009009120089,
+        "y": 173.99168173376665,
+        "color": "#c2a64f",
+        "type": "target"
+      },
+      {
+        "x": 279.6009009120089,
+        "y": 173.99168173376665,
+        "color": "#b69b44",
+        "type": "target"
+      },
+      {
+        "x": 101.17472429783405,
+        "y": 118.55102027123297,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 322.5308028049356,
+        "y": 48.52708515266377,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 189.1582774750934,
+        "y": 69.4206402819076,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 58.64410712203164,
+        "y": 189.84973412497732,
+        "color": "#767676",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 2042.820622996763,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 15,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

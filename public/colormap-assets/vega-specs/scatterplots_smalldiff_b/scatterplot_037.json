@@ -1,0 +1,145 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 217.3452603658527,
+        "y": 82.37464401988672,
+        "color": "#5c3f3a",
+        "type": "target"
+      },
+      {
+        "x": 342.3452603658527,
+        "y": 82.37464401988672,
+        "color": "#5e3f34",
+        "type": "target"
+      },
+      {
+        "x": 58.096556063388675,
+        "y": 80.4606373826524,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 173.65518428612666,
+        "y": 74.06669400458945,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 299.21067400754043,
+        "y": 177.01035038535673,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 233.46093339776368,
+        "y": 172.21079073962778,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 315.0559541467855,
+        "y": 207.4015340841392,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 265.0556032537612,
+        "y": 67.9227293222358,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 84.71534962781656,
+        "y": 23.678753810912866,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 345.7898276140044,
+        "y": 24.803534638857315,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 81.49140407832141,
+        "y": 92.48882363699204,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 335.4500453015712,
+        "y": 149.21698317065147,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 185.24415270048675,
+        "y": 149.75979189592988,
+        "color": "#767676",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 530.929158456675,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 15,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

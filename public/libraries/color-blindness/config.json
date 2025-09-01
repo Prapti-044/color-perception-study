@@ -13,19 +13,19 @@
         "plateType": "demonstration"
       },
       "instruction": "What number do you see in this image?",
-      "instructionLocation": "sidebar",
+      "instructionLocation": "belowStimulus",
       "type": "image",
       "path": "libraries/color-blindness/assets/Ishihara1.png",
       "style": {
-        "width": "300px"
+        "width": "350px"
       },
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "plate1-response",
           "prompt": "Enter the number you see:",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "numerical",
           "withDontKnow": true
         }
@@ -48,19 +48,19 @@
         "plateType": "transformation"
       },
       "instruction": "What number do you see in this image?",
-      "instructionLocation": "sidebar",
+      "instructionLocation": "belowStimulus",
       "type": "image",
       "path": "libraries/color-blindness/assets/Ishihara2.png",
       "style": {
-        "width": "300px"
+        "width": "350px"
       },
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "plate2-response",
           "prompt": "Enter the number you see:",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "numerical",
           "withDontKnow": true
         }
@@ -83,19 +83,19 @@
         "plateType": "transformation"
       },
       "instruction": "What number do you see in this image?",
-      "instructionLocation": "sidebar",
+      "instructionLocation": "belowStimulus",
       "type": "image",
       "path": "libraries/color-blindness/assets/Ishihara3.png",
       "style": {
-        "width": "300px"
+        "width": "350px"
       },
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "plate3-response",
           "prompt": "Enter the number you see:",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "numerical",
           "withDontKnow": true
         }
@@ -223,19 +223,19 @@
         "plateType": "transformation"
       },
       "instruction": "What number do you see in this image?",
-      "instructionLocation": "sidebar",
+      "instructionLocation": "belowStimulus",
       "type": "image",
       "path": "libraries/color-blindness/assets/Ishihara7.png",
       "style": {
-        "width": "300px"
+        "width": "350px"
       },
-      "nextButtonLocation": "sidebar",
+      "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "plate7-response",
           "prompt": "Enter the number you see:",
           "required": true,
-          "location": "sidebar",
+          "location": "belowStimulus",
           "type": "numerical",
           "withDontKnow": true
         }
@@ -798,41 +798,11 @@
     "short-test": {
       "id": "short-test",
       "order": "random",
-      "components": [
+      "components": [   
         "plate2",
-        "plate4",
-        "plate8",
-        "plate9"
-      ]
-    },
-    "full-test": {
-      "id": "full-test",
-      "order": "fixed",
-      "components": [
         "plate1",
-        "plate2",
         "plate3",
-        "plate4",
-        "plate5",
-        "plate6",
-        "plate7",
-        "plate8",
-        "plate9",
-        "plate10",
-        "plate11",
-        "plate12",
-        "plate13",
-        "plate14",
-        "plate15",
-        "plate16",
-        "plate17",
-        "plate18",
-        "plate19",
-        "plate20",
-        "plate21",
-        "plate22",
-        "plate23",
-        "plate24"
+        "plate7"
       ]
     }
   }

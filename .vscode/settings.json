@@ -1,5 +1,10 @@
 {
   "yaml.schemas": {
     "./src/parser/StudyConfigSchema.json": "*.yaml"
+  },
+  "[typescript]": {
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false
   }
+
 }

@@ -12,7 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Environment files
+.env
+.local.env
+
 # Editor directories and files
+.vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -33,7 +38,6 @@ docsLibraries/
 public/__revisit-widget
 src/public/__revisit-widget
 
-supabase/volumes/*
-!supabase/volumes/db/
-supabase/volumes/db/data
-!supabase/volumes/api/
+__pycache__/
+
+analysis/report-app/static/data/

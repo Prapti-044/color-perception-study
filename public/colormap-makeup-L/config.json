@@ -1,0 +1,1113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Color Perception Study",
+    "version": "1.0.0",
+    "authors": [
+      "Shadmaan Hye"
+    ],
+    "date": "2025-07-09",
+    "description": "Here you will answer some questions based on the color perception of the user. This study aims to explore how individuals perceive and respond to different colors.",
+    "organizations": [
+      "University of Utah"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "u1452119@utah.edu",
+    "helpTextPath": "colormap-assets/help.md",
+    "logoPath": "revisitAssets/revisitLogoSquare.svg",
+    "withProgressBar": true,
+    "autoDownloadStudy": false,
+    "withSidebar": false,
+    "nextOnEnter": true,
+    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CHHYW1WW). Or you can use this completion code: CHHYW1WW",
+    "participantNameField": "introduction.prolificId",
+    "urlParticipantIdParam": "PROLIFIC_PID"
+  },
+  "baseComponents": {
+    "color-difference-base": {
+      "type": "website",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "In each trial, you will see two colored points within a scatterplot. Determine whether the colors are the **same** or **different**. Check your answer with the **Check Answer** button, and then press **Enter** or **Next** to continue.",
+      "instructionLocation": "aboveStimulus",
+      "path": "colormap-assets/color-difference.html",
+      "response": [
+        {
+          "id": "color-difference",
+          "prompt": "Are the two colors the same or different?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Same",
+            "Different"
+          ]
+        }
+      ],
+      "provideFeedback": true,
+      "allowFailedTraining": true,
+      "trainingAttempts": 3
+    },
+    "scatterplot-base": {
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "scatterplot-response",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "reactive",
+          "hidden": true
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "scatterplot-response",
+          "answer": "Different"
+        }
+      ]
+    },
+    "scatterplot-largediff-base": {
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "scatterplot-response",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "reactive",
+          "hidden": true
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "scatterplot-response",
+          "answer": "Different"
+        }
+      ]
+    },
+    "scatterplot-samecolor-base": {
+      "type": "react-component",
+      "path": "colormap-makeup/vega-scatterplot.tsx",
+      "nextButtonLocation": "belowStimulus",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "scatterplot-response",
+          "prompt": "Are the two colored points the same or different?",
+          "required": true,
+          "location": "aboveStimulus",
+          "type": "reactive",
+          "hidden": true
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "scatterplot-response",
+          "answer": "Same"
+        }
+      ]
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "colormap-assets/introduction.md",
+      "response": [],
+      "nextButtonLocation": "belowStimulus"
+    },
+    "consent-form": {
+      "type": "markdown",
+      "path": "colormap-assets/consent_form.md",
+      "nextButtonText": "Agree",
+      "response": [
+        {
+          "id": "prolificId",
+          "prompt": "Please enter your Prolific ID",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "shortText",
+          "placeholder": "Prolific ID",
+          "paramCapture": "PROLIFIC_PID"
+        },
+        {
+          "id": "color-deficiency",
+          "prompt": "Do you have any color vision deficiency?",
+          "required": true,
+          "requiredValue": "No",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "accept",
+          "prompt": "Do you consent to the study and wish to continue?",
+          "requiredValue": "Yes",
+          "location": "belowStimulus",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        }
+      ]
+    },
+    "color-difference-introduction": {
+      "type": "markdown",
+      "path": "colormap-assets/color-difference-introduction.md",
+      "response": [],
+      "nextButtonLocation": "belowStimulus"
+    },
+    "keyboard-manual": {
+      "type": "markdown",
+      "path": "colormap-assets/keyboard-manual.md",
+      "response": [],
+      "nextButtonLocation": "belowStimulus"
+    },
+    "thanks": {
+      "type": "markdown",
+      "path": "colormap-assets/thanks.md",
+      "response": []
+    },
+    "color-difference-1": {
+      "baseComponent": "color-difference-base",
+      "parameters": {
+        "color1": "#3498db",
+        "color2": "#3498db"
+      },
+      "correctAnswer": [
+        {
+          "id": "color-difference",
+          "answer": "Same"
+        }
+      ]
+    },
+    "color-difference-2": {
+      "baseComponent": "color-difference-base",
+      "parameters": {
+        "color1": "#3498db",
+        "color2": "#e74c3c"
+      },
+      "correctAnswer": [
+        {
+          "id": "color-difference",
+          "answer": "Different"
+        }
+      ]
+    },
+    "color-difference-3": {
+      "baseComponent": "color-difference-base",
+      "parameters": {
+        "color1": "#3498db",
+        "color2": "#85c1e9"
+      },
+      "correctAnswer": [
+        {
+          "id": "color-difference",
+          "answer": "Different"
+        }
+      ]
+    },
+    "attention-check-1": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check1",
+          "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check1",
+          "answer": "3"
+        }
+      ]
+    },
+    "attention-check-2": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check2",
+          "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check2",
+          "answer": "3"
+        }
+      ]
+    },
+    "attention-check-3": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check3",
+          "prompt": "How many b’s are there in blueberry? Select the correct answer.",
+          "type": "radio",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check3",
+          "answer": "2"
+        }
+      ]
+    },
+    "attention-check-4": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check4",
+          "prompt": "Please type the third letter of the word banana.",
+          "type": "radio",
+          "options": [
+            "a",
+            "n",
+            "b"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check4",
+          "answer": "n"
+        }
+      ]
+    },
+    "attention-check-5": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check5",
+          "prompt": "Do NOT choose the first option. Choose the third.",
+          "type": "radio",
+          "options": [
+            "Option 1",
+            "Option 2", 
+            "Option 3"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check5",
+          "answer": "Option 3"
+        }
+      ]
+    },
+    "attention-check-6": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check6",
+          "prompt": "Which word contains more vowels?",
+          "type": "radio",
+          "options": [
+            "apple",
+            "orange"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check6",
+          "answer": "orange"
+        }
+      ]
+    },
+    "attention-check-7": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check7",
+          "prompt": "Which of these words contains two of the same letter?",
+          "type": "radio",
+          "options": [
+            "melon",
+            "apple",
+            "plum"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check7",
+          "answer": "apple"
+        }
+      ]
+    },
+    "color-reset": {
+      "type": "website",
+      "nextButtonLocation": "belowStimulus",
+      "nextButtonEnableTime": 500,
+      "path": "colormap-assets/color-reset.html",
+      "response": [],
+      "instruction": "The neutral gray screen is shown to reset your color perception. You can proceed to the next trial after 0.5 seconds. Press **Next** or hit **Enter** to proceed to the next stimulus.",
+      "instructionLocation": "aboveStimulus"
+    },
+    "scatterplot-1": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_000.json"
+      }
+    },
+    "scatterplot-2": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_001.json"
+      }
+    },
+    "scatterplot-3": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_002.json"
+      }
+    },
+    "scatterplot-4": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_003.json"
+      }
+    },
+    "scatterplot-5": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_004.json"
+      }
+    },
+    "scatterplot-6": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_005.json"
+      }
+    },
+    "scatterplot-7": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_006.json"
+      }
+    },
+    "scatterplot-8": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_007.json"
+      }
+    },
+    "scatterplot-9": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_008.json"
+      }
+    },
+    "scatterplot-10": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_009.json"
+      }
+    },
+    "scatterplot-11": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_010.json"
+      }
+    },
+    "scatterplot-12": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_011.json"
+      }
+    },
+    "scatterplot-13": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_012.json"
+      }
+    },
+    "scatterplot-14": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_013.json"
+      }
+    },
+    "scatterplot-15": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_014.json"
+      }
+    },
+    "scatterplot-16": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_015.json"
+      }
+    },
+    "scatterplot-17": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_016.json"
+      }
+    },
+    "scatterplot-18": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_017.json"
+      }
+    },
+    "scatterplot-19": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_018.json"
+      }
+    },
+    "scatterplot-20": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_019.json"
+      }
+    },
+    "scatterplot-21": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_020.json"
+      }
+    },
+    "scatterplot-22": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_021.json"
+      }
+    },
+    "scatterplot-23": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_022.json"
+      }
+    },
+    "scatterplot-24": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_023.json"
+      }
+    },
+    "scatterplot-25": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_024.json"
+      }
+    },
+    "scatterplot-26": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_025.json"
+      }
+    },
+    "scatterplot-27": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_026.json"
+      }
+    },
+    "scatterplot-28": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_027.json"
+      }
+    },
+    "scatterplot-29": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_028.json"
+      }
+    },
+    "scatterplot-30": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_029.json"
+      }
+    },
+    "scatterplot-31": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_030.json"
+      }
+    },
+    "scatterplot-32": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_031.json"
+      }
+    },
+    "scatterplot-33": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_032.json"
+      }
+    },
+    "scatterplot-34": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_033.json"
+      }
+    },
+    "scatterplot-35": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_034.json"
+      }
+    },
+    "scatterplot-36": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_035.json"
+      }
+    },
+    "scatterplot-37": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_036.json"
+      }
+    },
+    "scatterplot-38": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_037.json"
+      }
+    },
+    "scatterplot-39": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_038.json"
+      }
+    },
+    "scatterplot-40": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_039.json"
+      }
+    },
+    "scatterplot-41": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_040.json"
+      }
+    },
+    "scatterplot-42": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_041.json"
+      }
+    },
+    "scatterplot-43": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_042.json"
+      }
+    },
+    "scatterplot-44": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_043.json"
+      }
+    },
+    "scatterplot-45": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_044.json"
+      }
+    },
+    "scatterplot-46": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_045.json"
+      }
+    },
+    "scatterplot-47": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_046.json"
+      }
+    },
+    "scatterplot-48": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_047.json"
+      }
+    },
+    "scatterplot-49": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_048.json"
+      }
+    },
+    "scatterplot-50": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_049.json"
+      }
+    },
+    "scatterplot-51": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_050.json"
+      }
+    },
+    "scatterplot-52": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_051.json"
+      }
+    },
+    "scatterplot-53": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_052.json"
+      }
+    },
+    "scatterplot-54": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_053.json"
+      }
+    },
+    "scatterplot-55": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_054.json"
+      }
+    },
+    "scatterplot-56": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_055.json"
+      }
+    },
+    "scatterplot-57": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_056.json"
+      }
+    },
+    "scatterplot-58": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_057.json"
+      }
+    },
+    "scatterplot-59": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_058.json"
+      }
+    },
+    "scatterplot-60": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_059.json"
+      }
+    },
+    "scatterplot-61": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_060.json"
+      }
+    },
+    "scatterplot-62": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_061.json"
+      }
+    },
+    "scatterplot-63": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_062.json"
+      }
+    },
+    "scatterplot-64": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_063.json"
+      }
+    },
+    "scatterplot-65": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_064.json"
+      }
+    },
+    "scatterplot-66": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_065.json"
+      }
+    },
+    "scatterplot-67": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_066.json"
+      }
+    },
+    "scatterplot-68": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_067.json"
+      }
+    },
+    "scatterplot-69": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_068.json"
+      }
+    },
+    "scatterplot-70": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_069.json"
+      }
+    },
+    "scatterplot-71": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_070.json"
+      }
+    },
+    "scatterplot-72": {
+      "baseComponent": "scatterplot-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_smalldiff_L/scatterplot_071.json"
+      }
+    },
+    "scatterplot-samecolor-1": {
+      "baseComponent": "scatterplot-samecolor-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_072.json"
+      }
+    },
+    "scatterplot-samecolor-2": {
+      "baseComponent": "scatterplot-samecolor-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_073.json"
+      }
+    },
+    "scatterplot-samecolor-3": {
+      "baseComponent": "scatterplot-samecolor-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_074.json"
+      }
+    },
+    "scatterplot-samecolor-4": {
+      "baseComponent": "scatterplot-samecolor-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_075.json"
+      }
+    },
+    "scatterplot-largediff-1": {
+      "baseComponent": "scatterplot-largediff-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_076.json"
+      }
+    },
+    "scatterplot-largediff-2": {
+      "baseComponent": "scatterplot-largediff-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_077.json"
+      }
+    },
+    "scatterplot-largediff-3": {
+      "baseComponent": "scatterplot-largediff-base",
+      "parameters": {
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_078.json"
+      }
+    },
+    "demographic-questionnaire-makeup": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "makeup-familiarity",
+          "prompt": "Are you familiar with makeup?",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "use-makeup",
+          "prompt": "Do you use makeup in any form or capacity?",
+          "type": "radio",
+          "options": [
+            "I do not use makeup",
+            "I use it occasionally",
+            "I use it regularly",
+            "I use it professionally"
+          ]
+        },
+        {
+          "id": "foundation-shade",
+          "prompt": "What color foundation do you typically use? If you recall the brand name and color (e.g., 'NARS Warm Beige') off the top of your head, please list it. If not, describe to your best memory. If not applicable, please write NA.",
+          "type": "longText",
+          "placeholder": "Please name the brand and color shades of foundation you typically use to the best of your recollection."
+        },
+        {
+          "id": "makeup-products",
+          "prompt": "Which makeup products do you regularly use? Please select all that apply from the list below. ",
+          "type": "checkbox",
+          "options": [
+            "Foundation",
+            "Concealer",
+            "Blush",
+            "Bronzer",
+            "Eyeshadow",
+            "Eyeliner",
+            "Mascara",
+            "Lipstick",
+            "Lip Gloss",
+            "Setting Powder",
+            "None"
+          ]
+        }
+      ]
+    },
+    "demographic-questionnaire-color-theory": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "strategies",
+          "prompt": "Did you use any particular strategies to complete the task. If yes, please specify the strategies.",
+          "type": "longText",
+          "placeholder": "Please explain the strategies you used."
+        },
+        {
+          "id": "color-hobby",
+          "prompt": "Which of the following activities do you enjoy as a hobby? Check any of the activities below that you enjoy as a hobby.",
+          "type": "checkbox",
+          "options": [
+            "Painting",
+            "Drawing",
+            "Graphic Design",
+            "Photography",
+            "I don't participate in any of the above"
+          ]
+        },
+        {
+          "id": "color-theory-class",
+          "prompt": "Have you ever taken a class or received formal instruction in color theory? ",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "color-theory-knowledge",
+          "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? If you're unsure, give your best guess.",
+          "type": "longText",
+          "placeholder": "Please name the color you get."
+        },
+        {
+          "id": "color-theory-knowledge-2",
+          "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity? If you're unsure, give your best guess.",
+          "type": "longText",
+          "placeholder": "Please name the color you get."
+        }
+      ]
+    }
+  },
+  "importedLibraries": [
+    "color-blindness",
+    "demographics"
+  ],
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "consent-form",
+      "introduction",
+      "$color-blindness.se.short-test",
+      "color-difference-introduction",
+      "color-difference-1",
+      "color-difference-2",
+      "color-difference-3",
+      "keyboard-manual",
+      {
+        "components": [
+          "scatterplot-1",
+          "scatterplot-2",
+          "scatterplot-3",
+          "scatterplot-4",
+          "scatterplot-5",
+          "scatterplot-6",
+          "scatterplot-7",
+          "scatterplot-8",
+          "scatterplot-9",
+          "scatterplot-10",
+          "scatterplot-11",
+          "scatterplot-12",
+          "scatterplot-13",
+          "scatterplot-14",
+          "scatterplot-15",
+          "scatterplot-16",
+          "scatterplot-17",
+          "scatterplot-18",
+          "scatterplot-19",
+          "scatterplot-20",
+          "scatterplot-21",
+          "scatterplot-22",
+          "scatterplot-23",
+          "scatterplot-24",
+          "scatterplot-25",
+          "scatterplot-26",
+          "scatterplot-27",
+          "scatterplot-28",
+          "scatterplot-29",
+          "scatterplot-30",
+          "scatterplot-31",
+          "scatterplot-32",
+          "scatterplot-33",
+          "scatterplot-34",
+          "scatterplot-35",
+          "scatterplot-36",
+          "scatterplot-37",
+          "scatterplot-38",
+          "scatterplot-39",
+          "scatterplot-40",
+          "scatterplot-41",
+          "scatterplot-42",
+          "scatterplot-43",
+          "scatterplot-44",
+          "scatterplot-45",
+          "scatterplot-46",
+          "scatterplot-47",
+          "scatterplot-48",
+          "scatterplot-49",
+          "scatterplot-50",
+          "scatterplot-51",
+          "scatterplot-52",
+          "scatterplot-53",
+          "scatterplot-54",
+          "scatterplot-55",
+          "scatterplot-56",
+          "scatterplot-57",
+          "scatterplot-58",
+          "scatterplot-59",
+          "scatterplot-60",
+          "scatterplot-61",
+          "scatterplot-62",
+          "scatterplot-63",
+          "scatterplot-64",
+          "scatterplot-65",
+          "scatterplot-66",
+          "scatterplot-67",
+          "scatterplot-68",
+          "scatterplot-69",
+          "scatterplot-70",
+          "scatterplot-71",
+          "scatterplot-72",
+          "scatterplot-samecolor-1",
+          "scatterplot-samecolor-2",
+          "scatterplot-samecolor-3",
+          "scatterplot-samecolor-4",
+          "scatterplot-largediff-1",
+          "scatterplot-largediff-2",
+          "scatterplot-largediff-3"
+        ],
+        "order": "random",
+        "interruptions": [
+          {
+            "spacing": 99999,
+            "firstLocation": 11,
+            "components": ["attention-check-1"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 22,
+            "components": ["attention-check-2"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 33,
+            "components": ["attention-check-3"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 44,
+            "components": ["attention-check-4"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 55,
+            "components": ["attention-check-5"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 66,
+            "components": ["attention-check-6"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 77,
+            "components": ["attention-check-7"]
+          },
+          {
+            "spacing": 1,
+            "firstLocation": 1,
+            "components": ["color-reset"]
+          }
+        ]
+      },
+      "$demographics.co.demographics",
+      "demographic-questionnaire-color-theory",
+      "demographic-questionnaire-makeup",
+      "thanks"
+    ]
+  }
+}

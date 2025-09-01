@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 208.25047985072848,
+        "y": 147.4956115405058,
+        "color": "#83639c",
+        "type": "target"
+      },
+      {
+        "x": 333.2504798507285,
+        "y": 147.4956115405058,
+        "color": "#7865ad",
+        "type": "target"
+      },
+      {
+        "x": 81.4387714663558,
+        "y": 142.22945385498147,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 225.03602602671054,
+        "y": 206.06378518253953,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 330.87396807970816,
+        "y": 212.22661335938335,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 240.24357089330232,
+        "y": 85.7049500251507,
+        "color": "#767676",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 2042.820622996763,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 15,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

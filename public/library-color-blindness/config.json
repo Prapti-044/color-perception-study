@@ -30,7 +30,7 @@
     }
   },
   "sequence": {
-    "order": "fixed",
+    "order": "latinSquare",
     "components": [
       "introduction",
       "$color-blindness.sequences.short-test",

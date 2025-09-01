@@ -2,7 +2,7 @@ name: Release new version
 
 on:
   pull_request:
-    branches: [main]
+    branches: [color-perception-study]
     types: [closed]
 
 jobs:

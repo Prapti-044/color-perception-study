@@ -1,0 +1,103 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 76.9867163253885,
+        "y": 38.559147446393865,
+        "color": "#79ac2d",
+        "type": "target"
+      },
+      {
+        "x": 201.9867163253885,
+        "y": 38.559147446393865,
+        "color": "#75ac41",
+        "type": "target"
+      },
+      {
+        "x": 342.1030640488925,
+        "y": 65.51352443336421,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 130.10699841871104,
+        "y": 78.7487557700732,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 318.1728807869657,
+        "y": 119.9258474075246,
+        "color": "#767676",
+        "type": "distractor"
+      },
+      {
+        "x": 197.23020883606497,
+        "y": 173.09760678354667,
+        "color": "#767676",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 2042.820622996763,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 15,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#a0a0a0",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

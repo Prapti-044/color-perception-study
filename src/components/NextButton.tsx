@@ -2,7 +2,7 @@ import { Alert, Button, Group } from '@mantine/core';
 import {
   JSX, useEffect, useMemo, useState,
 } from 'react';
-import { IconInfoCircle, IconAlertTriangle } from '@tabler/icons-react';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useNextStep } from '../store/hooks/useNextStep';
 import { IndividualComponent, ResponseBlockLocation } from '../parser/types';
@@ -111,7 +111,7 @@ export function NextButton({
             <Alert mt="md" title="Please wait" color="blue" icon={<IconInfoCircle />}>
               The next button will be enabled in
               {' '}
-              {Math.ceil((nextButtonEnableTime - timer) / 1000)}
+              {Math.ceil((nextButtonDisableTime - timer) / 1000)}
               {' '}
               seconds.
             </Alert>
