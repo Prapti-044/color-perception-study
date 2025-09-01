@@ -217,7 +217,7 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check-1",
+          "id": "attention-check1",
           "prompt": "How many o’s are there in Tomorrow? Select the correct answer.",
           "type": "radio",
           "requiredValue": "3",
@@ -243,7 +243,7 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check-2",
+          "id": "attention-check2",
           "prompt": "How many r’s are there in Strawberry? Select the correct answer.",
           "type": "radio",
           "requiredValue": "3",
@@ -269,7 +269,7 @@
       "type": "questionnaire",
       "response": [
         {
-          "id": "attention-check-3",
+          "id": "attention-check3",
           "prompt": "How many b’s are there in blueberry? Select the correct answer.",
           "type": "radio",
           "requiredValue": "2",
