@@ -14,8 +14,8 @@ from colorspacious import cspace_convert
 TOTAL_PLOTS = 3
 FIXED_RADIUS = 800  # Medium fixed radius
 GRAY_COLOR = "#727972"
-CHART_WIDTH = 500
-CHART_HEIGHT = 500
+CHART_WIDTH = 420
+CHART_HEIGHT = 420
 MIN_COORD = 0
 MAX_COORD = 10
 

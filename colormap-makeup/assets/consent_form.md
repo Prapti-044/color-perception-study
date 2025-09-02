@@ -2,10 +2,6 @@
 
 ### IRB Consent Form
 
-**Title of Research Study:** Evaluating Perception and Efficacy in Data Visualization
-
-
-**Introduction**  
 You are invited to take part in a research study. We are studying how people perceive and interpret colors in data visualizations to improve understanding of color perception.
  
 You will complete an online survey with visualization images and questions. It takes about **15 minutes** to complete the study.   

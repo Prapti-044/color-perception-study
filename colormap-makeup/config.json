@@ -812,7 +812,7 @@
         },
         {
           "id": "foundation-shade",
-          "prompt": "Which foundation do you typically use? Please specify the brand name and color shade to the best of your recollection. (For example, if you use the shade \"Warm Beige\" from the brand \"NARS\", please write \"NARS, Warm Beige\".) If not applicable, please write NA.",
+          "prompt": "What color foundation do you typically use? If you recall the brand name and color (e.g., 'NARS Warm Beige') off the top of your head, please list it. If not, describe to your best memory. If not applicable, please write NA.",
           "type": "longText",
           "placeholder": "Please name the brand and color shades of foundation you typically use to the best of your recollection."
         },
