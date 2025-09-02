@@ -3,17 +3,11 @@
 
 # Thank You for Your Participation!
 
-We would like to extend our gratitude for your participation in this research study on color perception.  
-
-Your time and participation is greatly valued in understanding the visual perception.   
+We appreciate your time and effort in this color perception study.    
 
 ### Purpose of the Study  
 
-The primary objective of this research is to investigate how individuals perceive and interpret colors across various visual stimuli.  
-
-Some tasks or questions may have appeared unusual or repetitive; this design is intentional.  
-
-By systematically analyzing responses, we aim to identify patterns in color perception and better understand the factors influencing individual differences.  
+This research explores how people perceive and interpret colors across visual stimuli. Some tasks may have seemed unusual or repetitive—this was intentional to study perception patterns and individual differences.  
 
 This study constitutes a **replication of the research conducted by Danielle Albers Szafir**, as documented in her paper:  
 
@@ -23,17 +17,12 @@ The purpose of this replication is to verify and extend her findings, thereby co
 
 #### Why Color Theory and Makeup Questions?
 
-You may have noticed that this study included questions about color theory (like mixing paint and light) and makeup-related color perception. These questions were specifically designed to gather data that will be used in our next research project, which focuses on understanding how individuals perceive foundation makeup palette colors. 
+These questions were included to support future research on how people perceive foundation makeup colors and to study how color training (e.g., hobbies or makeup experience) affects overall color perception. Your responses help us explore the link between general color perception and specific makeup preferences.
 
-In addition to generating further data regarding Dr. Szafir's findings, we also are investigating any effect of color training, e.g., through hobbies or make up, on perception. By analyzing your responses to these questions alongside the color difference tasks, we can better understand the relationship between general color perception abilities and specific makeup color preferences, ultimately helping to develop more understanding of the relationship between color perception and makeup preferences.
+### Confidentiality  
+All responses are confidential and reported only in aggregate.  
 
-
-
-We wish to assure you that all responses are treated with confidentiality and reported only in aggregate form.  
-
-On behalf of the research team, we express our appreciation for your voluntary participation.  
-
-For any questions or additional information regarding this study, please contact:  
-- **Researcher:** Shadmaan Hye, u1452119@utah.edu
+For questions, please contact:  
+**Researcher:** Shadmaan Hye, u1452119@utah.edu  
 
 <!-- </div> -->

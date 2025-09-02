@@ -28,7 +28,7 @@
     "color-difference-base": {
       "type": "website",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "In this study, you will be asked to decide whether two colors appear the same or different. When a pair of circles is shown in the scatterplot stimuli, please select **same** if the pair of colored points looks the same and **different** if they look different, then press  **Next** button to proceed to the next stimulus.",
+      "instruction": "In this study, you will see pairs of colored circles in scatterplots. Decide if they are the **Same** or **Different**, click **Check Answer** to verify the actual result, then press **Next** to continue.",
       "instructionLocation": "aboveStimulus",
       "path": "colormap-makeup/assets/color-difference.html",
       "response": [
@@ -47,6 +47,7 @@
       "provideFeedback": true,
       "allowFailedTraining": true,
       "trainingAttempts": 3
+
     },
     "scatterplot-base": {
       "type": "react-component",
@@ -153,12 +154,12 @@
         {
           "id": "accept",
           "prompt": "Do you consent to the study and wish to continue?",
-          "requiredValue": "Accept",
+          "requiredValue": "Yes",
           "location": "belowStimulus",
           "type": "radio",
           "options": [
-            "Decline",
-            "Accept"
+            "Yes",
+            "No"
           ]
         }
       ]
@@ -811,9 +812,9 @@
         },
         {
           "id": "foundation-shade",
-          "prompt": "Which foundation do you typically use? Please specify the brand name and color shade. (For example, if you use the shade \"Warm Beige\" from the brand \"NARS\", please write \"NARS, Warm Beige\".) If not applicable, please write NA.",
+          "prompt": "Which foundation do you typically use? Please specify the brand name and color shade to the best of your recollection. (For example, if you use the shade \"Warm Beige\" from the brand \"NARS\", please write \"NARS, Warm Beige\".) If not applicable, please write NA.",
           "type": "longText",
-          "placeholder": "Please name the brand and color shades of foundation you typically use."
+          "placeholder": "Please name the brand and color shades of foundation you typically use to the best of your recollection."
         },
         {
           "id": "makeup-products",
@@ -852,7 +853,7 @@
         },
         {
           "id": "color-theory-class",
-          "prompt": "Have you ever taken a class or received formal instruction in color theory?",
+          "prompt": "Have you ever taken a class or received formal instruction in color theory? ",
           "type": "radio",
           "options": [
             "Yes",
@@ -861,13 +862,13 @@
         },
         {
           "id": "color-theory-knowledge",
-          "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? ",
+          "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? If you're unsure, give your best guess.",
           "type": "longText",
           "placeholder": "Please name the color you get."
         },
         {
           "id": "color-theory-knowledge-2",
-          "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity?",
+          "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity? If you're unsure, give your best guess.",
           "type": "longText",
           "placeholder": "Please name the color you get."
         }
