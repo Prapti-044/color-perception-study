@@ -10,12 +10,14 @@ Participation is **voluntary**. You may withdraw at any time. No identifying inf
 
 
 **Risks and Benefits**
-- Risks: Minimal, similar to normal computer use, Benefits: Results may improve data visualization design.  
+- Risks: Minimal, similar to normal computer use
+- Benefits: Results may improve data visualization design.  
 
 **Contacts**  
 - Principal Investigators: Dr. Kate Isaacs, Dr. Andrew McNutt, University of Utah
 - Researcher: Shadmaan Hye, u1452119@utah.edu  
-- IRB: (801) 581-3655 | irb@hsc.utah.edu, Research Participant Advocate: (801) 581-3803 | participant.advocate@hsc.utah.edu  
+- IRB: (801) 581-3655 | irb@hsc.utah.edu
+- Research Participant Advocate: (801) 581-3803 | participant.advocate@hsc.utah.edu  
 
 **Consent**  
 By clicking **Agree**, you confirm that you:  

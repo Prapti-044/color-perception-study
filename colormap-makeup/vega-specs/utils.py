@@ -10,7 +10,7 @@ from colorspacious import cspace_convert
 import numpy as np
 
 # Default random seed for reproducible results
-DEFAULT_SEED = 43
+DEFAULT_SEED = 60
 
 def set_random_seed(seed=DEFAULT_SEED):
     """Set random seed for reproducible results"""
