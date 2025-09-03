@@ -21,9 +21,9 @@ def set_random_seed(seed=DEFAULT_SEED):
 
 GRAY_COLOR = "#737373"
 MIN_X_COORD = 0
-MAX_X_COORD = 10
+MAX_X_COORD = 50
 MIN_Y_COORD = 0
-MAX_Y_COORD = 10
+MAX_Y_COORD = 50
 
 # Default Assumptions for visual angle calculations
 PPI = 96  # Pixels per inch
@@ -238,7 +238,7 @@ def generate_test_pair(target_distance_coords, point_size, chart_width):
 def generate_random_points(n, point_size, excluded_points, chart_width):
     """Generate n random points with minimum distance constraints"""
     points = []
-    min_distance = calculate_point_radius_in_coords(point_size, chart_width) * 2.5
+    min_distance = calculate_point_radius_in_coords(point_size, chart_width) * 4.0
     padding = calculate_padding(point_size, chart_width)
     blend_factor = calculate_distribution_blend(point_size)
     attempts = 0
@@ -263,9 +263,9 @@ def create_base_vega_lite_spec(data_values, point_size, num_points, description,
         "data": {"values": data_values},
         "mark": {"type": "point", "filled": True, "size": point_size},
         "encoding": {
-            "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, 
+            "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 50], "zero": False}, 
                   "axis": {"title": "", "grid": False, "domainColor": "#808080", "domainWidth": 1, "labels": False}},
-            "y": {"field": "y", "type": "quantitative", "scale": {"domain": [0, 10], "zero": False}, 
+            "y": {"field": "y", "type": "quantitative", "scale": {"domain": [0, 50], "zero": False}, 
                   "axis": {"title": "", "grid": False, "domainColor": "#808080", "domainWidth": 1, "labels": False}},
             "color": {"field": "color", "type": "nominal", "scale": None, "legend": None}
         },
