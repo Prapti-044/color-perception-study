@@ -316,7 +316,7 @@
     "scatterplot-1": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-100.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-1.json"
       }
     },
     "scatterplot-2": {
