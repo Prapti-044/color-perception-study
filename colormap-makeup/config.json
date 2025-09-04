@@ -322,7 +322,7 @@
     "scatterplot-2": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-74.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-2.json"
       }
     },
     "scatterplot-3": {
@@ -364,7 +364,7 @@
     "scatterplot-9": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-75.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-80.json"
       }
     },
     "scatterplot-10": {
@@ -586,7 +586,7 @@
     "scatterplot-46": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-76.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-10.json"
       }
     },
     "scatterplot-47": {
@@ -610,7 +610,7 @@
     "scatterplot-50": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-77.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-13.json"
       }
     },
     "scatterplot-51": {
@@ -640,7 +640,7 @@
     "scatterplot-55": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-78.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-54.json"
       }
     },
     "scatterplot-56": {
@@ -652,13 +652,13 @@
     "scatterplot-57": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-79.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-57.json"
       }
     },
     "scatterplot-58": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-58.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-81.json"
       }
     },
     "scatterplot-59": {
@@ -670,13 +670,13 @@
     "scatterplot-60": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-80.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-60.json"
       }
     },
     "scatterplot-61": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-61.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-82.json"
       }
     },
     "scatterplot-62": {
@@ -694,7 +694,7 @@
     "scatterplot-64": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-64.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-83.json"
       }
     },
     "scatterplot-65": {
@@ -718,7 +718,7 @@
     "scatterplot-68": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-68.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-85.json"
       }
     },
     "scatterplot-69": {
@@ -736,7 +736,7 @@
     "scatterplot-71": {
       "baseComponent": "scatterplot-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-81.json"
+        "vegaSpecPath": "vega-specs/scatterplots/scatterplot-71.json"
       }
     },
     "scatterplot-72": {
@@ -754,13 +754,13 @@
     "scatterplot-samecolor-2": {
       "baseComponent": "scatterplot-samecolor-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-5.json"
+        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-6.json"
       }
     },
     "scatterplot-samecolor-3": {
       "baseComponent": "scatterplot-samecolor-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-8.json"
+        "vegaSpecPath": "vega-specs/scatterplots_same/scatterplot-3.json"
       }
     },
     "scatterplot-samecolor-4": {
@@ -778,7 +778,7 @@
     "scatterplot-largediff-2": {
       "baseComponent": "scatterplot-largediff-base",
       "parameters": {
-        "vegaSpecPath": "vega-specs/scatterplots_largediff/scatterplot-4.json"
+        "vegaSpecPath": "vega-specs/scatterplots_largediff/scatterplot-2.json"
       }
     },
     "scatterplot-largediff-3": {
