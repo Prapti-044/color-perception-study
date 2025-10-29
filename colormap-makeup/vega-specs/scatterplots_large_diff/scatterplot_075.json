@@ -1,0 +1,101 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 170.86367294700148,
+        "y": 86.7343832538779,
+        "color": "#5f317f",
+        "type": "target"
+      },
+      {
+        "x": 295.8636729470015,
+        "y": 86.7343832538779,
+        "color": "#b07bd0",
+        "type": "target"
+      },
+      {
+        "x": 169.5900158674129,
+        "y": 142.8520713102918,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 161.94339924909136,
+        "y": 208.46199621219964,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 260.5803258996631,
+        "y": 147.71499027753185,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 98.17403963790734,
+        "y": 173.97468019673897,
+        "color": "#808080",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 1984.5024591083484,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}
