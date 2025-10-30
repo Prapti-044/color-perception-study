@@ -1,0 +1,120 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 145.54300710905125,
+        "y": 194.447008964953,
+        "color": "#84a2b2",
+        "type": "target"
+      },
+      {
+        "x": 270.54300710905125,
+        "y": 194.447008964953,
+        "color": "#929eb2",
+        "type": "target"
+      },
+      {
+        "x": 280.4983377133272,
+        "y": 62.0115226597229,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 176.6729965530129,
+        "y": 57.228983281659026,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 191.59276137466776,
+        "y": 153.03452057899008,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 26.729418557753775,
+        "y": 147.45830446191178,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 71.61800643377755,
+        "y": 125.66779180214077,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 88.58426702141158,
+        "y": 171.2078302656247,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 309.4436255017325,
+        "y": 112.4124502104276,
+        "color": "#808080",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 1134.1149479459152,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 72.11612933761546,
+        "y": 54.9191669686858,
+        "color": "#8f684e",
+        "type": "target"
+      },
+      {
+        "x": 197.11612933761546,
+        "y": 54.9191669686858,
+        "color": "#906848",
+        "type": "target"
+      },
+      {
+        "x": 39.47204158803939,
+        "y": 129.89937586488264,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 243.59181475027285,
+        "y": 104.03128670913664,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 242.3717319805497,
+        "y": 189.5544971921076,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 326.3744209617154,
+        "y": 176.8059377728944,
+        "color": "#808080",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 2042.820622996763,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

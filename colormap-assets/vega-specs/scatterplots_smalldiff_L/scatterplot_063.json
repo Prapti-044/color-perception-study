@@ -1,0 +1,102 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 171.36910523851398,
+        "y": 171.64176727828303,
+        "color": "#6c9aa7",
+        "type": "target"
+      },
+      {
+        "x": 296.36910523851395,
+        "y": 171.64176727828303,
+        "color": "#76a4b2",
+        "type": "target"
+      },
+      {
+        "x": 223.89319012748587,
+        "y": 129.80431558809082,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 290.04220959489356,
+        "y": 102.60143591770431,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 250.7923237427216,
+        "y": 194.85424557348017,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 141.33993394970167,
+        "y": 213.77124708815327,
+        "color": "#808080",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 2042.820622996763,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -1,7 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.0/src/parser/GlobalConfigSchema.json",
   "configsList": [
-    "colormap-makeup",
+    "colormap-makeup-L",
+    "colormap-makeup-a",
+    "colormap-makeup-b",
     "tutorial",
     "demo-html",
     "demo-html-input",
@@ -52,8 +54,14 @@
     "test-step-logic"
   ],
   "configs": {
-    "colormap-makeup": {
-      "path": "colormap-makeup/config.json"
+    "colormap-makeup-L": {
+      "path": "colormap-makeup-L/config.json"
+    },
+    "colormap-makeup-a": {
+      "path": "colormap-makeup-a/config.json"
+    },
+    "colormap-makeup-b": {
+      "path": "colormap-makeup-b/config.json"
     },
     "tutorial": {
       "path": "tutorial/config.json"

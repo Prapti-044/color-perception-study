@@ -1,0 +1,174 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 375,
+  "height": 250,
+  "background": "white",
+  "padding": 0,
+  "data": {
+    "values": [
+      {
+        "x": 77.48005560567395,
+        "y": 185.3319083438095,
+        "color": "#ad7686",
+        "type": "target"
+      },
+      {
+        "x": 202.48005560567395,
+        "y": 185.3319083438095,
+        "color": "#c78e9e",
+        "type": "target"
+      },
+      {
+        "x": 142.48121432258222,
+        "y": 231.28396056569912,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 276.9781067574767,
+        "y": 33.96689797125569,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 315.0553978481556,
+        "y": 26.241569275365265,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 334.7247061796792,
+        "y": 51.29386625168166,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 142.51651745210256,
+        "y": 186.1928065030777,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 55.28989883943174,
+        "y": 189.13799911804722,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 65.19723337022137,
+        "y": 137.3623662231497,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 343.25649172238514,
+        "y": 33.150950934449256,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 276.0372240091835,
+        "y": 178.16246525869684,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 187.5589641525863,
+        "y": 150.43027717941763,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 91.18963032060087,
+        "y": 14.25761097700071,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 309.44564630564605,
+        "y": 104.54663002596816,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 56.182889712931626,
+        "y": 61.41347596349917,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 249.79466397542345,
+        "y": 162.28714287093803,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 214.15081282187936,
+        "y": 148.24698471914732,
+        "color": "#808080",
+        "type": "distractor"
+      },
+      {
+        "x": 135.54502869561748,
+        "y": 72.71819428684091,
+        "color": "#808080",
+        "type": "distractor"
+      }
+    ]
+  },
+  "mark": {
+    "type": "circle",
+    "size": 283.5287369864788,
+    "opacity": 1
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          375
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": false,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          250
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "ticks": true,
+        "tickCount": 10,
+        "labels": false,
+        "title": null,
+        "domainColor": "#808080",
+        "domainWidth": 1
+      }
+    },
+    "color": {
+      "field": "color",
+      "type": "nominal",
+      "scale": null,
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}
