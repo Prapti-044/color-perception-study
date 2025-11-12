@@ -329,18 +329,19 @@
       "response": [
         {
           "id": "attention-check5",
-          "prompt": "Which word contains more vowels?",
+          "prompt": "Do NOT choose the first option. Choose the third.?",
           "type": "radio",
           "options": [
-            "apple",
-            "orange"
+            "Option 1",
+            "Option 2", 
+            "Option 3"
           ]
         }
       ],
       "correctAnswer": [
         {
           "id": "attention-check5",
-          "answer": "orange"
+          "answer": "Option 3"
         }
       ]
     },
@@ -369,7 +370,7 @@
       "response": [
         {
           "id": "attention-check7",
-          "prompt": "Which of these words contains double letters?",
+          "prompt": "Which of these words contains two of the same letter?",
           "type": "radio",
           "options": [
             "melon",
