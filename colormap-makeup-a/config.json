@@ -36,7 +36,7 @@
           "id": "color-difference",
           "prompt": "Are the two colors the same or different?",
           "required": true,
-          "location": "belowStimulus",
+          "location": "aboveStimulus",
           "type": "radio",
           "options": [
             "Same",
