@@ -36,7 +36,7 @@
           "id": "color-difference",
           "prompt": "Are the two colors the same or different?",
           "required": true,
-          "location": "belowStimulus",
+          "location": "aboveStimulus",
           "type": "radio",
           "options": [
             "Same",
@@ -300,6 +300,88 @@
         {
           "id": "attention-check3",
           "answer": "2"
+        }
+      ]
+    },
+    "attention-check-4": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check4",
+          "prompt": "Please type the third letter of the word banana.",
+          "type": "radio",
+          "options": [
+            "a",
+            "n",
+            "b"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check4",
+          "answer": "n"
+        }
+      ]
+    },
+    "attention-check-5": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check5",
+          "prompt": "Which word contains more vowels?",
+          "type": "radio",
+          "options": [
+            "apple",
+            "orange"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check5",
+          "answer": "orange"
+        }
+      ]
+    },
+    "attention-check-6": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check6",
+          "prompt": "Which word contains more vowels?",
+          "type": "radio",
+          "options": [
+            "apple",
+            "orange"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check6",
+          "answer": "orange"
+        }
+      ]
+    },
+    "attention-check-7": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "attention-check7",
+          "prompt": "Which of these words contains double letters?",
+          "type": "radio",
+          "options": [
+            "melon",
+            "apple",
+            "plum"
+          ]
+        }
+      ],
+      "correctAnswer": [
+        {
+          "id": "attention-check7",
+          "answer": "apple"
         }
       ]
     },
@@ -975,18 +1057,38 @@
         "interruptions": [
           {
             "spacing": 99999,
-            "firstLocation": 20,
+            "firstLocation": 11,
             "components": ["attention-check-1"]
           },
           {
             "spacing": 99999,
-            "firstLocation": 44,
+            "firstLocation": 22,
             "components": ["attention-check-2"]
           },
           {
             "spacing": 99999,
-            "firstLocation": 65,
+            "firstLocation": 33,
             "components": ["attention-check-3"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 44,
+            "components": ["attention-check-4"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 55,
+            "components": ["attention-check-5"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 66,
+            "components": ["attention-check-6"]
+          },
+          {
+            "spacing": 99999,
+            "firstLocation": 77,
+            "components": ["attention-check-7"]
           },
           {
             "spacing": 1,
