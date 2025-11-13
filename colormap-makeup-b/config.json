@@ -28,7 +28,7 @@
     "color-difference-base": {
       "type": "website",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "In this study, you will see pairs of colored circles in scatterplots. Decide if they are the **Same** or **Different**, click **Check Answer** to verify the actual result, then press **Next** to continue.",
+      "instruction": "In each trial, you will see two colored points within a scatterplot. Determine whether the colors are the **same** or **different**. Check your answer with the **Check Answer** button, and then press **Enter** or **Next** to continue.",
       "instructionLocation": "aboveStimulus",
       "path": "colormap-assets/color-difference.html",
       "response": [
@@ -52,7 +52,7 @@
       "type": "react-component",
       "path": "colormap-makeup/vega-scatterplot.tsx",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
       "instructionLocation": "aboveStimulus",
       "response": [
         {
@@ -75,7 +75,7 @@
       "type": "react-component",
       "path": "colormap-makeup/vega-scatterplot.tsx",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
       "instructionLocation": "aboveStimulus",
       "response": [
         {
@@ -98,7 +98,7 @@
       "type": "react-component",
       "path": "colormap-makeup/vega-scatterplot.tsx",
       "nextButtonLocation": "belowStimulus",
-      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different.",
+      "instruction": "Are the two colored points the same or different? Please press **f** for same and **j** for different. Then press **Enter** or click **Next** to continue.",
       "instructionLocation": "aboveStimulus",
       "response": [
         {
@@ -920,6 +920,12 @@
     "demographic-questionnaire-color-theory": {
       "type": "questionnaire",
       "response": [
+        {
+          "id": "strategies",
+          "prompt": "Did you use any particular strategies to complete the task. If yes, please specify the strategies.",
+          "type": "longText",
+          "placeholder": "Please explain the strategies you used."
+        },
         {
           "id": "color-hobby",
           "prompt": "Which of the following activities do you enjoy as a hobby? Check any of the activities below that you enjoy as a hobby.",

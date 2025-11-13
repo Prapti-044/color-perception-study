@@ -22,7 +22,7 @@ You'll have two options:
 1. Select **Same** or **Different**.  
 2. Click **Check Answer**.  
    - If wrong, you’ll get up to **2 more tries**.  
-3. Once correct, click **Next** to continue. 
+3. Once correct, hit **Enter** or click **Next** to continue. 
 
 
 ## Ready to Begin?

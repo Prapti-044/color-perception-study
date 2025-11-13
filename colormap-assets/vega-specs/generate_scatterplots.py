@@ -228,7 +228,7 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
             color2 = lab_to_rgb(row['L'], row['a'], row['b_origin'])
     
     # Gray color for distractors
-    gray_color = "#808080"
+    gray_color = "#767676"
     
     # Build data
     data_values = []
@@ -261,10 +261,11 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
                 "scale": {"domain": [0, width]},
                 "axis": {
                     "grid": False,
-                    "ticks": False,
+                    "ticks": True,
+                    "tickCount": 15,
                     "labels": False,
                     "title": None,
-                    "domainColor": "#808080",
+                    "domainColor": "#a0a0a0",
                     "domainWidth": 1
                 }
             },
@@ -278,7 +279,7 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
                     "tickCount": 10,
                     "labels": False,
                     "title": None,
-                    "domainColor": "#808080",
+                    "domainColor": "#a0a0a0",
                     "domainWidth": 1
                 }
             },
