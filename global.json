@@ -1,10 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.0/src/parser/GlobalConfigSchema.json",
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.2/src/parser/GlobalConfigSchema.json",
   "configsList": [
     "colormap-makeup-L",
     "colormap-makeup-a",
     "colormap-makeup-b",
     "tutorial",
+    "tutorial-replication",
     "demo-html",
     "demo-html-input",
     "demo-screen-recording",
@@ -65,6 +66,9 @@
     },
     "tutorial": {
       "path": "tutorial/config.json"
+    },
+    "tutorial-replication": {
+      "path": "tutorial/replication-config.json"
     },
     "demo-video-slider": {
       "path": "demo-video-slider/config.json"
