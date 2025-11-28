@@ -166,6 +166,9 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
         height: Plot height in pixels
         point_diameter_degrees: Point diameter in degrees of visual angle
         diff_type: Type of difference ('small', 'none', or 'large')
+    
+    Returns:
+        tuple: (spec, metadata) where spec is the Vega-Lite spec and metadata is a dict
     """
     
     # Convert visual angle to pixels
@@ -199,31 +202,52 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
         n_distractors, width, height, point_radius, avoid_points=target_points
     )
     
-    # Get colors for target points based on diff_type
+    # Get colors and LAB values for target points based on diff_type
+    lab1 = {}
+    lab2 = {}
+    delta_e = 0
+    
     if diff_type == 'none':
         # Both points same color
+        lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+        lab2 = lab1.copy()
         color1 = lab_to_rgb(row['L'], row['a'], row['b'])
         color2 = color1
+        delta_e = 0
     elif diff_type == 'large':
         # Apply large DE of 30 on a random axis
+        delta_e = 30
         if axis == 'L':
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L'] + 30), "a": float(row['a']), "b": float(row['b'])}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L'] + 30, row['a'], row['b'])
         elif axis == 'a':
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L']), "a": float(row['a'] + 30), "b": float(row['b'])}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L'], row['a'] + 30, row['b'])
         else:  # axis == 'b'
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'] + 30)}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L'], row['a'], row['b'] + 30)
     else:  # diff_type == 'small'
         # Get colors for target points from merged data
+        delta_e = float(row['DE']) if 'DE' in row else 0
         if axis == 'L':
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L_origin']), "a": float(row['a']), "b": float(row['b'])}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L_origin'], row['a'], row['b'])
         elif axis == 'a':
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L']), "a": float(row['a_origin']), "b": float(row['b'])}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L'], row['a_origin'], row['b'])
         else:  # axis == 'b'
+            lab1 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b'])}
+            lab2 = {"L": float(row['L']), "a": float(row['a']), "b": float(row['b_origin'])}
             color1 = lab_to_rgb(row['L'], row['a'], row['b'])
             color2 = lab_to_rgb(row['L'], row['a'], row['b_origin'])
     
@@ -295,7 +319,33 @@ def create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, di
         }
     }
     
-    return spec
+    # Create metadata
+    metadata = {
+        "axis": axis,
+        "diff_type": diff_type,
+        "delta_e": delta_e,
+        "point_radius_pixels": float(point_radius),
+        "point_diameter_degrees": float(point_diameter_degrees),
+        "point_area_pixels": float(point_area),
+        "plot_width": width,
+        "plot_height": height,
+        "target_color1_hex": color1,
+        "target_color2_hex": color2,
+        "target_color1_lab": lab1,
+        "target_color2_lab": lab2,
+        "distractor_color_hex": gray_color,
+        "target_positions": [
+            {"x": float(target_x1), "y": float(target_y)},
+            {"x": float(target_x2), "y": float(target_y)}
+        ],
+        "target_separation_pixels": 125.0,
+        "n_distractors": n_distractors,
+        "n_total_points": n_distractors + 2,
+        "ppi": PPI,
+        "viewing_distance_inches": DISTANCE_FROM_VIEW_SCREEN_INCHES
+    }
+    
+    return spec, metadata
 
 
 def generate_scatterplots(merged_df, axis, output_dir, diff_type='small'):
@@ -306,25 +356,39 @@ def generate_scatterplots(merged_df, axis, output_dir, diff_type='small'):
         axis: Which axis to test ('L', 'a', 'b')
         output_dir: Output directory path
         diff_type: Type of difference ('small', 'none', or 'large')
+    
+    Returns:
+        list: List of metadata dictionaries for each generated scatterplot
     """
     os.makedirs(output_dir, exist_ok=True)
     
     width = 375
     height = 250
     
+    metadata_list = []
+    
     for idx, row in merged_df.iterrows():
         point_diameter_degrees = row['Width']
-        spec = create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, diff_type)
+        spec, metadata = create_scatterplot_spec(row, axis, width, height, point_diameter_degrees, diff_type)
         
         # Create filename
         filename = f"scatterplot_{idx:03d}.json"
         filepath = os.path.join(output_dir, filename)
         
+        # Add file information to metadata
+        metadata['filename'] = filename
+        metadata['filepath'] = filepath
+        metadata['output_directory'] = output_dir
+        metadata['index'] = int(idx)
+        
         # Save specification
         with open(filepath, 'w') as f:
             json.dump(spec, f, indent=2)
         
+        metadata_list.append(metadata)
         print(f"Generated: {filepath}")
+    
+    return metadata_list
 
 
 # Expand diff values (interleave positive and negative)
@@ -337,15 +401,21 @@ merged_small_diff_L = create_merged_diff(small_diff, L_values_expanded, 'L')
 merged_small_diff_a = create_merged_diff(small_diff, a_values_expanded, 'a')
 merged_small_diff_b = create_merged_diff(small_diff, b_values_expanded, 'b')
 
+# Collect all metadata
+all_metadata = []
+
 # Generate small diff scatterplots
 print("Generating scatterplots for L axis (small diff)...")
-generate_scatterplots(merged_small_diff_L, 'L', os.path.join(base_dir, 'scatterplots_smalldiff_L'))
+metadata_L = generate_scatterplots(merged_small_diff_L, 'L', os.path.join(base_dir, 'scatterplots_smalldiff_L'))
+all_metadata.extend(metadata_L)
 
 print("\nGenerating scatterplots for a axis (small diff)...")
-generate_scatterplots(merged_small_diff_a, 'a', os.path.join(base_dir, 'scatterplots_smalldiff_a'))
+metadata_a = generate_scatterplots(merged_small_diff_a, 'a', os.path.join(base_dir, 'scatterplots_smalldiff_a'))
+all_metadata.extend(metadata_a)
 
 print("\nGenerating scatterplots for b axis (small diff)...")
-generate_scatterplots(merged_small_diff_b, 'b', os.path.join(base_dir, 'scatterplots_smalldiff_b'))
+metadata_b = generate_scatterplots(merged_small_diff_b, 'b', os.path.join(base_dir, 'scatterplots_smalldiff_b'))
+all_metadata.extend(metadata_b)
 
 # Generate no diff scatterplots (3 scatterplots with same color targets)
 print("\nGenerating no diff scatterplots...")
@@ -357,11 +427,20 @@ output_dir_nodiff = os.path.join(base_dir, 'scatterplots_no_diff')
 os.makedirs(output_dir_nodiff, exist_ok=True)
 
 for idx, row in no_diff_with_width.iterrows():
-    spec = create_scatterplot_spec(row, None, 375, 250, row['Width'], diff_type='none')
+    spec, metadata = create_scatterplot_spec(row, None, 375, 250, row['Width'], diff_type='none')
     filename = f"scatterplot_{idx:03d}.json"
     filepath = os.path.join(output_dir_nodiff, filename)
+    
+    # Add file information to metadata
+    metadata['filename'] = filename
+    metadata['filepath'] = filepath
+    metadata['output_directory'] = output_dir_nodiff
+    metadata['index'] = int(idx)
+    
     with open(filepath, 'w') as f:
         json.dump(spec, f, indent=2)
+    
+    all_metadata.append(metadata)
     print(f"Generated: {filepath}")
 
 # Generate large diff scatterplots (4 scatterplots with DE=30)
@@ -377,11 +456,30 @@ os.makedirs(output_dir_largediff, exist_ok=True)
 axes_cycle = ['L', 'a', 'b', 'L']
 for i, (idx, row) in enumerate(large_diff_with_width.iterrows()):
     axis = axes_cycle[i]
-    spec = create_scatterplot_spec(row, axis, 375, 250, row['Width'], diff_type='large')
+    spec, metadata = create_scatterplot_spec(row, axis, 375, 250, row['Width'], diff_type='large')
     filename = f"scatterplot_{idx:03d}.json"
     filepath = os.path.join(output_dir_largediff, filename)
+    
+    # Add file information to metadata
+    metadata['filename'] = filename
+    metadata['filepath'] = filepath
+    metadata['output_directory'] = output_dir_largediff
+    metadata['index'] = int(idx)
+    
     with open(filepath, 'w') as f:
         json.dump(spec, f, indent=2)
+    
+    all_metadata.append(metadata)
     print(f"Generated: {filepath} (axis: {axis})")
 
-print("\nAll scatterplots generated successfully!")
+# Write all metadata to a single JSON file
+metadata_filepath = os.path.join(base_dir, 'scatterplots_metadata.json')
+with open(metadata_filepath, 'w') as f:
+    json.dump({
+        "generated_date": pd.Timestamp.now().isoformat(),
+        "total_scatterplots": len(all_metadata),
+        "scatterplots": all_metadata
+    }, f, indent=2)
+
+print(f"\nAll scatterplots generated successfully!")
+print(f"Metadata written to: {metadata_filepath}")
