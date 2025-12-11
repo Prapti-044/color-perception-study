@@ -8,12 +8,14 @@
 
 **Researcher:** Shadmaan Hye, u1452119@utah.edu
 
+__**Attention:** Some levels will display colors that are obviously the same or largely different. These are attention check stimuli designed to ensure you are carefully completing the study. You are expected to answer these correctly. **Failure to correctly answer these stimuli questions may result in not receiving payment.**__ 
+
 ## Introduction  
 You are invited to take part in a research study. The purpose of this research study is to develop knowledge regarding how various people perceive and interpret colors. By improving understanding of how well people can perceive colors and perform tasks given some plots, we are able to better design and recommend users insights in color perception.
 We value your time and willingness to help us improve our understanding of visual perception.  
 
 ## Tasks 
-If you agree, you will participate you will complete an online survey, where you will be shown images of data visualizations and their components and then asked to answer some questions with them. The entire process should take no more than **15 minutes**. 
+If you agree, you will participate you will complete an online survey, where you will be shown images of data visualizations and their components and then asked to answer some questions with them. The entire process should take no more than **15 minutes**.
 
 ## Voluntary Participation  
 Your participation is **completely voluntary**. You are free to withdraw consent and discontinue participation in the interview at any time for any reason without penalty or loss of benefits. 

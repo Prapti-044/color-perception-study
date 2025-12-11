@@ -847,25 +847,25 @@
     "scatterplot-samecolor-4": {
       "baseComponent": "scatterplot-samecolor-base",
       "parameters": {
-        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_072.json"
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_no_diff/scatterplot_075.json"
       }
     },
     "scatterplot-largediff-1": {
       "baseComponent": "scatterplot-largediff-base",
       "parameters": {
-        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_075.json"
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_076.json"
       }
     },
     "scatterplot-largediff-2": {
       "baseComponent": "scatterplot-largediff-base",
       "parameters": {
-        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_076.json"
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_077.json"
       }
     },
     "scatterplot-largediff-3": {
       "baseComponent": "scatterplot-largediff-base",
       "parameters": {
-        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_077.json"
+        "vegaSpecPath": "/colormap-assets/vega-specs/scatterplots_large_diff/scatterplot_078.json"
       }
     },
     "demographic-questionnaire-makeup": {
