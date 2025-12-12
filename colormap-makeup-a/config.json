@@ -271,7 +271,7 @@
       "correctAnswer": [
         {
           "id": "attention-check2",
-          "answer": "2"
+          "answer": "3"
         }
       ]
     },
@@ -329,7 +329,7 @@
       "response": [
         {
           "id": "attention-check5",
-          "prompt": "Do NOT choose the first option. Choose the third.?",
+          "prompt": "Do NOT choose the first option. Choose the third.",
           "type": "radio",
           "options": [
             "Option 1",
@@ -950,13 +950,13 @@
         },
         {
           "id": "color-theory-knowledge",
-          "prompt": "What color do you get by mixing equal amounts of red and yellow paint? If you're unsure, give your best guess.",
+          "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? If you're unsure, give your best guess.",
           "type": "longText",
           "placeholder": "Please name the color you get."
         },
         {
           "id": "color-theory-knowledge-2",
-          "prompt": "What is the result of mixing red, green, and blue light in equal intensity? If you're unsure, give your best guess.",
+          "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity? If you're unsure, give your best guess.",
           "type": "longText",
           "placeholder": "Please name the color you get."
         }
@@ -979,7 +979,6 @@
       "color-difference-3",
       "keyboard-manual",
       {
-        
         "components": [
           "scatterplot-1",
           "scatterplot-2",
