@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.4.1/src/parser/GlobalConfigSchema.json",
   "configsList": [
+    "color-vision-perception",
     "colormap-makeup-L",
     "colormap-makeup-a",
     "colormap-makeup-b",
@@ -58,6 +59,9 @@
     "test-step-logic"
   ],
   "configs": {
+    "color-vision-perception": {
+      "path": "color-vision-perception/config.json"
+    },
     "colormap-makeup-L": {
       "path": "colormap-makeup-L/config.json"
     },

@@ -49,7 +49,7 @@ export function useCurrentStep() {
 }
 
 const modules = import.meta.glob(
-  '../public/**/*.{mjs,js,mts,ts,jsx,tsx}',
+  ['../public/**/*.{mjs,js,mts,ts,jsx,tsx}', '!**/*.spec.*'],
   { eager: true },
 );
 

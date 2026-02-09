@@ -10,7 +10,7 @@ import { useCurrentIdentifier } from '../routes/utils';
 import { ErrorBoundary } from './ErrorBoundary';
 
 const modules = import.meta.glob(
-  '../public/**/*.{mjs,js,mts,ts,jsx,tsx}',
+  ['../public/**/*.{mjs,js,mts,ts,jsx,tsx}', '!**/*.spec.*'],
   { eager: true },
 );
 
