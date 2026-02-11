@@ -534,18 +534,6 @@ export default function DirectionStimuli({
         paddingTop: '2rem',
       }}
     >
-      {/* Title */}
-      <h2
-        style={{
-          color: '#3b6178',
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          margin: 0,
-        }}
-      >
-        {practice ? 'Practice — Find the opening of the circle!' : 'Find the opening of the circle!'}
-      </h2>
-
       {/* Counters and practice hint */}
       <div style={{ textAlign: 'center' }}>
         {!practice && setIndex !== undefined && totalSets !== undefined && (
@@ -565,6 +553,46 @@ export default function DirectionStimuli({
             {' '}
             {totalSets}
           </p>
+        )}
+        {practice && (
+          <div
+            style={{
+              marginTop: '0.75rem',
+              maxWidth: '56rem',
+              textAlign: 'left',
+              color: '#666',
+              fontSize: '0.95rem',
+              lineHeight: 1.5,
+            }}
+          >
+            <h3
+              style={{
+                margin: '0 0 0.5rem 0',
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: '#3b6178',
+              }}
+            >
+              How the trials work
+            </h3>
+            <p style={{ margin: '0.25rem 0' }}>
+              We will show you a colored image with a circle in it, your task is to identify where the{' '}
+              <strong><em>opening of the circle is in the image.</em></strong>
+            </p>
+            <p style={{ margin: '0.25rem 0' }}>
+              Click on the button on the side that you think the opening is to move on to the next image.
+            </p>
+            <p style={{ margin: '0.25rem 0' }}>
+              If you can&apos;t tell where the opening of the circle is, click on the <strong style={{ color: 'blue' }}>I CAN&apos;T TELL!</strong> button to the bottom
+              right.
+            </p>
+            <p style={{ margin: '0.25rem 0' }}>
+              Try to answer each one as fast as you can. There will be 12 sets of images.
+            </p>
+            <p style={{ margin: '0.25rem 0' }}>
+              The trials will look something like this..
+            </p>
+          </div>
         )}
         {practice && (
           <p

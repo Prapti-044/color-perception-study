@@ -1,28 +1,26 @@
-<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
-
-
 # Thank You for Your Participation!
 
-We appreciate your time and effort in this color perception study.    
+Thank you for completing the **Color Vision Discriminability Study**.
 
-### Purpose of the Study  
+### Purpose of the Study
 
-This research explores how people perceive and interpret colors across visual stimuli. Some tasks may have seemed unusual or repetitive—this was intentional to study perception patterns and individual differences.  
+This research studies how well people can distinguish between colors with intensity levels. Your responses help us understand color vision , discriminability and perception.
 
-This study constitutes a **replication of the research conducted by Danielle Albers Szafir**, as documented in her paper:  
+This study constitutes a **replication conducted by Katharina Reinecke** as documented in her paper.
 
-[Danielle Albers Szafir, "Modeling Color Difference for Visualization Design," Published in: IEEE Transactions on Visualization and Computer Graphics, 2018](https://ieeexplore.ieee.org/document/8017604).  
+[Katharina Reinecke, "Enabling Designers to Foresee Which Colors Users Cannot See", Published in: Conference on Human Factors in Computing Systems (CHI), 2016](https://dl.acm.org/doi/10.1145/2858036.2858077)
 
-The purpose of this replication is to verify and extend her findings, thereby contributing to a broader understanding of color perception across diverse populations.
-
-#### Why Color Theory and Makeup Questions?
+### Why Color Theory and Makeup Questions?
 
 These questions were included to support future research on how people perceive foundation makeup colors and to study how color training (e.g., hobbies or makeup experience) affects overall color perception. Your responses help us explore the link between general color perception and specific makeup preferences.
 
-### Confidentiality  
-All responses are confidential and reported only in aggregate.  
+### Confidentiality
 
-For questions, please contact:  
-**Researcher:** Shadmaan Hye, u1452119@utah.edu  
+All responses are confidential and reported only in aggregate.
 
-<!-- </div> -->
+### Contact
+
+For questions about this study, please contact:  
+**Researcher:** Shadmaan Hye, u1452119@utah.edu
+
+

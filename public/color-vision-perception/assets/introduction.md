@@ -1,19 +1,20 @@
 <!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
 
 
-# Welcome to the Color Perception Study!  
+# Welcome to the Color Vision Discriminability Study!  
 
 Thank you for taking the time to participate in this research study.  
 
 ### What You Will Do  
 
-You will see **visual plots** and answer questions about your **color perception**. Please respond as accurately as you can based on your natural judgment.   
+The experiment is going to study how well you can distinguish between colors.
 
-The study aims to understand how people perceive and interpret colors. 
+The test typically takes less than 5 minutes to complete.
 
-Please take your time and answer each question carefully.  
+For this experiment, we ask that you **stay in the same spot** and keep your **monitor settings the same** throughout the test!
 
-When you are ready, you may proceed to the study. 
+This test works best if you're in full screenmode, click **enter full screen** in the top right corner of your browser to go into full screen mode.
 
+Whenever you're ready, you may click **Next** to go to the next page.
 <!-- </div> -->
 

@@ -36,10 +36,18 @@
             ]
         }
     },
+    "importedLibraries": [
+        "demographics"
+      ],
     "components": {
         "introduction": {
             "type": "markdown",
             "path": "color-vision-perception/assets/introduction.md",
+            "response": []
+        },
+        "consent": {
+            "type": "markdown",
+            "path": "color-vision-perception/assets/consent.md",
             "response": []
         },
         "halfway-break": {
@@ -51,6 +59,101 @@
             "type": "markdown",
             "path": "color-vision-perception/assets/thanks.md",
             "response": []
+        },
+
+        "demographic-questionnaire-color-theory": {
+          "type": "questionnaire",
+          "response": [
+            {
+              "id": "strategies",
+              "prompt": "Did you use any particular strategies to complete the task. If yes, please specify the strategies.",
+              "type": "longText",
+              "placeholder": "Please explain the strategies you used."
+            },
+            {
+              "id": "color-hobby",
+              "prompt": "Which of the following activities do you enjoy as a hobby? Check any of the activities below that you enjoy as a hobby.",
+              "type": "checkbox",
+              "options": [
+                "Painting",
+                "Drawing",
+                "Graphic Design",
+                "Photography",
+                "I don't participate in any of the above"
+              ]
+            },
+            {
+              "id": "color-theory-class",
+              "prompt": "Have you ever taken a class or received formal instruction in color theory? ",
+              "type": "radio",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "color-theory-knowledge",
+              "prompt": "What color do you get by mixing equal amounts of red and yellow **paint**? If you're unsure, give your best guess.",
+              "type": "longText",
+              "placeholder": "Please name the color you get."
+            },
+            {
+              "id": "color-theory-knowledge-2",
+              "prompt": "What is the result of mixing red, green, and blue **light** in equal intensity? If you're unsure, give your best guess.",
+              "type": "longText",
+              "placeholder": "Please name the color you get."
+            }
+          ]
+        },
+
+        "demographic-questionnaire-makeup": {
+          "type": "questionnaire",
+          "response": [
+            {
+              "id": "makeup-familiarity",
+              "prompt": "Are you familiar with makeup?",
+              "type": "radio",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "use-makeup",
+              "prompt": "Do you use makeup in any form or capacity?",
+              "type": "radio",
+              "options": [
+                "I do not use makeup",
+                "I use it occasionally",
+                "I use it regularly",
+                "I use it professionally"
+              ]
+            },
+            {
+              "id": "foundation-shade",
+              "prompt": "What color foundation do you typically use? If you recall the brand name and color (e.g., 'NARS Warm Beige') off the top of your head, please list it. If not, describe to your best memory. If not applicable, please write NA.",
+              "type": "longText",
+              "placeholder": "Please name the brand and color shades of foundation you typically use to the best of your recollection."
+            },
+            {
+              "id": "makeup-products",
+              "prompt": "Which makeup products do you regularly use? Please select all that apply from the list below. ",
+              "type": "checkbox",
+              "options": [
+                "Foundation",
+                "Concealer",
+                "Blush",
+                "Bronzer",
+                "Eyeshadow",
+                "Eyeliner",
+                "Mascara",
+                "Lipstick",
+                "Lip Gloss",
+                "Setting Powder",
+                "None"
+              ]
+            }
+          ]
         },
 
         "practice": {
@@ -179,21 +282,22 @@
         "order": "fixed",
         "components": [
             "introduction",
+            "consent",
             "practice",
             {
-                "order": "random",
+                "order": "fixed",
                 "components": [
                     "set-v0-r1",
-                    "set-v0-r2",
-                    "set-v0-r3",
                     "set-v1-r1",
-                    "set-v1-r2",
-                    "set-v1-r3",
                     "set-v2-r1",
+                    "set-v3-r1",    
+                    "set-v0-r2",
+                    "set-v1-r2",
                     "set-v2-r2",
-                    "set-v2-r3",
-                    "set-v3-r1",
                     "set-v3-r2",
+                    "set-v0-r3",
+                    "set-v1-r3",
+                    "set-v2-r3",
                     "set-v3-r3"
                 ],
                 "interruptions": [
@@ -204,6 +308,9 @@
                     }
                 ]
             },
+            "$demographics.co.demographics",
+            "demographic-questionnaire-color-theory",
+            "demographic-questionnaire-makeup",
             "thanks"
         ]
     }
