@@ -48,11 +48,12 @@
         "consent": {
             "type": "markdown",
             "path": "color-vision-perception/assets/consent.md",
-            "response": []
+            "response": [],
+            "nextButtonText": "Agree"
         },
         "halfway-break": {
-            "type": "markdown",
-            "path": "color-vision-perception/assets/halfway-break.md",
+            "type": "website",
+            "path": "color-vision-perception/assets/halfway-break.html",
             "response": []
         },
         "thanks": {
@@ -161,119 +162,119 @@
             "description": "Unlimited practice with feedback — easy stimuli, random vector/direction/step",
             "parameters": {
                 "vector": 0,
-                "startingLocation": 175,
+                "maxLocation": 175,
                 "practice": true
-            }
-        },
-
-        "set-v0-r1": {
-            "baseComponent": "direction-stimuli",
-            "description": "Axis 0 (Red), repetition 1",
-            "parameters": {
-                "vector": 0,
-                "startingLocation": 175,
-                "totalSets": 12
-            }
-        },
-        "set-v0-r2": {
-            "baseComponent": "direction-stimuli",
-            "description": "Axis 0 (Red), repetition 2",
-            "parameters": {
-                "vector": 0,
-                "startingLocation": 175,
-                "totalSets": 12
-            }
-        },
-        "set-v0-r3": {
-            "baseComponent": "direction-stimuli",
-            "description": "Axis 0 (Red), repetition 3",
-            "parameters": {
-                "vector": 0,
-                "startingLocation": 175,
-                "totalSets": 12
             }
         },
 
         "set-v1-r1": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 1 (Blue), repetition 1",
+            "description": "Axis 0 (Red), repetition 1",
             "parameters": {
                 "vector": 1,
-                "startingLocation": 175,
-                "totalSets": 12
+                "totalSets": 12,
+                "maxLocation": 166
             }
         },
         "set-v1-r2": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 1 (Blue), repetition 2",
+            "description": "Axis 0 (Red), repetition 2",
             "parameters": {
                 "vector": 1,
-                "startingLocation": 175,
+                "maxLocation": 166,
                 "totalSets": 12
             }
         },
         "set-v1-r3": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 1 (Blue), repetition 3",
+            "description": "Axis 0 (Red), repetition 3",
             "parameters": {
                 "vector": 1,
-                "startingLocation": 175,
+                "maxLocation": 166,
                 "totalSets": 12
             }
         },
 
         "set-v2-r1": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 2 (Magenta), repetition 1",
+            "description": "Axis 1 (Blue), repetition 1",
             "parameters": {
                 "vector": 2,
-                "startingLocation": 175,
+                "maxLocation": 134,
                 "totalSets": 12
             }
         },
         "set-v2-r2": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 2 (Magenta), repetition 2",
+            "description": "Axis 1 (Blue), repetition 2",
             "parameters": {
                 "vector": 2,
-                "startingLocation": 175,
+                "maxLocation": 134,
                 "totalSets": 12
             }
         },
         "set-v2-r3": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 2 (Magenta), repetition 3",
+            "description": "Axis 1 (Blue), repetition 3",
             "parameters": {
                 "vector": 2,
-                "startingLocation": 175,
+                "maxLocation": 134,
                 "totalSets": 12
             }
         },
 
         "set-v3-r1": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 3 (Lightness), repetition 1",
+            "description": "Axis 2 (Magenta), repetition 1",
             "parameters": {
                 "vector": 3,
-                "startingLocation": 175,
+                "maxLocation": 174,
                 "totalSets": 12
             }
         },
         "set-v3-r2": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 3 (Lightness), repetition 2",
+            "description": "Axis 2 (Magenta), repetition 2",
             "parameters": {
                 "vector": 3,
-                "startingLocation": 175,
+                "maxLocation": 174,
                 "totalSets": 12
             }
         },
         "set-v3-r3": {
             "baseComponent": "direction-stimuli",
-            "description": "Axis 3 (Lightness), repetition 3",
+            "description": "Axis 2 (Magenta), repetition 3",
             "parameters": {
                 "vector": 3,
-                "startingLocation": 175,
+                "maxLocation": 174,
+                "totalSets": 12
+            }
+        },
+
+        "set-v4-r1": {
+            "baseComponent": "direction-stimuli",
+            "description": "Axis 3 (Lightness), repetition 1",
+            "parameters": {
+                "vector": 4,
+                "maxLocation": 106,
+                "totalSets": 12
+            }
+        },
+        "set-v4-r2": {
+            "baseComponent": "direction-stimuli",
+            "description": "Axis 3 (Lightness), repetition 2",
+            "parameters": {
+                "vector": 4,
+                "maxLocation": 106,
+                "totalSets": 12
+            }
+        },
+        "set-v4-r3": {
+            "baseComponent": "direction-stimuli",
+            "description": "Axis 3 (Lightness), repetition 3",
+            "parameters": {
+                "vector": 4,
+                "maxLocation": 106,
                 "totalSets": 12
             }
         }
@@ -285,26 +286,43 @@
             "consent",
             "practice",
             {
-                "order": "fixed",
+                "order": "random",
                 "components": [
-                    "set-v0-r1",
-                    "set-v1-r1",
-                    "set-v2-r1",
-                    "set-v3-r1",    
-                    "set-v0-r2",
-                    "set-v1-r2",
-                    "set-v2-r2",
-                    "set-v3-r2",
-                    "set-v0-r3",
-                    "set-v1-r3",
-                    "set-v2-r3",
-                    "set-v3-r3"
+                    {
+                        "order": "fixed",
+                        "components": [
+                            "set-v1-r1",
+                            "set-v2-r1",
+                            "set-v3-r1",
+                            "set-v4-r1"
+                        ]
+                    },
+                    {
+                        "order": "fixed",
+                        "components": [
+                            "set-v1-r2",
+                            "set-v2-r2",
+                            "set-v3-r2",
+                            "set-v4-r2"
+                        ]
+                    },
+                    {
+                        "order": "fixed",
+                        "components": [
+                            "set-v1-r3",
+                            "set-v2-r3",
+                            "set-v3-r3",
+                            "set-v4-r3"
+                        ]
+                    }
                 ],
                 "interruptions": [
                     {
-                        "firstLocation": 6,
                         "spacing": 99999,
-                        "components": [ "halfway-break" ]
+                        "firstLocation": 2,
+                        "components": [
+                            "halfway-break"
+                        ]
                     }
                 ]
             },

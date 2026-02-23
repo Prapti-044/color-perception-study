@@ -1,7 +1,6 @@
 import {
-  useCallback, useEffect, useMemo, useRef, useState,
+  useCallback, useEffect, useRef, useState,
 } from 'react';
-import Color from 'colorjs.io';
 import { StimulusParams } from '../../store/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -27,8 +26,7 @@ export interface TrialResult {
 /** Parameters passed from the study config */
 interface DirectionStimuliParams {
   vector: number;
-  startingLocation: number;
-  maxLocation?: number;
+  maxLocation: number;
   setIndex?: number;
   totalSets?: number;
   /** When true, runs in unlimited practice mode with feedback and easy stimuli */
@@ -37,118 +35,79 @@ interface DirectionStimuliParams {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DEFAULT_MAX_LOCATION = 185;
 const INTER_TRIAL_DELAY_MS = 500;
 const FEEDBACK_DELAY_MS = 2000;
 
-/** Practice mode uses easy (high-contrast) step values in this range */
-const PRACTICE_EASY_MIN_STEP = 140;
-const PRACTICE_EASY_MAX_STEP = 185;
+/** Practice mode samples across full range (hardest to easiest). */
+const PRACTICE_MIN_STEP = 140;
+const PRACTICE_MAX_STEP = 174;
 
-/**
- * Mapping from direction number (1-8) to named Direction.
- * direction 1 = 0° (right), direction 2 = 45° (bottom-right in SVG), etc.
- */
 const CORRECT_ANSWERS: Record<number, Direction> = {
-  1: 'mid-right',
+  0: 'bottom-mid',
+  1: 'bottom-left',
   2: 'bottom-right',
-  3: 'bottom-mid',
-  4: 'bottom-left',
-  5: 'mid-left',
-  6: 'top-left',
+  3: 'mid-left',
+  4: 'mid-right',
+  5: 'top-left',
+  6: 'top-right',
   7: 'top-mid',
-  8: 'top-right',
 };
 
-type VEC = [number, number, number];
-
-// Vectors in RGB matching the reference Stimuli component
-const VECTORS_IN_RGB: VEC[] = [
-  [1, 0, 0], // Red
-  [0, 0, 1], // Blue
-  [1, 0, 1], // Magenta (Purple)
-  [1, 1, 1], // White
-];
-
-// Pre-compute LUV vectors from the RGB vectors
-const VECTORS_IN_LUV: VEC[] = VECTORS_IN_RGB.map((rgb) => {
-  const color = new Color('srgb', rgb).to('luv');
-  return [color.luv.l, color.luv.u, color.luv.v] as VEC;
-});
-
-const LUV_MIDPOINT: VEC = [50, 0, 0];
-
-const NUMBER_CIRCLES_PER_ROW = 50;
-const RADIUS = 5;
-const SVG_WIDTH = RADIUS * 2 * NUMBER_CIRCLES_PER_ROW;
-const SVG_HEIGHT = RADIUS * 2 * NUMBER_CIRCLES_PER_ROW;
+const STIMULI_BASE_PATH = '/color-vision-perception/assets/stimuli';
 
 // ─── Pure helpers (exported for testing) ──────────────────────────────────────
 
-function interpolate3D(start: VEC, end: VEC, t: number): VEC {
-  return [
-    start[0] + (end[0] - start[0]) * t,
-    start[1] + (end[1] - start[1]) * t,
-    start[2] + (end[2] - start[2]) * t,
-  ];
-}
-
-/** Pick a random integer direction in [1, 8] */
+/** Pick a random integer direction index in [0, 7] */
 export function randomDirection(): number {
-  return Math.floor(Math.random() * 8) + 1;
+  return Math.floor(Math.random() * 8);
 }
 
-/** Pick a random vector index in [0, 3] */
+const NUM_VECTORS = 4;
+
+/** Pick a random vector index in [1, 4] */
 export function randomVector(): number {
-  return Math.floor(Math.random() * VECTORS_IN_RGB.length);
+  return Math.floor(Math.random() * NUM_VECTORS) + 1;
 }
 
-/** Pick a random easy step value for practice trials */
-export function randomEasyStep(): number {
+/** Pick a random step value across full practice range */
+export function randomPracticeStep(): number {
   return (
     Math.floor(
-      Math.random() * (PRACTICE_EASY_MAX_STEP - PRACTICE_EASY_MIN_STEP + 1),
-    ) + PRACTICE_EASY_MIN_STEP
+      Math.random() * (PRACTICE_MAX_STEP - PRACTICE_MIN_STEP + 1),
+    ) + PRACTICE_MIN_STEP
   );
 }
 
 /**
  * Adaptive bisection staircase: compute the next location to test.
  *
- * After a **correct** answer at `currentLocation`, the search moves toward
- * harder (lower) values.  After a **wrong** answer it moves toward easier
- * (higher) values.  The search converges when the gap between adjacent
- * tested values is <= 1.
+ * Uses the participant's full response history to maintain bounds:
+ * - lower bound = highest location ever answered wrong
+ * - upper bound = lowest location ever answered correct
+ * The next test is the midpoint of [lower, upper], so:
+ * - a correct response always pushes the search lower
+ * - a wrong response always pushes the search higher
+ * Search converges when upper - lower <= 1.
  *
  * @returns The next location, or `null` when the search has converged.
  */
 export function computeNextLocation(
-  testedLocations: number[],
-  currentLocation: number,
-  wasCorrect: boolean,
+  guesses: TrialResult[],
   maxLocation: number,
 ): number | null {
-  const sorted = [...new Set([...testedLocations, currentLocation])].sort(
-    (a, b) => a - b,
-  );
+  const wrongLocations = guesses
+    .filter((g) => !g.correct)
+    .map((g) => g.location);
+  const correctLocations = guesses
+    .filter((g) => g.correct)
+    .map((g) => g.location);
 
-  if (wasCorrect) {
-    // Search left (harder): find the largest value below currentLocation
-    const lowerValues = sorted.filter((l) => l < currentLocation);
-    const lowerNeighbor = lowerValues.length > 0
-      ? lowerValues[lowerValues.length - 1]
-      : 0;
+  // Lower bound = largest known-wrong location; Upper bound = smallest known-correct.
+  const lowerBound = wrongLocations.length > 0 ? Math.max(...wrongLocations) : 0;
+  const upperBound = correctLocations.length > 0 ? Math.min(...correctLocations) : maxLocation;
 
-    if (currentLocation - lowerNeighbor <= 1) return null; // converged
-    return Math.round((currentLocation + lowerNeighbor) / 2);
-  }
-
-  // Search right (easier): find the smallest value above currentLocation
-  const higherValues = sorted.filter((l) => l > currentLocation);
-  const upperNeighbor = higherValues.length > 0 ? higherValues[0] : maxLocation;
-
-  if (upperNeighbor - currentLocation <= 1) return null; // converged
-  return Math.round((currentLocation + upperNeighbor) / 2);
+  if (upperBound - lowerBound <= 1) return null; // converged
+  return Math.floor((lowerBound + upperBound) / 2);
 }
 
 /**
@@ -168,65 +127,6 @@ export function computeThreshold(
   return Math.min(...correctLocations);
 }
 
-// ─── SVG stimulus generation ──────────────────────────────────────────────────
-
-/**
- * Generate the array of rect fill colors for the stimuli SVG.
- * Each call produces fresh random lightness perturbation so the participant
- * cannot memorize the noise pattern across trials.
- */
-function generateStimuliRects(
-  direction: number,
-  step: number,
-  vector: number,
-): { x: number; y: number; fill: string }[] {
-  const directionAngle = (360 / 8) * (direction - 1);
-  const directionRadians = (directionAngle * Math.PI) / 180;
-  const rayDirX = Math.cos(directionRadians);
-  const rayDirY = Math.sin(directionRadians);
-
-  const interpolatedColor = interpolate3D(
-    LUV_MIDPOINT,
-    VECTORS_IN_LUV[vector],
-    step / 185,
-  );
-
-  const rects: { x: number; y: number; fill: string }[] = [];
-
-  for (let i = 0; i < NUMBER_CIRCLES_PER_ROW; i += 1) {
-    for (let j = 0; j < NUMBER_CIRCLES_PER_ROW; j += 1) {
-      const distX = i - NUMBER_CIRCLES_PER_ROW / 2;
-      const distY = j - NUMBER_CIRCLES_PER_ROW / 2;
-      const dist = Math.sqrt(distX * distX + distY * distY);
-      const inRing = dist >= 12 && dist < 19;
-
-      const CUTOUT_DIST = 5;
-      const perpDist = Math.abs(distX * rayDirY - distY * rayDirX);
-      const dotProduct = distX * rayDirX + distY * rayDirY;
-      const angleWithinCutout = perpDist <= CUTOUT_DIST && dotProduct > 0;
-
-      const inC = inRing && !angleWithinCutout;
-      const color = new Color('luv', inC ? interpolatedColor : LUV_MIDPOINT);
-      const labColor = new Color(color).to('luv');
-
-      const lightnessPerturb = Math.random() * 20 - 10;
-      labColor.luv.l = Math.min(
-        100,
-        Math.max(0, (labColor.luv?.l || 0) + lightnessPerturb),
-      );
-      const outputColor = labColor.to('srgb').toString();
-
-      rects.push({
-        x: i * RADIUS * 2,
-        y: j * RADIUS * 2,
-        fill: outputColor,
-      });
-    }
-  }
-
-  return rects;
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function DirectionStimuli({
@@ -235,8 +135,7 @@ export default function DirectionStimuli({
 }: StimulusParams<DirectionStimuliParams>) {
   const {
     vector,
-    startingLocation,
-    maxLocation = DEFAULT_MAX_LOCATION,
+    maxLocation,
     setIndex,
     totalSets,
     practice = false,
@@ -245,7 +144,7 @@ export default function DirectionStimuli({
   // ── State ─────────────────────────────────────────────────────────────────
 
   const [currentLocation, setCurrentLocation] = useState<number>(
-    practice ? randomEasyStep : startingLocation,
+    practice ? randomPracticeStep : () => Math.round(maxLocation / 2),
   );
   const [currentDirection, setCurrentDirection] = useState<number>(randomDirection);
   const [currentVector, setCurrentVector] = useState<number>(
@@ -321,7 +220,7 @@ export default function DirectionStimuli({
       // Generate fresh random params for the next practice trial
       setCurrentDirection(randomDirection());
       setCurrentVector(randomVector());
-      setCurrentLocation(randomEasyStep());
+      setCurrentLocation(randomPracticeStep());
       setFeedbackResponse(null);
       setFeedbackCorrectDir(null);
       setPhase('trial');
@@ -335,11 +234,8 @@ export default function DirectionStimuli({
   // In practice mode the vector changes per trial; in real mode it's fixed.
   const activeVector = practice ? currentVector : vector;
 
-  // Memoize stimulus SVG rects for the current trial
-  const rects = useMemo(
-    () => generateStimuliRects(currentDirection, currentLocation, activeVector),
-    [currentDirection, currentLocation, activeVector],
-  );
+  // File naming: vector is 1-indexed and direction is 0-indexed.
+  const stimulusPath = `${STIMULI_BASE_PATH}/${activeVector}-${currentLocation}-${currentDirection}.png`;
 
   // ── Process a participant response ────────────────────────────────────────
 
@@ -348,7 +244,10 @@ export default function DirectionStimuli({
       if (phase !== 'trial') return; // ignore clicks during feedback / inter-trial / complete
 
       const correctAnswer = CORRECT_ANSWERS[currentDirection];
+      console.log('correctAnswer', correctAnswer);
+      console.log('response', response);
       const isCorrect = response !== 'cant-tell' && response === correctAnswer;
+      console.log('isCorrect', isCorrect);
       const responseTimeMs = Date.now() - trialStartTime.current;
 
       const trial: TrialResult = {
@@ -380,13 +279,7 @@ export default function DirectionStimuli({
         });
       } else {
         // Real mode: adaptive staircase
-        const testedLocations = updatedGuesses.map((g) => g.location);
-        const nextLocation = computeNextLocation(
-          testedLocations,
-          currentLocation,
-          isCorrect,
-          maxLocation,
-        );
+        const nextLocation = computeNextLocation(updatedGuesses, maxLocation);
 
         if (nextLocation === null) {
           // Converged – compute threshold and report results
@@ -436,7 +329,10 @@ export default function DirectionStimuli({
   const DirectionButton = ({ direction: dir }: { direction: Direction }) => (
     <button
       type="button"
-      onClick={() => handleResponse(dir)}
+      onClick={() => {
+        console.log('DirectionButton clicked:', dir);
+        handleResponse(dir);
+      }}
       disabled={phase !== 'trial'}
       style={{
         background: 'transparent',
@@ -666,7 +562,7 @@ export default function DirectionStimuli({
           {/* Middle row */}
           <DirectionButton direction="mid-left" />
 
-          {/* Center stimuli SVG */}
+          {/* Center stimulus image */}
           <div
             style={{
               display: 'flex',
@@ -676,26 +572,11 @@ export default function DirectionStimuli({
               maxHeight: '350px',
             }}
           >
-            <svg
-              width={SVG_WIDTH + 10}
-              height={SVG_HEIGHT + 10}
-              viewBox={`0 0 ${SVG_WIDTH + 10} ${SVG_HEIGHT + 10}`}
+            <img
+              src={stimulusPath}
+              alt="Color stimulus"
               style={{ maxWidth: '350px', maxHeight: '350px', display: 'block' }}
-            >
-              <rect width={SVG_WIDTH + 5} height={SVG_HEIGHT + 5} fill="black" />
-              <g transform="translate(5, 5)">
-                {rects.map((r) => (
-                  <rect
-                    key={`${r.x}-${r.y}`}
-                    x={r.x}
-                    y={r.y}
-                    width={RADIUS}
-                    height={RADIUS}
-                    fill={r.fill}
-                  />
-                ))}
-              </g>
-            </svg>
+            />
           </div>
 
           <DirectionButton direction="mid-right" />
@@ -726,6 +607,10 @@ export default function DirectionStimuli({
           I CAN&apos;T TELL!
         </button>
       </div>
+    {/* Debug: print stimulusPath */}
+    {/* <div style={{ marginTop: '1rem', fontSize: '0.90em', color: '#888' }}>
+      stimulusPath: <code>{stimulusPath}</code>
+    </div> */}
     </div>
   );
 }

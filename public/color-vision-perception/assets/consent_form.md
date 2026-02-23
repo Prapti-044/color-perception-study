@@ -1,5 +1,3 @@
-<!-- <div style="max-width:800px; margin:0 auto; text-align:left;"> -->
-
 ### IRB Consent Form
 
 **Title of Research Study:** Evaluating Perception and Efficacy in Data Visualization
@@ -46,6 +44,3 @@ By clicking the **Agree** button, you confirm that you:
 - Voluntarily agree to participate.  
 
 Thank you for your willingness to participate!
-<!-- </div> -->
-
-
