@@ -53,7 +53,8 @@ const CORRECT_ANSWERS: Record<number, Direction> = {
   7: 'top-mid',
 };
 
-const STIMULI_BASE_PATH = '/color-vision-perception/assets/stimuli';
+const STIMULI_BASE_PATH = '/color-perception-study/color-vision-perception/assets/stimuli'; // for github pages
+// const STIMULI_BASE_PATH = '/color-vision-perception/assets/stimuli'; // for local development
 
 // ─── Pure helpers (exported for testing) ──────────────────────────────────────
 
