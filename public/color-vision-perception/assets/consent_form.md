@@ -13,7 +13,7 @@ You are invited to take part in a research study. The purpose of this research s
 We value your time and willingness to help us improve our understanding of visual perception.  
 
 ## Tasks 
-If you agree, you will participate you will complete an online survey, where you will be shown images of data visualizations and their components and then asked to answer some questions with them. The entire process should take no more than **15 minutes**.
+You will be shown some stimuli that are designed to test your color vision and then asked to answer questions about them. The entire process should take no more than **5 minutes**.
 
 ## Voluntary Participation  
 Your participation is **completely voluntary**. You are free to withdraw consent and discontinue participation in the interview at any time for any reason without penalty or loss of benefits. 

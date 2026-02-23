@@ -12,7 +12,7 @@ type Direction = 'top-left' | 'top-mid' | 'top-right' | 'mid-left' | 'mid-right'
 type Response = Direction | 'cant-tell';
 
 /** Phases of a single adaptive set (or practice) */
-type Phase = 'trial' | 'inter-trial' | 'feedback' | 'complete';
+type Phase = 'trial' | 'feedback' | 'complete';
 
 /** One recorded trial within an adaptive set */
 export interface TrialResult {
@@ -35,7 +35,6 @@ interface DirectionStimuliParams {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const INTER_TRIAL_DELAY_MS = 500;
 const FEEDBACK_DELAY_MS = 2000;
 
 /** Practice mode samples across full range (hardest to easiest). */
@@ -54,7 +53,7 @@ const CORRECT_ANSWERS: Record<number, Direction> = {
 };
 
 const PUBLIC_BASE_PATH = '/color-perception-study';  // for github pages
-// const PUBLIC_BASE_PATH = '/'; // for local development
+// const PUBLIC_BASE_PATH = 'http://localhost:8080/'; // for local development
 const STIMULI_BASE_PATH = `${PUBLIC_BASE_PATH}/color-vision-perception/assets/stimuli`;
 
 // ─── Pure helpers (exported for testing) ──────────────────────────────────────
@@ -158,9 +157,6 @@ export default function DirectionStimuli({
   /** Timestamp of when the current trial was presented */
   const trialStartTime = useRef<number>(Date.now());
 
-  /** Stores the next location to show after the inter-trial delay */
-  const nextLocationRef = useRef<number | null>(null);
-
   // ── Feedback state (practice mode only) ───────────────────────────────────
 
   /** The response the participant chose on the current feedback trial */
@@ -197,22 +193,6 @@ export default function DirectionStimuli({
       trialStartTime.current = Date.now();
     }
   }, [phase, currentDirection, currentLocation]);
-
-  // Handle the inter-trial delay (real mode) with proper cleanup
-  useEffect(() => {
-    if (phase !== 'inter-trial') return undefined;
-
-    const timer = setTimeout(() => {
-      if (nextLocationRef.current !== null) {
-        setCurrentLocation(nextLocationRef.current);
-        setCurrentDirection(randomDirection());
-        nextLocationRef.current = null;
-      }
-      setPhase('trial');
-    }, INTER_TRIAL_DELAY_MS);
-
-    return () => clearTimeout(timer);
-  }, [phase]);
 
   // Handle the feedback delay (practice mode): show feedback, then advance
   useEffect(() => {
@@ -301,9 +281,12 @@ export default function DirectionStimuli({
             },
           });
         } else {
-          // Store next location and transition through inter-trial blank
-          nextLocationRef.current = nextLocation;
-          setPhase('inter-trial');
+          const nextDir = randomDirection();
+          // Preload the next stimulus so it appears instantly on re-render
+          const img = new Image();
+          img.src = `${STIMULI_BASE_PATH}/${activeVector}-${nextLocation}-${nextDir}.png`;
+          setCurrentLocation(nextLocation);
+          setCurrentDirection(nextDir);
         }
       }
     },
@@ -355,30 +338,6 @@ export default function DirectionStimuli({
   );
 
   // ─── Render ───────────────────────────────────────────────────────────────
-
-  // Inter-trial blank screen (fixation dot) — real mode only
-  if (phase === 'inter-trial') {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '500px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: '#999',
-          }}
-        />
-      </div>
-    );
-  }
 
   // Set complete screen — real mode only
   if (phase === 'complete') {

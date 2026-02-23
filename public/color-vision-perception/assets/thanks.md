@@ -8,7 +8,10 @@ This research studies how well people can distinguish between colors with intens
 
 This study constitutes a **replication conducted by Katharina Reinecke** as documented in her paper.
 
-[Katharina Reinecke, "Enabling Designers to Foresee Which Colors Users Cannot See", Published in: Conference on Human Factors in Computing Systems (CHI), 2016](https://dl.acm.org/doi/10.1145/2858036.2858077)
+<a href="https://dl.acm.org/doi/10.1145/2858036.2858077" target="_blank" rel="noopener noreferrer">Katharina Reinecke, David R. Flatla, and Christopher Brooks: "Enabling Designers to Foresee Which Colors Users Cannot See", Published in: Conference on Human Factors in Computing Systems (CHI), 2016</a>
+
+We would like to sincerely thank **Katharina Reinecke** and **David R. Flatla** for their guidance and support and providing required resources to enable this replication. This work builds on research conducted through <a href="https://www.labinthewild.org/" target="_blank" rel="noopener noreferrer">Lab in the Wild</a>, a large-scale online experimental platform for studying human-computer interaction and perception.
+
 
 ### Why Color Theory and Makeup Questions?
 
