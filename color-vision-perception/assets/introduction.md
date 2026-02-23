@@ -1,4 +1,4 @@
-# Welcome to the Color Vision Discriminability Study!  
+# Welcome to the Color Vision Discriminability Study
 
 Thank you for taking the time to participate in this research study.  
 
