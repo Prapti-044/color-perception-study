@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.2/src/parser/GlobalConfigSchema.json",
   "configsList": [
+    "color-vision-perception",
     "colormap-makeup-L",
     "colormap-makeup-a",
     "colormap-makeup-b",
@@ -12,13 +13,14 @@
     "demo-survey",
     "demo-training",
     "demo-html-trrack",
-    "demo-click-accuracy-test",
+    "demo-react-trrack",
     "demo-image",
     "demo-upset",
     "demo-vega",
     "demo-video-slider",
     "demo-video",
     "demo-dynamic",
+    "demo-condition",
     "demo-style",
     "demo-yaml",
     "demo-ranking-widget",
@@ -44,9 +46,12 @@
     "library-screen-recording",
     "library-smeq",
     "library-sus",
+    "library-umux",
+    "library-umux-lite",
     "library-virtual-chinrest",
     "library-vlat",
     "test-audio",
+    "test-device-restriction",
     "test-library",
     "test-likert-matrix",
     "test-parser-errors",
@@ -55,6 +60,9 @@
     "test-step-logic"
   ],
   "configs": {
+    "color-vision-perception": {
+      "path": "color-vision-perception/config.json"
+    },
     "colormap-makeup-L": {
       "path": "colormap-makeup-L/config.json"
     },
@@ -97,11 +105,14 @@
     "demo-dynamic": {
       "path": "demo-dynamic/config.json"
     },
+    "demo-condition": {
+      "path": "demo-condition/config.json"
+    },
     "demo-html-trrack": {
       "path": "demo-html-trrack/config.json"
     },
-    "demo-click-accuracy-test": {
-      "path": "demo-click-accuracy-test/config.json"
+    "demo-react-trrack": {
+      "path": "demo-react-trrack/config.json"
     },
     "demo-image": {
       "path": "demo-image/config.json"
@@ -205,6 +216,9 @@
       "path": "test-audio/config.json",
       "test": true
     },
+    "test-device-restriction": {
+      "path": "test-device-restriction/config.json"
+    },
     "test-library": {
       "path": "test-library/config.json",
       "test": true
@@ -226,6 +240,14 @@
     },
     "test-step-logic": {
       "path": "test-step-logic/config.json",
+      "test": true
+    },
+    "library-umux": {
+      "path": "library-umux/config.json",
+      "test": true
+    },
+    "library-umux-lite": {
+      "path": "library-umux-lite/config.json",
       "test": true
     },
     "library-virtual-chinrest": {

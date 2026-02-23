@@ -1,0 +1,26 @@
+# Thank You for Your Participation!
+
+Thank you for completing the **Color Vision Discriminability Study**.
+
+### Purpose of the Study
+
+This research studies how well people can distinguish between colors with intensity levels. Your responses help us understand color vision , discriminability and perception.
+
+This study constitutes a **replication conducted by Katharina Reinecke** as documented in her paper.
+
+[Katharina Reinecke, "Enabling Designers to Foresee Which Colors Users Cannot See", Published in: Conference on Human Factors in Computing Systems (CHI), 2016](https://dl.acm.org/doi/10.1145/2858036.2858077)
+
+### Why Color Theory and Makeup Questions?
+
+These questions were included to support future research on how people perceive foundation makeup colors and to study how color training (e.g., hobbies or makeup experience) affects overall color perception. Your responses help us explore the link between general color perception and specific makeup preferences.
+
+### Confidentiality
+
+All responses are confidential and reported only in aggregate.
+
+### Contact
+
+For questions about this study, please contact:  
+**Researcher:** Shadmaan Hye, u1452119@utah.edu
+
+
