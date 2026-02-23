@@ -53,8 +53,9 @@ const CORRECT_ANSWERS: Record<number, Direction> = {
   7: 'top-mid',
 };
 
-const STIMULI_BASE_PATH = '/color-perception-study/color-vision-perception/assets/stimuli'; // for github pages
-// const STIMULI_BASE_PATH = '/color-vision-perception/assets/stimuli'; // for local development
+const PUBLIC_BASE_PATH = '/color-perception-study';  // for github pages
+// const PUBLIC_BASE_PATH = '/'; // for local development
+const STIMULI_BASE_PATH = `${PUBLIC_BASE_PATH}/color-vision-perception/assets/stimuli`;
 
 // ─── Pure helpers (exported for testing) ──────────────────────────────────────
 
@@ -314,7 +315,7 @@ export default function DirectionStimuli({
 
   // ── Direction button ──────────────────────────────────────────────────────
 
-  const directionsBasePath = '/color-vision-perception/assets/directions';
+  const directionsBasePath = `${PUBLIC_BASE_PATH}/color-vision-perception/assets/directions`;
 
   /**
    * Compute the border style for a direction button.
