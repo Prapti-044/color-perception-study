@@ -194,7 +194,7 @@ const generateValidation = (responses: Response[]) => {
         [response.id]: (value: StoredAnswer['answer'][string], values: StoredAnswer['answer']) => {
           if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
             if (response.type === 'matrix-checkbox' || response.type === 'matrix-radio') {
-              return checkMatrixResponse(response, value);
+              return checkMatrixResponse(response, value as Record<string, string>);
             }
             if (response.type === 'ranking-sublist' || response.type === 'ranking-categorical' || response.type === 'ranking-pairwise') {
               return Object.keys(value).length > 0 ? null : 'Empty Input';
@@ -215,10 +215,10 @@ const generateValidation = (responses: Response[]) => {
               return sortedReq.every((val, index) => val === sortedVal[index]) ? null : 'Incorrect input';
             }
             if (response.type === 'checkbox') {
-              return checkCheckboxResponse(response, value);
+              return checkCheckboxResponse(response, value as string[]);
             }
             if (response.type === 'dropdown') {
-              return checkDropdownResponse(response, value);
+              return checkDropdownResponse(response, value as string[]);
             }
             return value.length === 0 ? 'Empty input' : null;
           }
