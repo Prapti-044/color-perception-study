@@ -1,7 +1,8 @@
 import {
   useCallback, useEffect, useRef, useState,
 } from 'react';
-import { StimulusParams } from '../../store/types';
+import { type JsonValue, StimulusParams } from '../../store/types';
+import { useCurrentIdentifier } from '../../routes/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -38,8 +39,15 @@ interface DirectionStimuliParams {
 const FEEDBACK_DELAY_MS = 2000;
 
 /** Practice mode samples across full range (hardest to easiest). */
-const PRACTICE_MIN_STEP = 140;
-const PRACTICE_MAX_STEP = 174;
+const PRACTICE_MIN_STEP = 50;
+const PRACTICE_MAX_STEP = 106;
+
+/**
+ * vector 1 range is 0-166 steps.
+ * vector 2 range is 0-134 steps.
+ * vector 3 range is 0-174 steps.
+ * vector 4 range is 0-106 steps.
+ */
 
 const CORRECT_ANSWERS: Record<number, Direction> = {
   0: 'bottom-mid',
@@ -144,6 +152,10 @@ export default function DirectionStimuli({
 
   // ── State ─────────────────────────────────────────────────────────────────
 
+  const identifier = useCurrentIdentifier();
+  const currentTrialIndex = parseInt(identifier.split('_')[1], 10);
+  const currentSetIndex = currentTrialIndex > 10 ? currentTrialIndex - 4 : currentTrialIndex - 3;
+
   const [currentLocation, setCurrentLocation] = useState<number>(
     practice ? randomPracticeStep : () => Math.round(maxLocation / 2),
   );
@@ -226,10 +238,7 @@ export default function DirectionStimuli({
       if (phase !== 'trial') return; // ignore clicks during feedback / inter-trial / complete
 
       const correctAnswer = CORRECT_ANSWERS[currentDirection];
-      console.log('correctAnswer', correctAnswer);
-      console.log('response', response);
       const isCorrect = response !== 'cant-tell' && response === correctAnswer;
-      console.log('isCorrect', isCorrect);
       const responseTimeMs = Date.now() - trialStartTime.current;
 
       const trial: TrialResult = {
@@ -277,7 +286,7 @@ export default function DirectionStimuli({
               vector,
               'set-index': setIndex ?? 0,
               'trial-count': updatedGuesses.length,
-              guesses: JSON.stringify(updatedGuesses),
+              guesses: updatedGuesses as unknown as JsonValue[],
             },
           });
         } else {
@@ -315,7 +324,6 @@ export default function DirectionStimuli({
     <button
       type="button"
       onClick={() => {
-        console.log('DirectionButton clicked:', dir);
         handleResponse(dir);
       }}
       disabled={phase !== 'trial'}
@@ -391,6 +399,16 @@ export default function DirectionStimuli({
         paddingTop: '2rem',
       }}
     >
+      <h2
+        style={{
+          color: 'blue',
+          fontSize: '1.25rem',
+          fontWeight: 700,
+          margin: '0 0 0.5rem 0',
+        }}
+      >
+        Find the opening of the circle
+      </h2>
       {/* Counters and practice hint */}
       <div style={{ textAlign: 'center' }}>
         {!practice && setIndex !== undefined && totalSets !== undefined && (
@@ -404,7 +422,7 @@ export default function DirectionStimuli({
           >
             Set
             {' '}
-            {setIndex}
+            {currentSetIndex}
             {' '}
             of
             {' '}
@@ -485,24 +503,45 @@ export default function DirectionStimuli({
             margin: '0.25rem 0',
           }}
         >
-          Trial
+          Set
           {' '}
-          {guesses.length + 1}
+          {currentSetIndex + 1}
+          {' '}
+          out of
+          {' '}
+          {totalSets}
         </p>
       </div>
 
-      {/* Feedback banner (practice mode) */}
-      {feedbackText && (
-        <p
+      {/* Feedback banner (practice mode) — always reserve space to keep stimuli fixed */}
+      {practice && (
+        <div
           style={{
-            fontSize: '1.125rem',
-            fontWeight: 'bold',
+            minHeight: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             margin: '0.25rem 0',
-            color: feedbackIsCorrect ? '#2ecc71' : '#e74c3c',
           }}
+          aria-live="polite"
         >
-          {feedbackText}
-        </p>
+          {feedbackText ? (
+            <p
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 'bold',
+                margin: 0,
+                color: feedbackIsCorrect ? '#2ecc71' : '#e74c3c',
+              }}
+            >
+              {feedbackText}
+            </p>
+          ) : (
+            <span style={{ visibility: 'hidden', fontSize: '1.125rem', fontWeight: 'bold' }}>
+              Correct!
+            </span>
+          )}
+        </div>
       )}
 
       {/* Container for grid and "I can't tell!" button */}

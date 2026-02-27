@@ -47,29 +47,39 @@ export type TrialValidation = Record<
 >;
 
 /**
- * The StoredAnswer object is a data structure describing the participant's interaction with an individual component. It is the data structure used as values of the `answers` object of [ParticipantData](../ParticipantData). The general structure for this is below:
- *
- * ```json
- * {
- *   "answer": {
- *     "barChart": [
- *       1.3
- *     ]
- *   },
- *   "startTime": 1711641174858,
- *   "endTime": 1711641178836,
- *   "windowEvents": [
- *     ...
- *   ]
- * }
- * ```
- * The `answer` object here uses the "id" in the [Response](../BaseResponse) list of the component in your [StudyConfiguration](../StudyConfig) as its keys. It then contains a list of the answers given. You are also given a start and end time for the participant's interaction with the component. Lastly, a set of windowEvents is given. Below is an example of the windowEvents list.
- *
- * Each item in the window event is given a time, a position an event name, and some extra information for the event (for mouse events, this is the location).
- */
+The StoredAnswer object is a data structure describing the participants interaction with an individual component. It is the data structure used as values of the `answers` object of [ParticipantData](../ParticipantData). The general structure for this is below:
+
+```js
+{
+  "answer": {
+    "barChart": [
+      1.3
+    ]
+  },
+  "startTime": 1711641174858,
+  "endTime": 1711641178836,
+  "windowEvents": [
+    ...
+  ]
+}
+```
+The `answer` object here uses the "id" in the [Response](../BaseResponse) list of the component in your [StudyConfiguration](../StudyConfig) as its keys. It then contains a list of the answers given. You are also given a start and end time for the participants interaction with the component. Lastly, a set of windowEvents is given. Below is an example of the windowEvents list.
+
+Each item in the window event is given a time, a position an event name, and some extra information for the event (for mouse events, this is the location).
+*/
+
+/** JSON-serializable value: primitives, arrays, or plain objects. */
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
 export interface StoredAnswer {
-  /** Object whose keys are the "id"s in the Response list of the component in the StudyConfig and whose value is the inputted value from the participant. */
-  answer: Record<string, string | number | boolean | string[]>;
+  /** Object whose keys are the "id"s in the Response list of the component in the StudyConfig and whose value is the inputted value from the participant (JSON-serializable). */
+  answer: Record<string, JsonValue>;
   identifier: string;
   componentName: string;
   /** The order of the trial in the sequence. */
