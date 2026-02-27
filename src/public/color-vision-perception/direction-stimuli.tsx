@@ -422,6 +422,16 @@ export default function DirectionStimuli({
               lineHeight: 1.5,
             }}
           >
+            <h2
+              style={{
+                margin: '0 0 0.75rem 0',
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: '#3b6178',
+              }}
+            >
+              Practice Interface
+            </h2>
             <h3
               style={{
                 margin: '0 0 0.5rem 0',
@@ -436,7 +446,7 @@ export default function DirectionStimuli({
               We will show you a colored image with a circle in it, your task is to identify where the{' '}
               <strong><em>opening of the circle is in the image.</em></strong>
             </p>
-            <p style={{ margin: '0.25rem 0' }}>
+            <p style={{ margin: '1.2rem 0 0.25rem 0' }}>
               Click on the button on the side that you think the opening is to move on to the next image.
             </p>
             <p style={{ margin: '0.25rem 0' }}>
@@ -446,26 +456,27 @@ export default function DirectionStimuli({
             <p style={{ margin: '0.25rem 0' }}>
               Try to answer each one as fast as you can. There will be 12 sets of images.
             </p>
-            <p style={{ margin: '0.25rem 0' }}>
-              The trials will look something like this..
+            <p style={{ margin: '1rem 0 0.25rem 0' }}>
+              The trials will look something like this.
+            </p>
+            <p style={{ margin: '1rem 0', fontStyle: 'italic' }}>
+              Click on your guess and see how you do!
+            </p>
+            <p
+              style={{
+                color: '#888',
+                fontSize: '1rem',
+                margin: '0.75rem 0 0.25rem 0',
+                fontStyle: 'italic',
+              }}
+            >
+              Try as many as you like. Click
+              {' '}
+              <strong>Next</strong>
+              {' '}
+              when you feel ready to proceed to the main study.
             </p>
           </div>
-        )}
-        {practice && (
-          <p
-            style={{
-              color: '#888',
-              fontSize: '0.875rem',
-              margin: '0.25rem 0',
-              fontStyle: 'italic',
-            }}
-          >
-            Try as many as you like. Click
-            {' '}
-            <strong>Next</strong>
-            {' '}
-            when you feel ready.
-          </p>
         )}
         <p
           style={{

@@ -9,7 +9,7 @@ Researcher: Shadmaan Hye, u1452119@utah.edu
 We are trying to understand how lighting conditions may affect a person's ability to distinguish between colors in an online environment.
 
 #### Tasks
-We will show you several colored images, and ask you to identify where the opening of the circle is inside the image.
+We will show you a stimuli with different orientation. You will be asked to guess the matching orientation.
 
 #### What you will get
 
