@@ -286,10 +286,10 @@
             "consent",
             "practice",
             {
-                "order": "random",
+                "order": "fixed",
                 "components": [
                     {
-                        "order": "fixed",
+                        "order": "random",
                         "components": [
                             "set-v1-r1",
                             "set-v2-r1",
@@ -298,7 +298,7 @@
                         ]
                     },
                     {
-                        "order": "fixed",
+                        "order": "random",
                         "components": [
                             "set-v1-r2",
                             "set-v2-r2",
@@ -307,7 +307,7 @@
                         ]
                     },
                     {
-                        "order": "fixed",
+                        "order": "random",
                         "components": [
                             "set-v1-r3",
                             "set-v2-r3",
