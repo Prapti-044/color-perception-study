@@ -35,7 +35,6 @@
     Revisit.onDataReceive((data) => {
         const color1 = data['color1'];
         const color2 = data['color2'];
-        console.log(color1, color2);
 
         document.querySelector('circle[cx="40"]').setAttribute('fill', color1);
         document.querySelector('circle[cx="160"]').setAttribute('fill', color2);
