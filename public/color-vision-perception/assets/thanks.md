@@ -6,7 +6,7 @@ Thank you for completing the **Color Vision Discriminability Study**.
 
 This research studies how well people can distinguish between colors with intensity levels. Your responses help us understand color vision , discriminability and perception.
 
-This study constitutes a **replication conducted by Katharina Reinecke** as documented in her paper.
+This study constitutes a **replication** of an experiment in the following paper.
 
 <a href="https://dl.acm.org/doi/10.1145/2858036.2858077" target="_blank" rel="noopener noreferrer">Katharina Reinecke, David R. Flatla, and Christopher Brooks: "Enabling Designers to Foresee Which Colors Users Cannot See", Published in: Conference on Human Factors in Computing Systems (CHI), 2016</a>
 

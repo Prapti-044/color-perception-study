@@ -496,21 +496,23 @@ export default function DirectionStimuli({
             </p>
           </div>
         )}
-        <p
-          style={{
-            color: '#aaa',
-            fontSize: '0.875rem',
-            margin: '0.25rem 0',
-          }}
-        >
-          Set
-          {' '}
-          {currentSetIndex + 1}
-          {' '}
-          out of
-          {' '}
-          {totalSets}
-        </p>
+        {!practice && (
+          <p
+            style={{
+              color: '#aaa',
+              fontSize: '0.875rem',
+              margin: '0.25rem 0',
+            }}
+          >
+            Set
+            {' '}
+            {currentSetIndex + 1}
+            {' '}
+            out of
+            {' '}
+            {totalSets}
+          </p>
+        )}
       </div>
 
       {/* Feedback banner (practice mode) — always reserve space to keep stimuli fixed */}
