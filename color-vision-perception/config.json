@@ -16,7 +16,7 @@
         "autoDownloadStudy": false,
         "withSidebar": false,
         "nextOnEnter": true,
-        "studyEndMsg": "Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=CHHYW1WW). Or you can use this completion code: <completion code>",
+        "studyEndMsg": "Thank you for completing the study. You may click this link and return to Prolific**: [Prolific Link](https://app.prolific.com/submissions/complete?cc=C150YPEK). Or you can use this completion code: C150YPEK",
         "participantNameField": "introduction.prolificId",
         "urlParticipantIdParam": "PROLIFIC_PID"
     },
