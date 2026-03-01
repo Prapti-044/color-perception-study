@@ -6,7 +6,7 @@ Principal Investigator: Dr. Kate Isaacs, Dr. Andrew McNutt, University of Utah
 Researcher: Shadmaan Hye, u1452119@utah.edu
 
 #### Why we are doing this research 
-We are trying to understand how lighting conditions may affect a person's ability to distinguish between colors in an online environment.
+We are trying to understand people’s ability to perceive color and lighting intensity.
 
 #### Tasks
 We will show you a stimuli with different orientation. You will be asked to guess the matching orientation.
