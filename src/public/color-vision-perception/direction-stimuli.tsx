@@ -37,6 +37,7 @@ interface DirectionStimuliParams {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const FEEDBACK_DELAY_MS = 2000;
+const MAX_PRACTICE_TRIALS = 10;
 
 /** Practice mode samples across full range (hardest to easiest). */
 const PRACTICE_MIN_STEP = 50;
@@ -206,11 +207,20 @@ export default function DirectionStimuli({
     }
   }, [phase, currentDirection, currentLocation]);
 
-  // Handle the feedback delay (practice mode): show feedback, then advance
+  // Handle the feedback delay (practice mode): show feedback, then advance.
+  // For practice, stop creating new stimuli after MAX_PRACTICE_TRIALS so the
+  // participant moves on to the next component.
   useEffect(() => {
-    if (phase !== 'feedback') return undefined;
+    if (!practice || phase !== 'feedback') return undefined;
 
     const timer = setTimeout(() => {
+      const practiceCount = guesses.length;
+
+      if (practiceCount >= MAX_PRACTICE_TRIALS) {
+        setPhase('complete');
+        return;
+      }
+
       // Generate fresh random params for the next practice trial
       setCurrentDirection(randomDirection());
       setCurrentVector(randomVector());
@@ -221,7 +231,7 @@ export default function DirectionStimuli({
     }, FEEDBACK_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [phase]);
+  }, [phase, practice, guesses.length]);
 
   // ── Derived values ────────────────────────────────────────────────────────
 
@@ -488,7 +498,7 @@ export default function DirectionStimuli({
                 fontStyle: 'italic',
               }}
             >
-              Try as many as you like. Click
+              Click
               {' '}
               <strong>Next</strong>
               {' '}
