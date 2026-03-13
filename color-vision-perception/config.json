@@ -24,7 +24,6 @@
         "direction-stimuli": {
             "type": "react-component",
             "path": "color-vision-perception/direction-stimuli.tsx",
-            "nextButtonLocation": "belowStimulus",
             "response": [
                 {
                     "id": "direction-response",
@@ -52,9 +51,24 @@
             "nextButtonText": "Agree"
         },
         "halfway-break": {
-            "type": "website",
-            "path": "color-vision-perception/assets/halfway-break.html",
-            "response": []
+            "type": "react-component",
+            "path": "color-vision-perception/halfway-break.tsx",
+            "response": [
+                {
+                    "id": "halfway-guess",
+                    "prompt": "Click the direction of the squirrel's front paw.",
+                    "location": "belowStimulus",
+                    "type": "reactive",
+                    "hidden": true
+                },
+                {
+                    "id": "halfway-correct",
+                    "prompt": "",
+                    "location": "belowStimulus",
+                    "type": "reactive",
+                    "hidden": true
+                }
+            ]
         },
         "thanks": {
             "type": "markdown",

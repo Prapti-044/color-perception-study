@@ -1,12 +1,12 @@
 {
-  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.2/src/parser/StudyConfigSchema.json",
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.4.1/src/parser/StudyConfigSchema.json",
   "studyMetadata": {
     "title": "Conditional Blocks Demo",
     "version": "pilot",
     "authors": [
       "The reVISit Team"
     ],
-    "date": "2026-01-27",
+    "date": "2026-02-23",
     "description": "A demo of using conditional blocks in the study sequence.",
     "organizations": [
       "University of Utah",
@@ -15,7 +15,7 @@
   },
   "uiConfig": {
     "contactEmail": "contact@revisit.dev",
-    "helpTextPath": "demo-condition/assets/help.md",
+    "helpTextPath": "demo-condition/assets/introduction.md",
     "logoPath": "revisitAssets/revisitLogoSquare.svg",
     "withProgressBar": true,
     "autoDownloadStudy": false,
