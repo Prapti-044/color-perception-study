@@ -39,12 +39,15 @@ export function drawMap(
   const us = mapData as unknown as Topology<USObjectData>;
   const projection = d3
     .geoIdentity()
-    .fitSize([MAP_WIDTH, MAP_HEIGHT], topojson.feature(us, us.objects.states));
+    .fitSize(
+      [MAP_WIDTH, MAP_HEIGHT],
+      topojson.feature(us, us.objects.states) as unknown as FeatureCollection,
+    );
   const path = d3.geoPath().projection(projection);
   const statesFeature = topojson.feature(
     us,
     us.objects.states,
-  ) as FeatureCollection<Geometry, { name: string }>;
+  ) as unknown as FeatureCollection<Geometry, { name: string }>;
 
   svg
     .append('g')
