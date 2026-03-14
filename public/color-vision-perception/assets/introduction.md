@@ -4,7 +4,7 @@ Thank you for taking the time to participate in this research study.
 
 ### What You Will Do  
 
-The experiment is going to study how well you can understand color perception.
+This experiment measures color perception.
 
 The test typically takes less than **5 minutes** to complete.
 

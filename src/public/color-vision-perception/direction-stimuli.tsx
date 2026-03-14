@@ -381,11 +381,7 @@ export default function DirectionStimuli({
           Set complete!
         </h2>
         <p style={{ color: '#888', fontSize: '1rem' }}>
-          Completed
-          {' '}
-          {guesses.length}
-          {' '}
-          trials. Click Next to continue.
+          Completed the trial set. Click Next to continue.
         </p>
       </div>
     );
