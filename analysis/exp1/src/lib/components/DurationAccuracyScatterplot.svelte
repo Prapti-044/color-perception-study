@@ -1,28 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { TrialDetails, ExperimentInfo } from '$lib/types';
 	import { generateParticipantSummary, groupBy } from '$lib';
 	import { formatNumber, formatPercent } from '$lib/utils';
 	import Section from './Section.svelte';
-	import {
-		Chart,
-		ScatterController,
-		PointElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend
-	} from 'chart.js';
-
-	// Register Chart.js components
-	Chart.register(
-		ScatterController,
-		PointElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend
-	);
+	import { renderScatterChart } from '$lib/d3/scatterChart';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	interface DurationAccuracyPoint {
 		participantId: string;
@@ -37,20 +19,11 @@
 
 	let { trialDetails, experimentInfo }: Props = $props();
 
-	let chartCanvas: HTMLCanvasElement;
-	let chart: Chart | null = null;
-	
-	// Compute data once - not reactive to avoid infinite loops
-	let participantsData: DurationAccuracyPoint[] = $state([]);
-	let stats = $state({ avgDuration: 0, avgAccuracy: 0, count: 0 });
+	let chartHost = $state<HTMLDivElement | undefined>();
 
-	function computeParticipantsData() {
-		if (trialDetails.length === 0) {
-			participantsData = [];
-			stats = { avgDuration: 0, avgAccuracy: 0, count: 0 };
-			return;
-		}
-		
+	const participantsData = $derived.by((): DurationAccuracyPoint[] => {
+		if (trialDetails.length === 0) return [];
+
 		const trialsByParticipant = groupBy(trialDetails, (t) => t.participantId);
 		const data: DurationAccuracyPoint[] = [];
 
@@ -59,7 +32,6 @@
 			const expInfo = experimentInfo[participantId];
 			const duration = expInfo?.duration_minutes ?? null;
 
-			// Only include participants with valid duration data
 			if (duration !== null && duration > 0) {
 				data.push({
 					participantId,
@@ -69,185 +41,97 @@
 			}
 		}
 
-		participantsData = data;
-		
-		if (data.length > 0) {
-			const avgDuration = data.reduce((sum, d) => sum + d.duration, 0) / data.length;
-			const avgAccuracy = data.reduce((sum, d) => sum + d.accuracy, 0) / data.length;
-			stats = { avgDuration, avgAccuracy, count: data.length };
-		} else {
-			stats = { avgDuration: 0, avgAccuracy: 0, count: 0 };
+		return data;
+	});
+
+	const stats = $derived.by(() => {
+		const data = participantsData;
+		if (data.length === 0) {
+			return { avgDuration: 0, avgAccuracy: 0, count: 0 };
 		}
-	}
+		const avgDuration = data.reduce((sum, d) => sum + d.duration, 0) / data.length;
+		const avgAccuracy = data.reduce((sum, d) => sum + d.accuracy, 0) / data.length;
+		return { avgDuration, avgAccuracy, count: data.length };
+	});
 
-	// Build the chart
-	function buildChart() {
-		if (!chartCanvas || chart || participantsData.length === 0) return;
+	$effect(() => {
+		if (!chartHost || participantsData.length === 0) return;
 
-		const scatterData = participantsData.map((d) => ({
+		const pts = participantsData.map((d) => ({
 			x: d.duration,
-			y: d.accuracy * 100, // Convert to percentage
-			participantId: d.participantId
+			y: d.accuracy * 100
 		}));
 
-		// Calculate min/max for axes
-		const durations = scatterData.map((d) => d.x);
-		const accuracies = scatterData.map((d) => d.y);
-		const minDuration = Math.min(...durations) * 0.95;
-		const maxDuration = Math.max(...durations) * 1.05;
-		const minAccuracy = Math.max(0, Math.min(...accuracies) * 0.95);
-		const maxAccuracy = Math.min(100, Math.max(...accuracies) * 1.05);
-
-		chart = new Chart(chartCanvas, {
-			type: 'scatter',
-			data: {
-				datasets: [
-					{
-						label: 'Participants',
-						data: scatterData,
-						backgroundColor: 'rgba(59, 130, 246, 0.6)',
-						borderColor: 'rgba(59, 130, 246, 0.8)',
-						pointRadius: 6,
-						pointHoverRadius: 8,
-						borderWidth: 1
-					}
-				]
+		renderScatterChart(
+			chartHost,
+			{
+				title: 'Accuracy vs Duration',
+				xLabel: 'Duration (minutes)',
+				yLabel: 'Accuracy (%)',
+				points: pts,
+				formatX: (v) => String(Math.round(v * 10) / 10),
+				formatY: (v) => `${Math.round(v)}%`
 			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				interaction: {
-					mode: 'point',
-					intersect: false
-				},
-				plugins: {
-					legend: {
-						display: false
-					},
-					title: {
-						display: true,
-						text: 'Accuracy vs Duration',
-						font: {
-							size: 18,
-							weight: 'bold'
-						},
-						padding: { bottom: 20 }
-					},
-					tooltip: {
-						callbacks: {
-							label: (context) => {
-								const point = context.raw as any;
-								const participantData = participantsData.find((d) => d.participantId === point.participantId);
-								return [
-									`Participant: ${participantData?.participantId.slice(0, 8)}...`,
-									`Duration: ${formatNumber(point.x, 1)} minutes`,
-									`Accuracy: ${formatPercent(point.y / 100)}`
-								];
-							}
-						}
-					}
-				},
-				scales: {
-					x: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'Duration (minutes)',
-							font: { size: 14 }
-						},
-						min: minDuration,
-						max: maxDuration,
-						ticks: {
-							stepSize: 5
-						}
-					},
-					y: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'Accuracy (%)',
-							font: { size: 14 }
-						},
-						min: minAccuracy,
-						max: maxAccuracy,
-						ticks: {
-							callback(tickValue) {
-								const n = typeof tickValue === 'number' ? tickValue : Number(tickValue);
-								if (Number.isNaN(n)) return '';
-								return `${Math.round(n)}%`;
-							}
-						}
-					}
-				}
-			}
-		});
-	}
-
-	onMount(() => {
-		// Compute data once when component mounts
-		computeParticipantsData();
-		
-		// Build chart after a brief delay to ensure canvas is ready
-		setTimeout(() => {
-			if (chartCanvas && participantsData.length > 0) {
-				buildChart();
-			}
-		}, 50);
-		
-		return () => {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
-		};
+			{ width: 720, height: 440 }
+		);
 	});
+
+	function downloadSvg() {
+		const svg = chartHost?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, 'duration-vs-accuracy.svg');
+	}
 </script>
 
 <Section title="Duration vs Accuracy Scatterplot">
-	<div class="mb-4 rounded-lg bg-blue-50 p-4 border border-blue-200">
+	<div class="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
 		<p class="text-sm text-blue-800">
-			<strong>Description:</strong> This scatterplot shows the relationship between experiment duration (in minutes) and participant accuracy (as a percentage). 
+			<strong>Description:</strong> This scatterplot shows the relationship between experiment duration (in minutes) and participant accuracy (as a percentage).
 			Each point represents one participant.
 		</p>
-		<p class="text-sm text-blue-700 mt-2">
+		<p class="mt-2 text-sm text-blue-700">
 			<strong>Participants included:</strong> {stats.count} (only participants with valid duration data)
 		</p>
 	</div>
 
 	{#if stats.count > 0}
-		<div class="rounded-lg bg-white p-6 shadow-sm border border-slate-200">
+		<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+			<div class="mb-2 flex justify-end">
+				<button
+					type="button"
+					class="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400"
+					onclick={downloadSvg}>Download SVG</button
+				>
+			</div>
 			<div class="h-[500px]">
-				<canvas bind:this={chartCanvas}></canvas>
+				<div bind:this={chartHost} class="h-full w-full"></div>
 			</div>
 		</div>
 
-		<!-- Statistics Summary -->
 		<div class="mt-6 grid gap-4 md:grid-cols-3">
-			<div class="rounded-lg bg-slate-50 p-4 border border-slate-200">
-				<h4 class="text-sm font-semibold text-slate-700 mb-2">Average Duration</h4>
+			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+				<h4 class="mb-2 text-sm font-semibold text-slate-700">Average Duration</h4>
 				<p class="text-2xl font-bold text-slate-800">
 					{formatNumber(stats.avgDuration, 1)} min
 				</p>
 			</div>
-			<div class="rounded-lg bg-slate-50 p-4 border border-slate-200">
-				<h4 class="text-sm font-semibold text-slate-700 mb-2">Average Accuracy</h4>
+			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+				<h4 class="mb-2 text-sm font-semibold text-slate-700">Average Accuracy</h4>
 				<p class="text-2xl font-bold text-slate-800">
 					{formatPercent(stats.avgAccuracy)}
 				</p>
 			</div>
-			<div class="rounded-lg bg-slate-50 p-4 border border-slate-200">
-				<h4 class="text-sm font-semibold text-slate-700 mb-2">Participants</h4>
+			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+				<h4 class="mb-2 text-sm font-semibold text-slate-700">Participants</h4>
 				<p class="text-2xl font-bold text-slate-800">
 					{stats.count}
 				</p>
 			</div>
 		</div>
 	{:else}
-		<div class="rounded-lg bg-yellow-50 p-6 border border-yellow-200">
+		<div class="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
 			<p class="text-yellow-800">
 				No data available. Please ensure participants have valid duration information.
 			</p>
 		</div>
 	{/if}
 </Section>
-

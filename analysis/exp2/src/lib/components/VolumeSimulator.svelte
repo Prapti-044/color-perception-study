@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+	import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer.js';
+	import { downloadSvgString } from '$lib/svgDownload';
 	import {
 		buildEllipsoidModelFromThresholdMeans,
 		MAX_LOCATION_BY_VECTOR,
@@ -272,6 +274,27 @@
 			[vector]: Number(value)
 		};
 	}
+
+	function downloadSvgSnapshot() {
+		if (!scene || !camera) {
+			return;
+		}
+
+		const exportW = 1200;
+		const exportH = 900;
+		const svgRenderer = new SVGRenderer();
+		svgRenderer.setSize(exportW, exportH);
+
+		const exportCam = camera.clone() as {
+			aspect: number;
+			updateProjectionMatrix: () => void;
+		};
+		exportCam.aspect = exportW / exportH;
+		exportCam.updateProjectionMatrix();
+
+		svgRenderer.render(scene, exportCam);
+		downloadSvgString(svgRenderer.domElement.outerHTML, 'volume-simulator-3d.svg');
+	}
 </script>
 
 <div class="rounded-3xl border border-slate-200/90 bg-white/90 p-5 shadow-sm">
@@ -335,6 +358,13 @@
 					Drag to orbit, scroll to zoom, and pan to inspect the ellipsoid in 3D. Chromatic points lie in
 					the `u*–v*` plane, while the lightness point extends along the vertical axis.
 				</p>
+				<div class="mt-2 flex justify-end">
+					<button
+						type="button"
+						class="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400"
+						onclick={downloadSvgSnapshot}>Download SVG (vector snapshot)</button
+					>
+				</div>
 				<div
 					bind:this={ellipsoidHost}
 					class="mt-4 h-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"

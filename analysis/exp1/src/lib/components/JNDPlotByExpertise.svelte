@@ -1,36 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { NDLinearFitRow, RegressionRow } from '$lib/types';
 	import { formatNumber } from '$lib/utils';
-	import {
-		jndLegendLabelOptions,
-		legendInsidePlotTopRightPlugin
-	} from '$lib/chart-legend-inside';
 	import Section from './Section.svelte';
 	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
 	import {
-		Chart,
-		LineController,
-		PointElement,
-		LineElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend,
-		Filler
-	} from 'chart.js';
-
-	Chart.register(
-		LineController,
-		PointElement,
-		LineElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend,
-		Filler
-	);
+		renderJndComparisonChart,
+		type JndLineSeries,
+		type JndScatterSeries
+	} from '$lib/d3/jndComparisonChart';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	interface Props {
 		regressionExpert: RegressionRow[];
@@ -60,8 +39,7 @@
 		figureScopeDescription = 'using the active expert clause shown above.'
 	}: Props = $props();
 
-	let chartCanvas: HTMLCanvasElement;
-	let chart: Chart | null = null;
+	let chartHost = $state<HTMLDivElement | undefined>();
 
 	const resolvedChartTitle = $derived(
 		chartTitle || `50% JND Comparison: ${expertLabel} vs Non-Expert`
@@ -158,9 +136,7 @@
 		}
 	}
 
-	function buildChart() {
-		if (!chartCanvas || chart) return;
-
+	const jndSvgModel = $derived.by(() => {
 		const regressionByAxisExpert = sortedRegressionExpert;
 		const regressionByAxisNonExpert = sortedRegressionNonExpert;
 		const allSizes = [
@@ -169,12 +145,21 @@
 		];
 
 		if (allSizes.length === 0) {
-			return;
+			return {
+				lineSeries: [] as JndLineSeries[],
+				scatterSeries: [] as JndScatterSeries[],
+				xDomain: [0, 1] as [number, number],
+				yDomain: [0, 1] as [number, number],
+				hasData: false
+			};
 		}
 
 		const minSize = Math.min(...allSizes) * 0.9;
 		const maxSize = Math.max(...allSizes) * 1.1;
-		const datasets: any[] = [];
+
+		const lineSeries: JndLineSeries[] = [];
+		const scatterSeries: JndScatterSeries[] = [];
+		let yHi = 0;
 
 		for (const axis of axisOrder) {
 			const expertModel = ndLinearFitExpert.find((row) => row.axis === axis);
@@ -184,223 +169,97 @@
 			const colors = axisColors[axis];
 
 			if (expertModel && expertAxisData) {
-				datasets.push({
+				const pts = generateLinearModelCurve(expertModel.A, expertModel.B, minSize, maxSize);
+				lineSeries.push({
 					label: `${axis}-axis (${expertLabel})`,
-					data: generateLinearModelCurve(expertModel.A, expertModel.B, minSize, maxSize),
-					borderColor: colors.expert,
-					backgroundColor: 'transparent',
-					borderWidth: 2.5,
-					pointRadius: 0,
-					tension: 0,
-					parsing: { xAxisKey: 'x', yAxisKey: 'y' }
+					color: colors.expert,
+					points: pts
 				});
+				for (const p of pts) yHi = Math.max(yHi, p.y);
 
-				datasets.push({
+				const expPts = expertAxisData.map((row) => ({
+					x: row.size_deg,
+					y: row.ND50,
+					yMin: row.ND50 - row.ND50_se,
+					yMax: row.ND50 + row.ND50_se
+				}));
+				scatterSeries.push({
 					label: `${axis}-axis data (${expertLabel.toLowerCase()})`,
-					data: expertAxisData.map((row) => ({
-						x: row.size_deg,
-						y: row.ND50,
-						yMin: row.ND50 - row.ND50_se,
-						yMax: row.ND50 + row.ND50_se
-					})),
-					borderColor: colors.expert,
-					backgroundColor: colors.expert,
-					pointRadius: 6,
-					pointStyle: 'circle',
-					showLine: false,
-					parsing: { xAxisKey: 'x', yAxisKey: 'y' }
+					color: colors.expert,
+					shape: 'circle',
+					points: expPts
 				});
+				for (const p of expPts) {
+					yHi = Math.max(yHi, p.y, p.yMax ?? p.y, p.yMin ?? p.y);
+				}
 			}
 
 			if (nonExpertModel && nonExpertAxisData) {
-				datasets.push({
+				const pts = generateLinearModelCurve(nonExpertModel.A, nonExpertModel.B, minSize, maxSize);
+				lineSeries.push({
 					label: `${axis}-axis (Non-Expert)`,
-					data: generateLinearModelCurve(nonExpertModel.A, nonExpertModel.B, minSize, maxSize),
-					borderColor: colors.nonExpert,
-					backgroundColor: 'transparent',
-					borderWidth: 2.5,
-					borderDash: [8, 4],
-					pointRadius: 0,
-					tension: 0,
-					parsing: { xAxisKey: 'x', yAxisKey: 'y' }
+					color: colors.nonExpert,
+					strokeDasharray: '8 4',
+					points: pts
 				});
+				for (const p of pts) yHi = Math.max(yHi, p.y);
 
-				datasets.push({
+				const nePts = nonExpertAxisData.map((row) => ({
+					x: row.size_deg,
+					y: row.ND50,
+					yMin: row.ND50 - row.ND50_se,
+					yMax: row.ND50 + row.ND50_se
+				}));
+				scatterSeries.push({
 					label: `${axis}-axis data (non-expert)`,
-					data: nonExpertAxisData.map((row) => ({
-						x: row.size_deg,
-						y: row.ND50,
-						yMin: row.ND50 - row.ND50_se,
-						yMax: row.ND50 + row.ND50_se
-					})),
-					borderColor: colors.nonExpert,
-					backgroundColor: 'transparent',
-					pointRadius: 5,
-					pointStyle: 'rectRot',
-					borderWidth: 2,
-					showLine: false,
-					parsing: { xAxisKey: 'x', yAxisKey: 'y' }
+					color: colors.nonExpert,
+					shape: 'diamond',
+					points: nePts
 				});
+				for (const p of nePts) {
+					yHi = Math.max(yHi, p.y, p.yMax ?? p.y, p.yMin ?? p.y);
+				}
 			}
 		}
 
-		if (datasets.length === 0) {
-			return;
-		}
+		const yTop = Math.max(5, Math.ceil(yHi / 5) * 5);
 
-		chart = new Chart(chartCanvas, {
-			type: 'line',
-			data: { datasets },
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				interaction: {
-					mode: 'nearest',
-					intersect: false
-				},
-				plugins: {
-					legend: {
-						display: true,
-						position: 'chartArea',
-						align: 'start',
-						fullSize: false,
-						labels: jndLegendLabelOptions
-					},
-					title: {
-						display: true,
-						text: resolvedChartTitle,
-						font: { size: 18, weight: 'bold' },
-						padding: { bottom: 20 }
-					},
-					tooltip: {
-						callbacks: {
-							label: (context) => {
-								const point = context.raw as {
-									y: number;
-									yMin?: number;
-								};
-								const datasetLabel = context.dataset.label || '';
-								const group = datasetLabel.includes('Non-Expert')
-									? ' (Non-Expert)'
-									: ` (${expertLabel})`;
-
-								if (point.yMin !== undefined) {
-									return `ND(50%) = ${formatNumber(point.y, 2)} ± ${formatNumber(point.y - point.yMin, 2)} ΔE${group}`;
-								}
-
-								return `ND(50%) = ${formatNumber(point.y, 2)} ΔE${group}`;
-							}
-						}
-					}
-				},
-				scales: {
-					x: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'Point Diameter (Visual Angle °)',
-							font: { size: 14 }
-						},
-						min: 0,
-						max: maxSize,
-						ticks: {
-							stepSize: 0.5
-						}
-					},
-					y: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'ND(50%, s) in ΔE',
-							font: { size: 14 }
-						},
-						min: 0,
-						ticks: {
-							stepSize: 5
-						}
-					}
-				}
-			},
-			plugins: [
-				legendInsidePlotTopRightPlugin,
-				{
-					id: 'errorBars',
-					afterDatasetsDraw(currentChart) {
-						const ctx = currentChart.ctx;
-						currentChart.data.datasets.forEach((dataset, datasetIndex) => {
-							if (!dataset.label?.includes('data')) return;
-
-							const meta = currentChart.getDatasetMeta(datasetIndex);
-							meta.data.forEach((element, pointIndex) => {
-								const dataPoint = (dataset.data as Array<{
-									yMin?: number;
-									yMax?: number;
-								}>)[pointIndex];
-
-								if (!dataPoint || dataPoint.yMin === undefined || dataPoint.yMax === undefined) {
-									return;
-								}
-
-								const x = element.x;
-								const yMin = currentChart.scales.y.getPixelForValue(dataPoint.yMin);
-								const yMax = currentChart.scales.y.getPixelForValue(dataPoint.yMax);
-
-								ctx.save();
-								ctx.strokeStyle = (dataset.borderColor as string) || '#000';
-								ctx.lineWidth = 1.5;
-
-								ctx.beginPath();
-								ctx.moveTo(x, yMin);
-								ctx.lineTo(x, yMax);
-								ctx.stroke();
-
-								ctx.beginPath();
-								ctx.moveTo(x - 4, yMax);
-								ctx.lineTo(x + 4, yMax);
-								ctx.stroke();
-
-								ctx.beginPath();
-								ctx.moveTo(x - 4, yMin);
-								ctx.lineTo(x + 4, yMin);
-								ctx.stroke();
-
-								ctx.restore();
-							});
-						});
-					}
-				}
-			]
-		});
-	}
-
-	onMount(() => {
-		buildChart();
-		return () => {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
+		return {
+			lineSeries,
+			scatterSeries,
+			xDomain: [0, maxSize] as [number, number],
+			yDomain: [0, yTop] as [number, number],
+			hasData: lineSeries.length > 0
 		};
 	});
 
 	$effect(() => {
-		const tracked = [
+		const _ = [
 			regressionExpert,
 			regressionNonExpert,
 			ndLinearFitExpert,
 			ndLinearFitNonExpert,
 			expertLabel,
-			chartTitle
+			chartTitle,
+			resolvedChartTitle
 		];
+		if (!chartHost || !jndSvgModel.hasData) return;
 
-		if (tracked && chartCanvas) {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
-			buildChart();
-		}
+		renderJndComparisonChart(chartHost, {
+			title: resolvedChartTitle,
+			xLabel: 'Point Diameter (Visual Angle °)',
+			yLabel: 'ND(50%, s) in ΔE',
+			lineSeries: jndSvgModel.lineSeries,
+			scatterSeries: jndSvgModel.scatterSeries,
+			xDomain: jndSvgModel.xDomain,
+			yDomain: jndSvgModel.yDomain
+		});
 	});
+
+	function downloadJndSvg() {
+		const svg = chartHost?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, 'jnd-by-expertise.svg');
+	}
 </script>
 
 <Section title={sectionTitle}>
@@ -491,9 +350,16 @@
 	</div>
 
 	<div class="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-		<h3 class="mb-4 text-lg font-semibold text-slate-700">{resolvedChartTitle}</h3>
+		<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+			<h3 class="text-lg font-semibold text-slate-700">{resolvedChartTitle}</h3>
+			<button
+				type="button"
+				class="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400"
+				onclick={downloadJndSvg}>Download SVG</button
+			>
+		</div>
 		<div class="h-[500px]">
-			<canvas bind:this={chartCanvas}></canvas>
+			<div bind:this={chartHost} class="h-full w-full"></div>
 		</div>
 	</div>
 

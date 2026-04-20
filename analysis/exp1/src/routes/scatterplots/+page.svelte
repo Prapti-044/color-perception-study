@@ -332,7 +332,10 @@
 									<div class="scatterplot-item">
 										{#if plot.specLoaded && plot.spec}
 											<div class="chart-wrapper">
-												<VegaChart spec={plot.spec} />
+												<VegaChart
+													spec={plot.spec}
+													downloadFileName={`scatterplot-${section.id}-${plot.metadata.index}.svg`}
+												/>
 											</div>
 										{:else if plot.specLoaded && !plot.spec}
 											<div class="chart-placeholder">

@@ -1,38 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { RegressionRow, InverseModelRow, NDLinearFitRow } from '$lib/types';
 	import { formatNumber } from '$lib/utils';
 	import { ORIGINAL_PAPER_RESULTS } from '$lib/constants';
-	import {
-		jndLegendLabelOptions,
-		legendInsidePlotTopRightPlugin
-	} from '$lib/chart-legend-inside';
 	import Section from './Section.svelte';
 	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
 	import {
-		Chart,
-		LineController,
-		PointElement,
-		LineElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend,
-		Filler
-	} from 'chart.js';
-
-	// Register Chart.js components
-	Chart.register(
-		LineController,
-		PointElement,
-		LineElement,
-		LinearScale,
-		Title,
-		Tooltip,
-		Legend,
-		Filler
-	);
+		renderJndComparisonChart,
+		type JndLineSeries,
+		type JndScatterSeries
+	} from '$lib/d3/jndComparisonChart';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	interface Props {
 		regression: RegressionRow[];
@@ -42,8 +20,7 @@
 
 	let { regression, inverseModel, ndLinearFit }: Props = $props();
 
-	let chartCanvas: HTMLCanvasElement;
-	let chart: Chart | null = null;
+	let chartHost = $state<HTMLDivElement | undefined>();
 	let showReference = $state(true);
 
 	// Axis colors matching the original paper
@@ -107,27 +84,6 @@
 		return points;
 	}
 
-	// Generate curve from the original nonlinear model
-	function generateNonlinearModelCurve(
-		c_x: number,
-		k_x: number,
-		minSize: number,
-		maxSize: number,
-		numPoints: number = 100
-	): { x: number; y: number }[] {
-		const points: { x: number; y: number }[] = [];
-		const step = (maxSize - minSize) / (numPoints - 1);
-
-		for (let i = 0; i < numPoints; i++) {
-			const s = minSize + i * step;
-			// ND(50%, s) = 0.5 / (c_x + k_x / s)
-			const nd = 0.5 / (c_x + k_x / s);
-			points.push({ x: s, y: nd });
-		}
-
-		return points;
-	}
-
 	// Render KaTeX equation
 	function renderLatex(latex: string, displayMode: boolean = false): string {
 		try {
@@ -165,21 +121,18 @@
 		return points;
 	}
 
-	// Build the chart
-	function buildChart() {
-		if (!chartCanvas || chart) return;
-
+	const jndSvgModel = $derived.by(() => {
 		const regByAxis = sortedRegression();
 		const allSizes = regression.map((r) => r.size_deg);
-		// Include reference sizes in range calculation
 		const refSizes = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0];
 		const allSizesWithRef = [...allSizes, ...refSizes];
 		const minSize = Math.min(...allSizesWithRef) * 0.9;
 		const maxSize = Math.max(...allSizesWithRef) * 1.1;
 
-		const datasets: any[] = [];
+		const lineSeries: JndLineSeries[] = [];
+		const scatterSeries: JndScatterSeries[] = [];
+		let yHi = 0;
 
-		// For each axis, add the model curves and data points
 		for (const axis of axisOrder) {
 			const invModel = inverseModel.find((m) => m.axis === axis);
 			const linModel = ndLinearFit.find((m) => m.axis === axis);
@@ -189,229 +142,88 @@
 
 			const colors = axisColors[axis];
 
-			// Current study: Linear approximation model curve (solid line)
 			const linearCurvePoints = generateLinearModelCurve(linModel.A, linModel.B, minSize, maxSize);
-
-			datasets.push({
+			lineSeries.push({
 				label: `${axis}-axis (Current)`,
-				data: linearCurvePoints,
-				borderColor: colors.main,
-				backgroundColor: 'transparent',
-				borderWidth: 2.5,
-				pointRadius: 0,
-				tension: 0,
-				parsing: {
-					xAxisKey: 'x',
-					yAxisKey: 'y'
-				}
+				color: colors.main,
+				points: linearCurvePoints
 			});
+			for (const p of linearCurvePoints) yHi = Math.max(yHi, p.y);
 
-			// Current study: Data points with error bars
-			datasets.push({
+			const currentPts = axisData.map((r) => ({
+				x: r.size_deg,
+				y: r.ND50,
+				yMin: r.ND50 - r.ND50_se,
+				yMax: r.ND50 + r.ND50_se
+			}));
+			scatterSeries.push({
 				label: `${axis}-axis data (current)`,
-				data: axisData.map((r) => ({
-					x: r.size_deg,
-					y: r.ND50,
-					yMin: r.ND50 - r.ND50_se,
-					yMax: r.ND50 + r.ND50_se
-				})),
-				borderColor: colors.main,
-				backgroundColor: colors.main,
-				pointRadius: 6,
-				pointStyle: 'circle',
-				showLine: false,
-				parsing: {
-					xAxisKey: 'x',
-					yAxisKey: 'y'
-				}
+				color: colors.main,
+				shape: 'circle',
+				points: currentPts
 			});
+			for (const p of currentPts) {
+				yHi = Math.max(yHi, p.y, p.yMax ?? p.y, p.yMin ?? p.y);
+			}
 
-			// Reference: Original paper model curve (dashed line)
 			if (showReference && refInverseModel[axis]) {
 				const refModel = refInverseModel[axis];
 				const refCurvePoints = generateRefModelCurve(refModel.c, refModel.k, minSize, maxSize);
-
-				datasets.push({
+				lineSeries.push({
 					label: `${axis}-axis (Szafir et al.)`,
-					data: refCurvePoints,
-					borderColor: colors.ref,
-					backgroundColor: 'transparent',
-					borderWidth: 2,
-					borderDash: [8, 4],
-					pointRadius: 0,
-					tension: 0,
-					parsing: {
-						xAxisKey: 'x',
-						yAxisKey: 'y'
-					}
+					color: colors.ref,
+					strokeDasharray: '8 4',
+					points: refCurvePoints
 				});
+				for (const p of refCurvePoints) yHi = Math.max(yHi, p.y);
 
-				// Reference: Original paper data points (hollow squares)
 				const refAxisData = refRegression[axis];
 				if (refAxisData) {
-					const refDataPoints = Object.entries(refAxisData).map(([size, data]) => ({
+					const refPts = Object.entries(refAxisData).map(([size, data]) => ({
 						x: parseFloat(size),
 						y: data.nd50
 					}));
-
-					datasets.push({
+					scatterSeries.push({
 						label: `${axis}-axis data (Szafir)`,
-						data: refDataPoints,
-						borderColor: colors.ref,
-						backgroundColor: 'transparent',
-						pointRadius: 5,
-						pointStyle: 'rectRot',
-						borderWidth: 2,
-						showLine: false,
-						parsing: {
-							xAxisKey: 'x',
-							yAxisKey: 'y'
-						}
+						color: colors.ref,
+						shape: 'diamond',
+						points: refPts
 					});
+					for (const p of refPts) yHi = Math.max(yHi, p.y);
 				}
 			}
 		}
 
-		chart = new Chart(chartCanvas, {
-			type: 'line',
-			data: { datasets },
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				interaction: {
-					mode: 'nearest',
-					intersect: false
-				},
-				plugins: {
-					legend: {
-						display: true,
-						position: 'chartArea',
-						align: 'start',
-						fullSize: false,
-						labels: jndLegendLabelOptions
-					},
-					title: {
-						display: true,
-						text: '50% JND for Points (Current Study vs. Szafir et al.)',
-						font: {
-							size: 18,
-							weight: 'bold'
-						},
-						padding: { bottom: 20 }
-					},
-					tooltip: {
-						callbacks: {
-							label: (context) => {
-								const point = context.raw as any;
-								const datasetLabel = context.dataset.label || '';
-								const source = datasetLabel.includes('Szafir') ? ' (Szafir)' : ' (Current)';
-								if (point.yMin !== undefined) {
-									return `ND(50%) = ${formatNumber(point.y, 2)} ± ${formatNumber(point.y - point.yMin, 2)} ΔE${source}`;
-								}
-								return `ND(50%) = ${formatNumber(point.y, 2)} ΔE${source}`;
-							}
-						}
-					}
-				},
-				scales: {
-					x: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'Point Diameter (Visual Angle °)',
-							font: { size: 14 }
-						},
-						min: 0,
-						max: maxSize,
-						ticks: {
-							stepSize: 0.5
-						}
-					},
-					y: {
-						type: 'linear',
-						title: {
-							display: true,
-							text: 'ND(50%, s) in ΔE',
-							font: { size: 14 }
-						},
-						min: 0,
-						ticks: {
-							stepSize: 5
-						}
-					}
-				}
-			},
-			plugins: [
-				legendInsidePlotTopRightPlugin,
-				{
-					id: 'errorBars',
-					afterDatasetsDraw(chart) {
-						const ctx = chart.ctx;
-						chart.data.datasets.forEach((dataset, i) => {
-							if (!dataset.label?.includes('data')) return;
+		const yTop = Math.max(5, Math.ceil(yHi / 5) * 5);
 
-							const meta = chart.getDatasetMeta(i);
-							meta.data.forEach((element, index) => {
-								const dataPoint = (dataset.data as any[])[index];
-								if (!dataPoint || dataPoint.yMin === undefined) return;
-
-								const x = element.x;
-								const yMin = chart.scales.y.getPixelForValue(dataPoint.yMin);
-								const yMax = chart.scales.y.getPixelForValue(dataPoint.yMax);
-
-								ctx.save();
-								ctx.strokeStyle = (dataset.borderColor as string) || '#000';
-								ctx.lineWidth = 1.5;
-
-								// Vertical line
-								ctx.beginPath();
-								ctx.moveTo(x, yMin);
-								ctx.lineTo(x, yMax);
-								ctx.stroke();
-
-								// Top cap
-								ctx.beginPath();
-								ctx.moveTo(x - 4, yMax);
-								ctx.lineTo(x + 4, yMax);
-								ctx.stroke();
-
-								// Bottom cap
-								ctx.beginPath();
-								ctx.moveTo(x - 4, yMin);
-								ctx.lineTo(x + 4, yMin);
-								ctx.stroke();
-
-								ctx.restore();
-							});
-						});
-					}
-				}
-			]
-		});
-	}
-
-	onMount(() => {
-		buildChart();
-		return () => {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
+		return {
+			lineSeries,
+			scatterSeries,
+			xDomain: [0, maxSize] as [number, number],
+			yDomain: [0, yTop] as [number, number],
+			hasData: lineSeries.length > 0
 		};
 	});
 
-	// Rebuild chart when data or showReference changes
 	$effect(() => {
-		// Track dependencies
 		const _ = [regression, inverseModel, ndLinearFit, showReference];
-		if (chartCanvas) {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
-			buildChart();
-		}
+		if (!chartHost || !jndSvgModel.hasData) return;
+
+		renderJndComparisonChart(chartHost, {
+			title: '50% JND for Points (Current Study vs. Szafir et al.)',
+			xLabel: 'Point Diameter (Visual Angle °)',
+			yLabel: 'ND(50%, s) in ΔE',
+			lineSeries: jndSvgModel.lineSeries,
+			scatterSeries: jndSvgModel.scatterSeries,
+			xDomain: jndSvgModel.xDomain,
+			yDomain: jndSvgModel.yDomain
+		});
 	});
+
+	function downloadJndSvg() {
+		const svg = chartHost?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, 'jnd-50-percent-points.svg');
+	}
 </script>
 
 <Section title="50% JND Model for Points">
@@ -704,20 +516,27 @@
 	<!-- Chart -->
 	<div class="mt-8 rounded-lg bg-white p-6 shadow-sm border border-slate-200">
 		<!-- Chart controls -->
-		<div class="mb-4 flex items-center justify-between">
+		<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
 			<h3 class="text-lg font-semibold text-slate-700">50% JND Comparison Plot</h3>
-			<label class="flex items-center gap-2 cursor-pointer">
-				<input
-					type="checkbox"
-					bind:checked={showReference}
-					class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-				/>
-				<span class="text-sm text-slate-600">Show Szafir et al. reference</span>
-			</label>
+			<div class="flex flex-wrap items-center gap-4">
+				<button
+					type="button"
+					class="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400"
+					onclick={downloadJndSvg}>Download SVG</button
+				>
+				<label class="flex cursor-pointer items-center gap-2">
+					<input
+						type="checkbox"
+						bind:checked={showReference}
+						class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+					/>
+					<span class="text-sm text-slate-600">Show Szafir et al. reference</span>
+				</label>
+			</div>
 		</div>
 
 		<div class="h-[500px]">
-			<canvas bind:this={chartCanvas}></canvas>
+			<div bind:this={chartHost} class="h-full w-full"></div>
 		</div>
 	</div>
 

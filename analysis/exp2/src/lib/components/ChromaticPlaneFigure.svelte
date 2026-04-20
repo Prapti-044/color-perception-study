@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as d3 from 'd3';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	type AxisPoint = {
 		deltaLuv: readonly number[];
@@ -50,6 +51,12 @@
 	const yScale = $derived(
 		d3.scaleLinear().domain([-maxAbs, maxAbs]).range([height - margin, margin])
 	);
+
+	let planeSvg = $state<SVGSVGElement | undefined>();
+
+	function downloadSvg() {
+		if (planeSvg) downloadSvgElement(planeSvg, 'chromatic-plane-u-v.svg');
+	}
 </script>
 
 <div class="rounded-3xl border border-slate-200/90 bg-white/90 p-5 shadow-sm">
@@ -62,7 +69,7 @@
 				Recovered `u*–v*` directions
 			</h3>
 		</div>
-		<div class="flex flex-wrap gap-2">
+		<div class="flex flex-wrap items-center gap-2">
 			<button
 				type="button"
 				class="mode-chip rounded-full border px-3 py-1.5 text-sm font-semibold"
@@ -79,6 +86,11 @@
 			>
 				Normalized directions
 			</button>
+			<button
+				type="button"
+				class="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-600 hover:border-slate-400"
+				onclick={downloadSvg}>Download SVG</button
+			>
 		</div>
 	</div>
 
@@ -88,7 +100,14 @@
 		only direction.
 	</p>
 
-	<svg class="mt-6 w-full" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Recovered chromatic directions in the u star v star plane">
+	<svg
+		bind:this={planeSvg}
+		class="mt-6 w-full"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox={`0 0 ${width} ${height}`}
+		role="img"
+		aria-label="Recovered chromatic directions in the u star v star plane"
+	>
 		<rect x="0" y="0" width={width} height={height} rx="24" fill="#f8fafc" />
 		<line
 			x1={xScale(0)}

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Chart from 'chart.js/auto';
+	import { renderHistogramChart } from '$lib/d3/histogramChart';
+	import { renderMultiColorScatterChart } from '$lib/d3/multiColorScatterChart';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	interface ShadeData {
 		brand: string;
@@ -219,118 +221,102 @@
 		return lines.join('\n');
 	}
 
-	// Chart references
-	let chartInstances: Chart[] = [];
+	let lightnessHost = $state<HTMLDivElement | undefined>();
+	let aHost = $state<HTMLDivElement | undefined>();
+	let bHost = $state<HTMLDivElement | undefined>();
+	let scatterLaHost = $state<HTMLDivElement | undefined>();
+	let scatterLbHost = $state<HTMLDivElement | undefined>();
+	let scatterAbHost = $state<HTMLDivElement | undefined>();
 
-	function createHistogram(ctx: CanvasRenderingContext2D, values: number[], label: string, color: string, bins: number = 20) {
-		const min = Math.min(...values);
-		const max = Math.max(...values);
-		const binWidth = (max - min) / bins;
-		const binData = new Array(bins).fill(0);
-		const binLabels: string[] = [];
+	function downloadFrom(host: HTMLDivElement | undefined, filename: string) {
+		const svg = host?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, filename);
+	}
 
-		for (let i = 0; i < bins; i++) {
-			const binStart = min + i * binWidth;
-			const binEnd = min + (i + 1) * binWidth;
-			binLabels.push(`${binStart.toFixed(1)}-${binEnd.toFixed(1)}`);
+	$effect(() => {
+		if (loading || data.length === 0) return;
+		if (!lightnessHost || !aHost || !bHost || !scatterLaHost || !scatterLbHost || !scatterAbHost) {
+			return;
 		}
 
-		values.forEach(value => {
-			const binIndex = Math.min(Math.floor((value - min) / binWidth), bins - 1);
-			binData[binIndex]++;
-		});
+		const labValues = data.map((shade) => hexToLab(shade.hex));
 
-		const chart = new Chart(ctx, {
-			type: 'bar',
-			data: {
-				labels: binLabels,
-				datasets: [{
-					label: `${label} Distribution`,
-					data: binData,
-					backgroundColor: color + '80',
-					borderColor: color,
-					borderWidth: 1
-				}]
+		renderHistogramChart(
+			lightnessHost,
+			{
+				title: 'L* (Lightness) Distribution',
+				xAxisLabel: 'L* (Lightness)',
+				values: labValues.map((lab) => lab.L),
+				accentColor: '#667eea'
 			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					legend: { display: false }
-				},
-				scales: {
-					y: {
-						beginAtZero: true,
-						title: { display: true, text: 'Count' }
-					},
-					x: {
-						title: { display: true, text: label }
-					}
-				}
-			}
-		});
-		chartInstances.push(chart);
-	}
-
-	function createScatterPlot(
-		ctx: CanvasRenderingContext2D,
-		labValues: LabColor[],
-		xKey: 'L' | 'A' | 'B',
-		yKey: 'L' | 'A' | 'B',
-		title: string,
-		shadeData: ShadeData[]
-	) {
-		const scatterData = labValues.map((lab, index) => ({
-			x: lab[xKey],
-			y: lab[yKey],
-			backgroundColor: shadeData[index].hex
-		}));
-
-		const chart = new Chart(ctx, {
-			type: 'scatter',
-			data: {
-				datasets: [{
-					label: title,
-					data: scatterData,
-					backgroundColor: scatterData.map(point => point.backgroundColor),
-					borderColor: scatterData.map(point => point.backgroundColor),
-					borderWidth: 1,
-					pointRadius: 3,
-					pointHoverRadius: 5
-				}]
+			{ width: 520, height: 300 }
+		);
+		renderHistogramChart(
+			aHost,
+			{
+				title: 'a* (Red-Green) Distribution',
+				xAxisLabel: 'a* (Red-Green)',
+				values: labValues.map((lab) => lab.A),
+				accentColor: '#e74c3c'
 			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					legend: { display: false },
-					tooltip: {
-						callbacks: {
-							label: function(context) {
-								const shade = shadeData[context.dataIndex];
-								const x = context.parsed?.x ?? 0;
-								const y = context.parsed?.y ?? 0;
-								return [
-									`${xKey}*: ${x.toFixed(1)}`,
-									`${yKey}*: ${y.toFixed(1)}`,
-									`Brand: ${shade.brand}`,
-									`Shade: ${shade.name || shade.specific || 'Unknown'}`
-								];
-							}
-						}
-					}
-				},
-				scales: {
-					x: { title: { display: true, text: `${xKey}*` } },
-					y: { title: { display: true, text: `${yKey}*` } }
-				}
-			}
-		});
-		chartInstances.push(chart);
-	}
+			{ width: 520, height: 300 }
+		);
+		renderHistogramChart(
+			bHost,
+			{
+				title: 'b* (Yellow-Blue) Distribution',
+				xAxisLabel: 'b* (Yellow-Blue)',
+				values: labValues.map((lab) => lab.B),
+				accentColor: '#f39c12'
+			},
+			{ width: 520, height: 300 }
+		);
+
+		renderMultiColorScatterChart(
+			scatterLaHost,
+			{
+				title: 'L* vs a*',
+				xLabel: 'L*',
+				yLabel: 'a*',
+				points: labValues.map((lab, index) => ({
+					x: lab.L,
+					y: lab.A,
+					fill: data[index].hex
+				}))
+			},
+			{ width: 520, height: 340 }
+		);
+		renderMultiColorScatterChart(
+			scatterLbHost,
+			{
+				title: 'L* vs b*',
+				xLabel: 'L*',
+				yLabel: 'b*',
+				points: labValues.map((lab, index) => ({
+					x: lab.L,
+					y: lab.B,
+					fill: data[index].hex
+				}))
+			},
+			{ width: 520, height: 340 }
+		);
+		renderMultiColorScatterChart(
+			scatterAbHost,
+			{
+				title: 'a* vs b*',
+				xLabel: 'a*',
+				yLabel: 'b*',
+				points: labValues.map((lab, index) => ({
+					x: lab.A,
+					y: lab.B,
+					fill: data[index].hex
+				}))
+			},
+			{ width: 520, height: 340 }
+		);
+	});
 
 	onMount(() => {
-		// Load data
 		(async () => {
 			try {
 				const response = await fetch('/foundation-names/allShades.csv');
@@ -340,37 +326,11 @@
 				excludedCount = result.excludedCount;
 				brandData = processData(data);
 				loading = false;
-
-				// Create charts after data is loaded
-				setTimeout(() => {
-					const labValues = data.map(shade => hexToLab(shade.hex));
-
-					// Get canvas contexts
-					const lightnessCtx = (document.getElementById('lightnessChart') as HTMLCanvasElement)?.getContext('2d');
-					const aCtx = (document.getElementById('aChart') as HTMLCanvasElement)?.getContext('2d');
-					const bCtx = (document.getElementById('bChart') as HTMLCanvasElement)?.getContext('2d');
-					const scatterLaCtx = (document.getElementById('scatterLaChart') as HTMLCanvasElement)?.getContext('2d');
-					const scatterLbCtx = (document.getElementById('scatterLbChart') as HTMLCanvasElement)?.getContext('2d');
-					const scatterAbCtx = (document.getElementById('scatterAbChart') as HTMLCanvasElement)?.getContext('2d');
-
-					if (lightnessCtx) createHistogram(lightnessCtx, labValues.map(lab => lab.L), 'L* (Lightness)', '#667eea', 20);
-					if (aCtx) createHistogram(aCtx, labValues.map(lab => lab.A), 'a* (Red-Green)', '#e74c3c', 20);
-					if (bCtx) createHistogram(bCtx, labValues.map(lab => lab.B), 'b* (Yellow-Blue)', '#f39c12', 20);
-
-					if (scatterLaCtx) createScatterPlot(scatterLaCtx, labValues, 'L', 'A', 'L* vs a*', data);
-					if (scatterLbCtx) createScatterPlot(scatterLbCtx, labValues, 'L', 'B', 'L* vs b*', data);
-					if (scatterAbCtx) createScatterPlot(scatterAbCtx, labValues, 'A', 'B', 'a* vs b*', data);
-				}, 100);
 			} catch (error) {
 				console.error('Error loading data:', error);
 				loading = false;
 			}
 		})();
-
-		// Cleanup charts on unmount
-		return () => {
-			chartInstances.forEach(chart => chart.destroy());
-		};
 	});
 </script>
 
@@ -449,32 +409,80 @@
 				<div class="charts-grid">
 					<div class="chart-container">
 						<h3 class="chart-title">L* (Lightness) Distribution</h3>
-						<canvas id="lightnessChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(lightnessHost, 'foundation-l-star-distribution.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={lightnessHost} class="chart-svg-host"></div>
 					</div>
 
 					<div class="chart-container">
 						<h3 class="chart-title">a* (Red-Green) Distribution</h3>
-						<canvas id="aChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(aHost, 'foundation-a-star-distribution.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={aHost} class="chart-svg-host"></div>
 					</div>
 
 					<div class="chart-container">
 						<h3 class="chart-title">b* (Yellow-Blue) Distribution</h3>
-						<canvas id="bChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(bHost, 'foundation-b-star-distribution.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={bHost} class="chart-svg-host"></div>
 					</div>
 
 					<div class="chart-container">
 						<h3 class="chart-title">L* vs a* Scatter Plot</h3>
-						<canvas id="scatterLaChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(scatterLaHost, 'foundation-l-vs-a-scatter.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={scatterLaHost} class="chart-svg-host"></div>
 					</div>
 
 					<div class="chart-container">
 						<h3 class="chart-title">L* vs b* Scatter Plot</h3>
-						<canvas id="scatterLbChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(scatterLbHost, 'foundation-l-vs-b-scatter.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={scatterLbHost} class="chart-svg-host"></div>
 					</div>
 
 					<div class="chart-container">
 						<h3 class="chart-title">a* vs b* Scatter Plot</h3>
-						<canvas id="scatterAbChart" class="chart-canvas"></canvas>
+						<div class="chart-actions">
+							<button
+								type="button"
+								class="chart-download"
+								onclick={() => downloadFrom(scatterAbHost, 'foundation-a-vs-b-scatter.svg')}
+								>Download SVG</button
+							>
+						</div>
+						<div bind:this={scatterAbHost} class="chart-svg-host"></div>
 					</div>
 				</div>
 			</section>
@@ -543,8 +551,31 @@
 		text-align: center;
 	}
 
-	.chart-canvas {
-		max-height: 280px;
+	.chart-actions {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 0.35rem;
+	}
+
+	.chart-download {
+		border-radius: 0.375rem;
+		border: 1px solid #cbd5e1;
+		background: #fff;
+		padding: 0.25rem 0.5rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #475569;
+		cursor: pointer;
+	}
+
+	.chart-download:hover {
+		border-color: #94a3b8;
+		color: #0f172a;
+	}
+
+	.chart-svg-host {
+		max-height: 300px;
+		min-height: 240px;
 	}
 
 	/* Brand sections */

@@ -20,6 +20,7 @@
 
 <script lang="ts">
 	import * as d3 from 'd3';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	type Props = {
 		bins: HistogramBin[];
@@ -479,6 +480,11 @@
 					.text((item) => item.label);
 			});
 	});
+
+	function downloadSvg() {
+		const svg = chartContainer?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, 'perception-histogram.svg');
+	}
 </script>
 
 <div
@@ -489,7 +495,14 @@
 		role="toolbar"
 		aria-label="Chart display mode"
 	>
-		<p class="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">View</p>
+		<div class="flex flex-wrap items-center justify-between gap-2">
+			<p class="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">View</p>
+			<button
+				type="button"
+				class="rounded border border-slate-300 bg-white/95 px-2 py-1 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur hover:border-slate-400"
+				onclick={downloadSvg}>Download SVG</button
+			>
+		</div>
 		<div class="flex flex-wrap gap-1.5 sm:gap-2">
 			{#each MODE_OPTIONS as option (option.id)}
 				<button

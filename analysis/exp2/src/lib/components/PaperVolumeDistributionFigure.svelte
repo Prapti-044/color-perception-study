@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as d3 from 'd3';
+	import { downloadSvgElement } from '$lib/svgDownload';
 
 	type HistogramBin = {
 		end: number;
@@ -349,12 +350,26 @@
 				.text(summaryFormatter.format(row.value));
 		});
 	});
+
+	function downloadSvg() {
+		const svg = chartContainer?.querySelector('svg');
+		if (svg) downloadSvgElement(svg, 'paper-volume-distribution.svg');
+	}
 </script>
 
-<div
-	class="paper-figure w-full overflow-hidden rounded-sm bg-white"
-	bind:this={chartContainer}
-></div>
+<div class="relative w-full">
+	<div class="pointer-events-auto absolute right-2 top-2 z-10">
+		<button
+			type="button"
+			class="rounded border border-slate-300 bg-white/95 px-2 py-1 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur hover:border-slate-400"
+			onclick={downloadSvg}>Download SVG</button
+		>
+	</div>
+	<div
+		class="paper-figure w-full overflow-hidden rounded-sm bg-white"
+		bind:this={chartContainer}
+	></div>
+</div>
 
 <style>
 	.paper-figure :global(svg) {
