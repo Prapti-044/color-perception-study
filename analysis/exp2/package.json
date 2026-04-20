@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
-		"test": "node --test src/lib/colorVisionMath.spec.js src/lib/expertClause.spec.js src/lib/server/colorVisionMethodology.spec.js",
+		"test": "node --test src/lib/colorVisionMath.spec.js src/lib/expertClause.spec.js src/lib/normality.spec.js src/lib/server/colorVisionMethodology.spec.js",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"d3": "^7.9.0",
+		"jstat": "^1.9.6",
 		"three": "^0.184.0"
 	}
 }

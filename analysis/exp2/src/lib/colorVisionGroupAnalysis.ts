@@ -1,6 +1,8 @@
 import { HISTOGRAM_BIN_WIDTH, HISTOGRAM_MAX_VOLUME } from './colorVisionMath.js';
 import type { ExpertClauseNode, ExpertDemographics } from './expertClause.ts';
 import { getParticipantsByExpertClause } from './expertClause.ts';
+import { qqPlotPoints, shapiroWilk } from './normality.ts';
+import type { QQPoint, ShapiroWilkResult } from './normality.ts';
 
 const HISTOGRAM_BIN_COUNT = Math.ceil(HISTOGRAM_MAX_VOLUME / HISTOGRAM_BIN_WIDTH);
 
@@ -39,6 +41,7 @@ export type GroupAnalysis = {
 	id: 'expert' | 'nonExpert';
 	label: string;
 	metrics: {
+		ellipsoidVolume: SummaryStat;
 		meanNormalizedThreshold: SummaryStat;
 		meanRawThreshold: SummaryStat;
 		trialAccuracy: SummaryStat;
@@ -57,6 +60,25 @@ export type ComparisonMetric = {
 	label: string;
 	nonExpert: SummaryStat;
 	welch: WelchResult;
+};
+
+export type NormalityVariableId =
+	| 'trialAccuracy'
+	| 'meanRawThreshold'
+	| 'meanNormalizedThreshold'
+	| 'ellipsoidVolume';
+
+export type NormalityGroupResult = ShapiroWilkResult & {
+	qq: QQPoint[];
+};
+
+export type NormalityVariableAnalysis = {
+	description: string;
+	expert: NormalityGroupResult;
+	id: NormalityVariableId;
+	label: string;
+	nonExpert: NormalityGroupResult;
+	pooled: NormalityGroupResult;
 };
 
 export type HistogramBin = {
@@ -79,6 +101,7 @@ type HistogramSummary = {
 export type ColorVisionAnalysis = {
 	comparisons: ComparisonMetric[];
 	groups: GroupAnalysis[];
+	overallEllipsoidVolume: SummaryStat;
 	histogram: {
 		binWidth: number;
 		bins: HistogramBin[];
@@ -87,6 +110,10 @@ export type ColorVisionAnalysis = {
 		participantVolumes: number[];
 		summary: HistogramSummary;
 		visibleParticipantCount: number;
+	};
+	normality: {
+		alpha: number;
+		variables: NormalityVariableAnalysis[];
 	};
 };
 
@@ -217,6 +244,7 @@ function buildGroupAnalysis(
 		id,
 		label,
 		metrics: {
+			ellipsoidVolume: summarise(metrics.map((metric) => metric.ellipsoidVolume)),
 			meanNormalizedThreshold: summarise(
 				metrics.map((metric) => metric.meanNormalizedThreshold)
 			),
@@ -294,6 +322,64 @@ function buildHistogram(
 	};
 }
 
+function buildNormalityGroupResult(values: number[]): NormalityGroupResult {
+	const shapiro = shapiroWilk(values);
+	const qq = qqPlotPoints(values);
+	return { ...shapiro, qq };
+}
+
+const NORMALITY_VARIABLE_DEFINITIONS: Array<{
+	description: string;
+	id: NormalityVariableId;
+	label: string;
+	selector: (metric: ParticipantMetric) => number;
+}> = [
+	{
+		description: 'Proportion of correct staircase guesses per participant.',
+		id: 'trialAccuracy',
+		label: 'Trial accuracy',
+		selector: (metric) => metric.accuracy
+	},
+	{
+		description: 'Average threshold (in staircase steps) across completed direction sets.',
+		id: 'meanRawThreshold',
+		label: 'Mean raw threshold',
+		selector: (metric) => metric.meanRawThreshold
+	},
+	{
+		description: 'Raw threshold divided by per-vector max step count, then averaged.',
+		id: 'meanNormalizedThreshold',
+		label: 'Mean normalized threshold',
+		selector: (metric) => metric.meanNormalizedThreshold
+	},
+	{
+		description: 'Reconstructed discrimination-ellipsoid volume (L*u*v* units cubed).',
+		id: 'ellipsoidVolume',
+		label: 'Ellipsoid volume',
+		selector: (metric) => metric.ellipsoidVolume
+	}
+];
+
+function buildNormalityAnalysis(
+	expertMetrics: ParticipantMetric[],
+	nonExpertMetrics: ParticipantMetric[]
+) {
+	const pooledMetrics = [...expertMetrics, ...nonExpertMetrics];
+	const variables = NORMALITY_VARIABLE_DEFINITIONS.map((definition) => ({
+		description: definition.description,
+		expert: buildNormalityGroupResult(expertMetrics.map(definition.selector)),
+		id: definition.id,
+		label: definition.label,
+		nonExpert: buildNormalityGroupResult(nonExpertMetrics.map(definition.selector)),
+		pooled: buildNormalityGroupResult(pooledMetrics.map(definition.selector))
+	}));
+
+	return {
+		alpha: 0.05,
+		variables
+	};
+}
+
 export function buildColorVisionAnalysis(
 	records: ParticipantAnalysisRecord[],
 	clause: ExpertClauseNode
@@ -310,6 +396,9 @@ export function buildColorVisionAnalysis(
 	);
 	const expertGroup = buildGroupAnalysis('expert', 'Expert', expertRecords);
 	const nonExpertGroup = buildGroupAnalysis('nonExpert', 'Non-Expert', nonExpertRecords);
+	const allAnalyzedMetrics = [...expertRecords, ...nonExpertRecords].map(
+		(record) => record.metric
+	);
 
 	return {
 		comparisons: [
@@ -363,7 +452,14 @@ export function buildColorVisionAnalysis(
 			}
 		],
 		groups: [expertGroup, nonExpertGroup],
+		overallEllipsoidVolume: summarise(
+			allAnalyzedMetrics.map((metric) => metric.ellipsoidVolume)
+		),
 		histogram: buildHistogram(
+			expertRecords.map((record) => record.metric),
+			nonExpertRecords.map((record) => record.metric)
+		),
+		normality: buildNormalityAnalysis(
 			expertRecords.map((record) => record.metric),
 			nonExpertRecords.map((record) => record.metric)
 		)

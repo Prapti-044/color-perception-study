@@ -4,6 +4,8 @@
 	import { buildColorVisionAnalysis } from '$lib/colorVisionGroupAnalysis';
 	import ExpertClauseBuilder from '$lib/components/ExpertClauseBuilder.svelte';
 	import EllipseModeToggle from '$lib/components/EllipseModeToggle.svelte';
+	import NormalityAnalysis from '$lib/components/NormalityAnalysis.svelte';
+	import PooledNormalityAnalysis from '$lib/components/PooledNormalityAnalysis.svelte';
 	import PaperVolumeDistributionFigure from '$lib/components/PaperVolumeDistributionFigure.svelte';
 	import PerceptionHistogram from '$lib/components/PerceptionHistogram.svelte';
 	import {
@@ -107,6 +109,11 @@
 			label: ellipseMode === 'exact' ? 'Analyzed participants' : 'Analyzed participants (+ fitted)',
 			value: `${expertGroup.participantCount} vs ${nonExpertGroup.participantCount}`,
 			footnote: participantRatioFootnote
+		},
+		{
+			label: 'Mean ellipsoid volume (all participants)',
+			value: compactFormatter.format(analysis.overallEllipsoidVolume.mean),
+			footnote: `SD ${compactFormatter.format(analysis.overallEllipsoidVolume.sd)} ellipsoid units³`
 		},
 		{
 			label: 'Aggregate accuracy gap',
@@ -248,7 +255,7 @@
 					<EllipseModeToggle currentMode={ellipseMode} label="Ellipse inclusion" />
 				</div>
 
-				<div class="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+				<div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 					{#each highlightCards as card}
 						<div class="stat-card rounded-2xl border border-slate-200/90 bg-white/90 p-5 shadow-sm">
 							<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{card.label}</p>
@@ -347,6 +354,15 @@
 							</p>
 							<p class="mt-1 text-sm text-slate-600">
 								SD {threeDecimalFormatter.format(group.metrics.meanNormalizedThreshold.sd)}
+							</p>
+						</div>
+						<div class="rounded-2xl border border-slate-200/90 bg-white px-5 py-4 shadow-sm">
+							<p class="text-sm text-slate-500">Mean ellipsoid volume</p>
+							<p class="mt-2 font-mono text-2xl font-semibold tabular-nums text-slate-950">
+								{compactFormatter.format(group.metrics.ellipsoidVolume.mean)}
+							</p>
+							<p class="mt-1 text-sm text-slate-600">
+								SD {compactFormatter.format(group.metrics.ellipsoidVolume.sd)} ellipsoid units³
 							</p>
 						</div>
 					</div>
@@ -454,6 +470,137 @@
 					Open methods note
 				</a>
 			</aside>
+		</section>
+
+		<section class="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-sm sm:p-8">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+						Assumption check
+					</p>
+					<h2 class="mt-1 font-display text-2xl font-semibold text-slate-950">
+						Normality of user study data
+					</h2>
+				</div>
+				<p class="max-w-xs text-sm text-slate-500">
+					Shapiro–Wilk per metric, split by Expert / Non-Expert. α = {analysis.normality.alpha}.
+				</p>
+			</div>
+
+			<p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600">
+				The Welch t-tests above assume that each group's metric is approximately normal. This section
+				runs the Shapiro–Wilk test on every participant-level metric inside each group and pairs it
+				with a standardized Q–Q plot (Blom plotting positions against the y = x reference line). A
+				small <em>p</em>-value means the metric is unlikely to have been drawn from a normal
+				distribution.
+			</p>
+
+			<div class="mt-6">
+				<NormalityAnalysis
+					alpha={analysis.normality.alpha}
+					variables={analysis.normality.variables}
+				/>
+			</div>
+
+			<div
+				class="mt-8 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-5 text-sm leading-relaxed text-slate-700"
+			>
+				<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Conclusion</p>
+				<p class="mt-2">
+					Under the default expert clause in exact-ellipse mode (n = 147 Expert, n = 96 Non-Expert),
+					only <strong>trial accuracy</strong> fails to reject normality in both groups (Expert W =
+					0.984, p = 0.089; Non-Expert W = 0.980, p = 0.144). Both threshold metrics reject
+					strongly — <strong>mean raw threshold</strong> at Expert W = 0.873 and Non-Expert W =
+					0.798 (p ≈ 10⁻¹⁰ in both groups), and <strong>mean normalized threshold</strong> at
+					Expert W = 0.876 and Non-Expert W = 0.800 (p ≈ 10⁻⁹ or smaller). <strong>Ellipsoid
+					volume</strong> is the most extreme: Expert W = 0.422 and Non-Expert W = 0.375, both with
+					<em>p</em> indistinguishable from zero.
+				</p>
+				<p class="mt-3">
+					The Q–Q plots match the numbers. Accuracy scatters tightly along the y = x diagonal in
+					both groups (staircase targeting pulls accuracies toward ~60% and symmetrizes the
+					distribution), while the threshold and especially the ellipsoid-volume plots fan
+					sharply upward on the right tail — the classic signature of a right-skewed, long-tailed
+					distribution with a handful of participants producing disproportionately large volumes.
+				</p>
+				<p class="mt-3">
+					Switching to <em>include-fitted</em> mode (n = 252 Expert, n = 142 Non-Expert) preserves
+					the qualitative verdict for thresholds and volume (all four reject at p &lt; 10⁻¹²) and
+					additionally pushes Expert accuracy below α = 0.05 (W = 0.932, p ≈ 2 × 10⁻⁹), driven by
+					the extra variance that fitted participants contribute. Non-Expert accuracy stays on the
+					border (W = 0.983, p = 0.067).
+				</p>
+				<p class="mt-3">
+					Implication for the Welch table above: the accuracy contrast is on reasonably safe
+					parametric ground in exact mode (the CLT plus Welch's robustness cover the mild
+					deviation), but the threshold and volume contrasts should be treated as descriptive.
+					A rank-based sensitivity analysis (Mann–Whitney) — or, for ellipsoid volume
+					specifically, a log or Box–Cox transform before re-running the <em>t</em>-test — is the
+					appropriate follow-up for the last two rows of the group comparison.
+				</p>
+			</div>
+		</section>
+
+		<section class="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-sm sm:p-8">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+						Assumption check
+					</p>
+					<h2 class="mt-1 font-display text-2xl font-semibold text-slate-950">
+						Normality of user study data — pooled
+					</h2>
+				</div>
+				<p class="max-w-xs text-sm text-slate-500">
+					Shapiro–Wilk per metric, all participants pooled (no Expert / Non-Expert split). α =
+					{analysis.normality.alpha}.
+				</p>
+			</div>
+
+			<p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600">
+				The split-by-group view above asks whether each group is individually normal — the
+				assumption that the Welch <em>t</em>-test actually needs. It is also worth asking the
+				simpler question: treating the user study as a single sample, are these metrics normally
+				distributed overall? This section ignores the expert clause and runs Shapiro–Wilk on every
+				participant together.
+			</p>
+
+			<div class="mt-6">
+				<PooledNormalityAnalysis
+					alpha={analysis.normality.alpha}
+					variables={analysis.normality.variables}
+				/>
+			</div>
+
+			<div
+				class="mt-8 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-5 text-sm leading-relaxed text-slate-700"
+			>
+				<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Conclusion</p>
+				<p class="mt-2">
+					Pooling everyone in exact-ellipse mode (n = 243) rejects normality for every metric at α
+					= 0.05. <strong>Trial accuracy</strong> is the closest to normal (W = 0.986, p = 0.018)
+					— the rejection is driven mostly by the larger sample size, which makes the test very
+					sensitive to even mild deviations. Both <strong>threshold metrics</strong> are strongly
+					non-normal (mean raw W = 0.828 and mean normalized W = 0.831, both with p ≈ 10⁻¹⁵), and
+					<strong>ellipsoid volume</strong> is the most extreme (W = 0.397, <em>p</em> indistinguishable
+					from zero).
+				</p>
+				<p class="mt-3">
+					Switching to <em>include-fitted</em> mode (n = 394) amplifies every rejection. Trial
+					accuracy drops to W = 0.954 (p ≈ 9 × 10⁻¹⁰), the thresholds collapse to W ≈ 0.67, and
+					ellipsoid volume falls to W = 0.069 — essentially the entire sample lying on a single
+					extreme tail. The fitted participants inject a long right tail into every metric, which
+					is exactly what we saw in the split-by-group analysis.
+				</p>
+				<p class="mt-3">
+					Comparing pooled vs. split: accuracy looks marginally non-normal when pooled in exact
+					mode but passes comfortably inside each group, which is the expected signature of two
+					sub-populations with slightly different means being collapsed into one sample. The
+					threshold and volume metrics are non-normal both in aggregate and within each group, so
+					the conclusion from the Welch table does not change — rank-based or log-transformed
+					follow-ups remain the appropriate sensitivity checks for those two rows.
+				</p>
+			</div>
 		</section>
 
 		<section class="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-sm sm:p-8">
