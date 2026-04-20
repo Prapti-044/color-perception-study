@@ -51,12 +51,19 @@
 	const COLOR_EXPERT = '#0072B2';
 	const COLOR_NON_EXPERT = '#D55E00';
 	const COLOR_TOTAL = '#475569';
+	const COLOR_EXPERIENCED_LABEL = 'Color Experienced';
+	const COLOR_NON_EXPERIENCED_LABEL = 'Color Non-Experienced';
 
 	const margin = { bottom: 78, left: 64, right: 28, top: 52 };
 	const outerWidth = 1200;
 	const outerHeight = 430;
 	const INNER_PAD = 0.1;
 	const Y_AXIS_HEADROOM = 2;
+	const LEGEND_WIDTH = 188;
+	const LEGEND_PADDING_X = 16;
+	const LEGEND_PADDING_Y = 16;
+	const LEGEND_ROW_HEIGHT = 24;
+	const LEGEND_SWATCH_SIZE = 12;
 
 	const MODE_OPTIONS: { id: ChartMode; label: string; title: string }[] = [
 		{
@@ -94,17 +101,17 @@
 		}
 
 		if (chartMode === 'expertOnly') {
-			items.push({ color: COLOR_EXPERT, label: 'Expert' });
+			items.push({ color: COLOR_EXPERT, label: COLOR_EXPERIENCED_LABEL });
 			return items;
 		}
 
 		if (chartMode === 'nonExpertOnly') {
-			items.push({ color: COLOR_NON_EXPERT, label: 'Non-Expert' });
+			items.push({ color: COLOR_NON_EXPERT, label: COLOR_NON_EXPERIENCED_LABEL });
 			return items;
 		}
 
-		items.push({ color: COLOR_EXPERT, label: 'Expert' });
-		items.push({ color: COLOR_NON_EXPERT, label: 'Non-Expert' });
+		items.push({ color: COLOR_EXPERT, label: COLOR_EXPERIENCED_LABEL });
+		items.push({ color: COLOR_NON_EXPERT, label: COLOR_NON_EXPERIENCED_LABEL });
 		return items;
 	});
 
@@ -429,15 +436,15 @@
 			.append('g')
 			.attr(
 				'transform',
-				`translate(${outerWidth - margin.right - 150},${margin.top + 4})`
+				`translate(${outerWidth - margin.right - LEGEND_WIDTH},${margin.top + 4})`
 			);
 
 		legend
 			.append('rect')
-			.attr('x', -10)
-			.attr('y', -12)
-			.attr('width', 160)
-			.attr('height', legendItems.length * 22 + 12)
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('width', LEGEND_WIDTH)
+			.attr('height', legendItems.length * LEGEND_ROW_HEIGHT + LEGEND_PADDING_Y * 2)
 			.attr('rx', 10)
 			.attr('fill', 'rgba(255,255,255,0.9)')
 			.attr('stroke', '#cbd5e1')
@@ -447,21 +454,24 @@
 			.selectAll('g')
 			.data(legendItems)
 			.join('g')
-			.attr('transform', (_, index) => `translate(0, ${index * 22})`)
+			.attr(
+				'transform',
+				(_, index) => `translate(${LEGEND_PADDING_X}, ${LEGEND_PADDING_Y + index * LEGEND_ROW_HEIGHT})`
+			)
 			.call((groups) => {
 				groups
 					.append('rect')
-					.attr('width', 12)
-					.attr('height', 12)
+					.attr('width', LEGEND_SWATCH_SIZE)
+					.attr('height', LEGEND_SWATCH_SIZE)
 					.attr('rx', 2)
-					.attr('y', -8)
+					.attr('y', -LEGEND_SWATCH_SIZE + 2)
 					.attr('fill', (item) => item.color)
 					.attr('stroke', '#1f2937')
 					.attr('stroke-width', 0.8);
 
 				groups
 					.append('text')
-					.attr('x', 18)
+					.attr('x', LEGEND_SWATCH_SIZE + 10)
 					.attr('y', 2)
 					.attr('fill', '#334155')
 					.style('font-size', '12px')

@@ -2,7 +2,10 @@
 	import { onMount } from 'svelte';
 	import type { NDLinearFitRow, RegressionRow } from '$lib/types';
 	import { formatNumber } from '$lib/utils';
-	import { legendInsidePlotTopRightPlugin } from '$lib/chart-legend-inside';
+	import {
+		jndLegendLabelOptions,
+		legendInsidePlotTopRightPlugin
+	} from '$lib/chart-legend-inside';
 	import Section from './Section.svelte';
 	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
@@ -39,6 +42,8 @@
 		expertClauseSummary: string;
 		expertLabel?: string;
 		sectionTitle?: string;
+		chartTitle?: string;
+		figureScopeDescription?: string;
 	}
 
 	let {
@@ -50,13 +55,17 @@
 		nonExpertCount,
 		expertClauseSummary,
 		expertLabel = 'Expert',
-		sectionTitle = '50% JND by Expertise'
+		sectionTitle = '50% JND by Expertise',
+		chartTitle = '',
+		figureScopeDescription = 'using the active expert clause shown above.'
 	}: Props = $props();
 
 	let chartCanvas: HTMLCanvasElement;
 	let chart: Chart | null = null;
 
-	const chartTitle = $derived(`50% JND Comparison: ${expertLabel} vs Non-Expert`);
+	const resolvedChartTitle = $derived(
+		chartTitle || `50% JND Comparison: ${expertLabel} vs Non-Expert`
+	);
 	const axisColors: Record<
 		string,
 		{ expert: string; expertLight: string; nonExpert: string; nonExpertLight: string }
@@ -176,7 +185,7 @@
 
 			if (expertModel && expertAxisData) {
 				datasets.push({
-					label: `${axis}-axis (${expertLabel}): ND = ${formatNumber(expertModel.A, 2)} + ${formatNumber(expertModel.B, 2)}/s`,
+					label: `${axis}-axis (${expertLabel})`,
 					data: generateLinearModelCurve(expertModel.A, expertModel.B, minSize, maxSize),
 					borderColor: colors.expert,
 					backgroundColor: 'transparent',
@@ -205,7 +214,7 @@
 
 			if (nonExpertModel && nonExpertAxisData) {
 				datasets.push({
-					label: `${axis}-axis (Non-Expert): ND = ${formatNumber(nonExpertModel.A, 2)} + ${formatNumber(nonExpertModel.B, 2)}/s`,
+					label: `${axis}-axis (Non-Expert)`,
 					data: generateLinearModelCurve(nonExpertModel.A, nonExpertModel.B, minSize, maxSize),
 					borderColor: colors.nonExpert,
 					backgroundColor: 'transparent',
@@ -255,16 +264,11 @@
 						position: 'chartArea',
 						align: 'start',
 						fullSize: false,
-						labels: {
-							usePointStyle: true,
-							padding: 15,
-							font: { size: 11 },
-							filter: (item) => !item.text.includes('data')
-						}
+						labels: jndLegendLabelOptions
 					},
 					title: {
 						display: true,
-						text: chartTitle,
+						text: resolvedChartTitle,
 						font: { size: 18, weight: 'bold' },
 						padding: { bottom: 20 }
 					},
@@ -385,7 +389,8 @@
 			regressionNonExpert,
 			ndLinearFitExpert,
 			ndLinearFitNonExpert,
-			expertLabel
+			expertLabel,
+			chartTitle
 		];
 
 		if (tracked && chartCanvas) {
@@ -486,7 +491,7 @@
 	</div>
 
 	<div class="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-		<h3 class="mb-4 text-lg font-semibold text-slate-700">{chartTitle}</h3>
+		<h3 class="mb-4 text-lg font-semibold text-slate-700">{resolvedChartTitle}</h3>
 		<div class="h-[500px]">
 			<canvas bind:this={chartCanvas}></canvas>
 		</div>
@@ -504,7 +509,7 @@
 	</div>
 
 	<p class="mt-4 text-sm italic text-slate-600">
-		<strong>Figure:</strong> 50% JND (ND(50%, s)) as a function of point diameter using the active expert clause shown above.
+		<strong>Figure:</strong> 50% JND (ND(50%, s)) as a function of point diameter {figureScopeDescription}
 		<strong> Solid lines</strong> show the {expertLabel} group's fitted model;
 		<strong> dashed lines</strong> show the Non-Expert group's model.
 		Both groups use the linear approximation {@html renderLatex('ND_x(50\\%, s) = A_x + B_x/s')}.

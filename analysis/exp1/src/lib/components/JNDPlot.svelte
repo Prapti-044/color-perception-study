@@ -3,7 +3,10 @@
 	import type { RegressionRow, InverseModelRow, NDLinearFitRow } from '$lib/types';
 	import { formatNumber } from '$lib/utils';
 	import { ORIGINAL_PAPER_RESULTS } from '$lib/constants';
-	import { legendInsidePlotTopRightPlugin } from '$lib/chart-legend-inside';
+	import {
+		jndLegendLabelOptions,
+		legendInsidePlotTopRightPlugin
+	} from '$lib/chart-legend-inside';
 	import Section from './Section.svelte';
 	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
@@ -190,7 +193,7 @@
 			const linearCurvePoints = generateLinearModelCurve(linModel.A, linModel.B, minSize, maxSize);
 
 			datasets.push({
-				label: `${axis}-axis (Current): ND = ${formatNumber(linModel.A, 2)} + ${formatNumber(linModel.B, 2)}/s`,
+				label: `${axis}-axis (Current)`,
 				data: linearCurvePoints,
 				borderColor: colors.main,
 				backgroundColor: 'transparent',
@@ -285,12 +288,7 @@
 						position: 'chartArea',
 						align: 'start',
 						fullSize: false,
-						labels: {
-							usePointStyle: true,
-							padding: 15,
-							font: { size: 11 },
-							filter: (item) => !item.text.includes('data')
-						}
+						labels: jndLegendLabelOptions
 					},
 					title: {
 						display: true,
@@ -754,4 +752,3 @@
 		{/if}
 	</p>
 </Section>
-

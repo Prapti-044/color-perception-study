@@ -9,6 +9,8 @@
 		fitInverseSizeModel,
 		fitNDLinearModel,
 		compareToReference,
+		buildMakeupStimulusKeySet,
+		getStandardTrialKey,
 		groupBy,
 		deserializeExpertClause,
 		EXPERT_CLAUSE_QUERY_PARAM,
@@ -17,6 +19,7 @@
 		getDefaultExpertClause,
 		getExpertClauseSummary,
 		getParticipantsByExpertClause,
+		loadFoundationColors,
 		serializeExpertClause
 	} from '$lib';
 	import type {
@@ -59,6 +62,7 @@
 		{ id: 'regression', title: 'Regression Analysis' },
 		{ id: 'jnd-model', title: '50% JND Model' },
 		{ id: 'jnd-expertise', title: 'JND by Expertise' },
+		{ id: 'jnd-expertise-makeup', title: 'JND by Expertise (Makeup Colors Only)' },
 		{ id: 'comparison', title: 'Comparison to Paper' },
 		{ id: 'participant-reports', title: 'Participant Reports' }
 	];
@@ -90,6 +94,7 @@
 	let ndLinearFit = $state<NDLinearFitRow[]>([]);
 	let regressionComparison = $state<RegressionComparison[]>([]);
 	let inverseModelComparison = $state<InverseModelComparison[]>([]);
+	let makeupStimulusKeys = $state<Set<string>>(new Set());
 
 	// Expertise group analysis
 	let expertClause = $state<ExpertClauseGroupNode>(getDefaultExpertClause());
@@ -136,6 +141,60 @@
 		visibleParticipantReportCount += 20;
 	}
 
+	interface ExpertiseAnalysis {
+		expertParticipantCount: number;
+		nonExpertParticipantCount: number;
+		trialsColorExpert: TrialDetails[];
+		trialsNonExpert: TrialDetails[];
+		regressionColorExpert: RegressionRow[];
+		regressionNonExpert: RegressionRow[];
+		ndLinearFitColorExpert: NDLinearFitRow[];
+		ndLinearFitNonExpert: NDLinearFitRow[];
+	}
+
+	function createEmptyExpertiseAnalysis(): ExpertiseAnalysis {
+		return {
+			expertParticipantCount: 0,
+			nonExpertParticipantCount: 0,
+			trialsColorExpert: [],
+			trialsNonExpert: [],
+			regressionColorExpert: [],
+			regressionNonExpert: [],
+			ndLinearFitColorExpert: [],
+			ndLinearFitNonExpert: []
+		};
+	}
+
+	function createExpertiseAnalysis(
+		trials: TrialDetails[],
+		expertParticipantIds: Set<string>,
+		nonExpertParticipantIds: Set<string>
+	): ExpertiseAnalysis {
+		if (trials.length === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
+
+		const trialsColorExpert = trials.filter((trial) => expertParticipantIds.has(trial.participantId));
+		const trialsNonExpert = trials.filter((trial) => nonExpertParticipantIds.has(trial.participantId));
+		const regressionColorExpert = fitSizeAxisRegressions(
+			computeDiscriminability(trialsColorExpert)
+		);
+		const regressionNonExpert = fitSizeAxisRegressions(
+			computeDiscriminability(trialsNonExpert)
+		);
+
+		return {
+			expertParticipantCount: expertParticipantIds.size,
+			nonExpertParticipantCount: nonExpertParticipantIds.size,
+			trialsColorExpert,
+			trialsNonExpert,
+			regressionColorExpert,
+			regressionNonExpert,
+			ndLinearFitColorExpert: fitNDLinearModel(regressionColorExpert),
+			ndLinearFitNonExpert: fitNDLinearModel(regressionNonExpert)
+		};
+	}
+
 	// Derived values
 	const nParticipants = $derived(new Set(trialDetails.map((t) => t.participantId)).size);
 	const nExcluded = $derived(participantSummary.filter((p) => p.excluded).length);
@@ -174,44 +233,42 @@
 	const visibleParticipantIds = $derived(
 		showParticipantReports ? sortedParticipantIds().slice(0, visibleParticipantReportCount) : []
 	);
-	const expertiseAnalysis = $derived.by(() => {
-		if (demographics.length === 0 || analysisTrials.length === 0) {
+	const expertParticipantGroups = $derived.by(() => {
+		if (demographics.length === 0) {
 			return {
-				expertParticipantCount: 0,
-				nonExpertParticipantCount: 0,
-				trialsColorExpert: [] as TrialDetails[],
-				trialsNonExpert: [] as TrialDetails[],
-				regressionColorExpert: [] as RegressionRow[],
-				regressionNonExpert: [] as RegressionRow[],
-				ndLinearFitColorExpert: [] as NDLinearFitRow[],
-				ndLinearFitNonExpert: [] as NDLinearFitRow[]
+				colorExpert: new Set<string>(),
+				nonExpert: new Set<string>()
 			};
 		}
 
-		const participantGroups = getParticipantsByExpertClause(demographics, expertClause);
-		const trialsColorExpert = analysisTrials.filter((trial) =>
-			participantGroups.colorExpert.has(trial.participantId)
-		);
-		const trialsNonExpert = analysisTrials.filter((trial) =>
-			participantGroups.nonExpert.has(trial.participantId)
-		);
-		const regressionColorExpert = fitSizeAxisRegressions(
-			computeDiscriminability(trialsColorExpert)
-		);
-		const regressionNonExpert = fitSizeAxisRegressions(
-			computeDiscriminability(trialsNonExpert)
-		);
+		return getParticipantsByExpertClause(demographics, expertClause);
+	});
+	const expertiseAnalysis = $derived.by(() => {
+		if (demographics.length === 0 || analysisTrials.length === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
 
-		return {
-			expertParticipantCount: participantGroups.colorExpert.size,
-			nonExpertParticipantCount: participantGroups.nonExpert.size,
-			trialsColorExpert,
-			trialsNonExpert,
-			regressionColorExpert,
-			regressionNonExpert,
-			ndLinearFitColorExpert: fitNDLinearModel(regressionColorExpert),
-			ndLinearFitNonExpert: fitNDLinearModel(regressionNonExpert)
-		};
+		return createExpertiseAnalysis(
+			analysisTrials,
+			expertParticipantGroups.colorExpert,
+			expertParticipantGroups.nonExpert
+		);
+	});
+	const makeupExpertiseAnalysis = $derived.by(() => {
+		if (demographics.length === 0 || analysisTrials.length === 0 || makeupStimulusKeys.size === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
+
+		const makeupAnalysisTrials = analysisTrials.filter((trial) => {
+			const key = getStandardTrialKey(trial);
+			return key !== null && makeupStimulusKeys.has(key);
+		});
+
+		return createExpertiseAnalysis(
+			makeupAnalysisTrials,
+			expertParticipantGroups.colorExpert,
+			expertParticipantGroups.nonExpert
+		);
 	});
 
 	onMount(async () => {
@@ -219,12 +276,19 @@
 			expertClause = getInitialExpertClause();
 			clauseHydrated = true;
 
-			// Load all data
-			const data = await loadAllData();
+			// Load all data needed for the report and makeup-only stimulus classification
+			const [data, foundationColors] = await Promise.all([
+				loadAllData(),
+				loadFoundationColors()
+			]);
 			metadata = data.metadata;
 			demographics = data.demographics;
 			attentionChecks = data.attentionChecks;
 			experimentInfo = data.experimentInfo;
+			makeupStimulusKeys = buildMakeupStimulusKeySet(
+				data.metadata.scatterplots.filter((scatterplot) => scatterplot.diff_type === 'small'),
+				foundationColors
+			);
 
 			// Build trial dataframe
 			const allTrials = buildTrialDataframe(data.responses, data.metadata);
@@ -458,6 +522,26 @@
 							group1Color="rgb(59, 130, 246)"
 							group2Color="rgb(147, 197, 253)"
 							title="Performance Breakdown: Expert vs Non-Expert (All Scatterplots)"
+						/>
+					{/if}
+				</div>
+			{/if}
+
+			<!-- 50% JND by Expertise Group (Makeup Colors Only) -->
+			{#if demographics.length > 0}
+				<div id="jnd-expertise-makeup" class="mb-6 scroll-mt-20">
+					{#if makeupExpertiseAnalysis.regressionColorExpert.length > 0 || makeupExpertiseAnalysis.regressionNonExpert.length > 0}
+						<JNDPlotByExpertise
+							regressionExpert={makeupExpertiseAnalysis.regressionColorExpert}
+							regressionNonExpert={makeupExpertiseAnalysis.regressionNonExpert}
+							ndLinearFitExpert={makeupExpertiseAnalysis.ndLinearFitColorExpert}
+							ndLinearFitNonExpert={makeupExpertiseAnalysis.ndLinearFitNonExpert}
+							expertCount={makeupExpertiseAnalysis.expertParticipantCount}
+							nonExpertCount={makeupExpertiseAnalysis.nonExpertParticipantCount}
+							{expertClauseSummary}
+							sectionTitle="50% JND by Expertise (Makeup Colors Only)"
+							chartTitle="50% JND Comparison: Expert vs Non-Expert (Makeup Colors Only)"
+							figureScopeDescription="using only scatterplots classified as With Makeup Colors on the Scatterplots page and the active expert clause shown above."
 						/>
 					{/if}
 				</div>

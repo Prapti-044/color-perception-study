@@ -2,5 +2,6 @@
 export * from './types';
 export * from './constants';
 export * from './data-loader';
+export * from './makeup';
 export * from './statistics';
 export * from './utils';

@@ -6,6 +6,7 @@ import type {
 	DiscriminabilityRow,
 	RegressionRow,
 	InverseModelRow,
+	NDLinearFitRow,
 	RegressionComparison,
 	InverseModelComparison
 } from './types';
@@ -238,23 +239,6 @@ export function ND(
 	}
 	const denom = row.c_x + row.k_x / sDeg;
 	return p / denom;
-}
-
-/**
- * Result of fitting ND(50%, s) = A + B/s to empirical ND values.
- */
-export interface NDLinearFitRow {
-	axis: string;
-	A: number; // intercept (asymptotic ND as s → ∞)
-	B: number; // coefficient of 1/s
-	A_se: number; // standard error of A
-	B_se: number; // standard error of B
-	R2: number;
-	n_points: number;
-	// Data points used for the fit
-	sizes: number[];
-	nd_values: number[];
-	nd_se_values: number[];
 }
 
 /**
