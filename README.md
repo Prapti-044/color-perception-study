@@ -1,88 +1,196 @@
-# ReVISit study – Interactive, Web-Based User Studies.
+# Color Perception — Study & Analysis (anonymized)
 
-Create your own interactive, web-based data visualization user studies by cloning/forking and editing configuration files and adding stimuli in the `public` folder.
+This repository contains everything needed to run and analyze our color perception
+user studies. It bundles two things in one place:
 
-ReVISit introduces reVISit.spec, a DSL for specifying study setups (consent forms, training, trials, etc.) for interactive web based studies. You describe your experimental setup in reVISit.spec, add your stimuli as images, forms, HTML pages, or React components, build and deploy — and you're ready to run your study. For tutorials and documentation, see the [reVISit website](https://revisit.dev).
+1. A **study application** (root project) — a [ReVISit](https://revisit.dev)-based
+   web app that delivers the experiments to participants.
+2. Two **analysis applications** (`analysis/exp1`, `analysis/exp2`) — SvelteKit
+   dashboards that ingest the raw study exports and produce the figures and
+   statistics used in the paper.
 
-## Build Instructions
+The repo is anonymized for review: author names, affiliations, and contact
+emails have been removed from study configs and metadata.
 
-To run this demo experiment locally, you will need to install Node.js on your computer.
+---
 
-* Clone `https://github.com/revisit-studies/study`
-* Run `yarn install`. If you don't have Yarn installed, run `npm i -g yarn`.
-* To run locally, run `yarn serve`.
-* Go to [http://localhost:8080](http://localhost:8080) to view it in your browser. The page will reload when you make changes.
+## What's in here
 
-## Adding Tests
+### Experiment 1 — JNDs along CIELAB axes (the "makeup" study)
 
-This repo uses two test types:
+Three sibling study configs under `public/`, each isolating perceptual
+discrimination along one CIELAB axis while holding the other two fixed:
 
-* **Unit tests** with **Vitest** for parser, utility, and component logic.
-* **End-to-end (E2E) tests** with **Playwright** for participant/designer flows in a running app.
+| Folder | Channel varied | Title |
+| --- | --- | --- |
+| `public/colormap-makeup-L/` | `L*` (lightness) | Color Perception Study, L\* channel |
+| `public/colormap-makeup-a/` | `a*` (red–green)  | Color Perception Study, a\* channel |
+| `public/colormap-makeup-b/` | `b*` (blue–yellow)| Color Perception Study, b\* channel |
 
-### Unit tests (Vitest)
+Each trial shows a Vega scatterplot with two highlighted points and asks the
+participant whether the two colors are the **same** or **different**
+(keyboard `f` / `j`). Same-color and large-difference catch trials, attention
+checks, an Ishihara color-vision screen, and a makeup / color-theory
+demographic questionnaire are interleaved with the JND trials. Stimuli live
+under `public/colormap-assets/` (Vega specs, training pages, consent, etc.).
 
-* Co-locate unit tests with the source file they cover.
-* Use the same base filename and add `.spec.` (for example: `src/parser/parser.ts` -> `src/parser/parser.spec.ts`).
-* Use `vitest` APIs (`describe`, `test`/`it`, `expect`).
-* Run unit tests with:
+### Experiment 2 — Color-vision perception
 
-```bash
-yarn unittest
+`public/color-vision-perception/` is a separate ReVISit study with its own
+direction-discrimination stimuli, halfway-break engagement check, and
+color-theory questionnaire.
+
+### Analysis apps
+
+Two independent SvelteKit apps that load the raw ReVISit exports and render
+the analyses:
+
+- `analysis/exp1/` — discriminability curves, JND models, expert-clause
+  filtering, makeup/training group t-tests, and per-participant reports for
+  the three CIELAB-axis studies.
+- `analysis/exp2/` — perception histograms, normality tests, paper-volume
+  distribution comparisons, and study-mean equivalence figures for the
+  color-vision study.
+
+---
+
+## Repository layout
+
+```
+.
+├── public/
+│   ├── colormap-makeup-{L,a,b}/   # Experiment 1 study configs (one per CIELAB axis)
+│   ├── colormap-assets/           # Stimuli, Vega specs, consent, training assets
+│   ├── color-vision-perception/   # Experiment 2 study config + assets
+│   └── libraries/                 # Imported ReVISit libraries (color-blindness, demographics, …)
+├── src/                           # ReVISit study runner (React + Mantine + Redux/Trrack)
+├── analysis/
+│   ├── exp1/                      # SvelteKit analysis app for Experiment 1
+│   └── exp2/                      # SvelteKit analysis app for Experiment 2
+├── tests/                         # Playwright end-to-end tests for the study app
+├── package.json                   # Root (study app) — yarn
+└── pnpm-lock.yaml                 # Analysis apps — pnpm workspaces
 ```
 
-### E2E tests (Playwright)
+---
 
-* Put E2E tests in the root `tests/` directory.
-* Name files with `.spec.ts` (for example: `tests/demo-vlat.spec.ts`).
-* Keep tests focused on user-observable behavior (navigation, input, progression, reviewer/designer behavior).
-* Run E2E tests with:
+## Running the study app
+
+Prerequisites: Node.js (LTS) and Yarn. If Yarn is missing, install it with
+`npm i -g yarn`. The root project enforces Yarn via a `preinstall` hook.
 
 ```bash
-yarn test
+yarn install
+yarn serve            # http://localhost:8080
 ```
 
-## Release Instructions
+Useful scripts:
 
-Releasing reVISit.dev happens automatically when a PR is merged into the `main` branch. The name of the pull request should be the title of the release, e.g. `v1.0.0`. Releasing creates a tag with the same name as the PR, but the official GitHub release should be created manually. The `main` branch is protected and requires two reviews before merging.
+| Command | What it does |
+| --- | --- |
+| `yarn serve` | Start the study app on `http://localhost:8080` |
+| `yarn build` | Type-check and produce a production bundle |
+| `yarn typecheck` | TypeScript only, no emit |
+| `yarn lint` | ESLint over `src/` (Airbnb config) |
+| `yarn unittest` | Vitest unit tests |
+| `yarn test` | Playwright end-to-end tests |
+| `yarn generate-schemas` | Regenerate JSON schemas from `src/parser/types.ts` |
 
-The workflow for release looks as follows:
-Develop features on feature branch
-| PRs
-Dev branch
-| PR (1 per release)
-Main branch
-| Run release workflow on merge
-References are updated and commit is tagged
+Once running, each study is at:
 
-### Release Follow-Up
+- `http://localhost:8080/colormap-makeup-L`
+- `http://localhost:8080/colormap-makeup-a`
+- `http://localhost:8080/colormap-makeup-b`
+- `http://localhost:8080/color-vision-perception`
 
-- [ ] Verify docs links in the [Study Repository](https://github.com/revisit-studies/study) are up to date and point to the current reVISit documentation pages.
-- [ ] After the release is complete, run the template update process so downstream study templates include the latest release changes.
+A `.env` file selects the storage backend (Firebase or Supabase). For local
+exploration without a backend, ReVISit will use local storage by default.
 
+### Docker
 
-## QC Checklist
+A `Dockerfile` and `nginx-docker.conf` are provided for containerized
+deployment behind nginx. Build and run:
 
-### [Study Repository](https://github.com/revisit-studies/study)
+```bash
+docker build -t color-perception-study .
+docker run --rm -p 8080:80 color-perception-study
+```
 
-**Studies**
-- [ ] Review all studies for any crashes/bugs
-- [ ] Check provenance data (audio, screen, etc.)
+---
 
-**File Download**
-- [ ] JSON export
-- [ ] Tidy download export
-- [ ] Download audio recordings
-- [ ] Download screen recordings
-- [ ] Download configs
+## Running the analysis apps
 
-**Docs**
-- [ ] Update comments in `store/types.ts`, `parser/types.ts`, `storage/types.ts`, `storage/engines/types.ts`
-- [ ] Update `typedocReadMe.md`
+Both analysis apps are SvelteKit projects managed with `pnpm`. They are
+independent of the root project — install dependencies inside each folder.
 
-### [Documentation Repository](https://github.com/revisit-studies/reVISit-studies.github.io)
-- [ ] Review docs
-- [ ] Review [library list](https://revisit.dev/docs/designing-studies/plugin-libraries/)
-- [ ] Check for typos / outdated docs
-- [ ] Validate example code
-- [ ] Update screenshots
+### Experiment 1
+
+```bash
+cd analysis/exp1
+pnpm install
+pnpm dev          # http://localhost:5173
+```
+
+Place the raw ReVISit exports for the three conditions in
+`analysis/exp1/data/`:
+
+```
+analysis/exp1/data/
+├── colormap-makeup-L_all.json
+├── colormap-makeup-a_all.json
+└── colormap-makeup-b_all.json
+```
+
+Other useful scripts in `analysis/exp1`: `pnpm build`, `pnpm preview`,
+`pnpm check` (svelte-check + tsc).
+
+### Experiment 2
+
+```bash
+cd analysis/exp2
+pnpm install
+pnpm dev
+```
+
+Each analysis app keeps colocated unit tests (Vitest) for its statistics and
+data-shaping code (e.g., `studyMeanEquivalence.spec.js`,
+`expertClause.spec.js`, `makeup.spec.ts`). Run them from inside the app
+directory:
+
+```bash
+pnpm exec vitest
+```
+
+---
+
+## Data flow
+
+1. Participants run a study config (`public/<study>/config.json`) inside the
+   ReVISit runner served from `src/`.
+2. Responses are persisted to the configured storage engine (Firebase /
+   Supabase / local).
+3. Researchers export the per-study `*_all.json` bundle from the ReVISit
+   analysis dashboard.
+4. The Svelte analysis apps consume those bundles directly from
+   `analysis/exp*/data/` and render the figures.
+
+---
+
+## Tech stack
+
+- **Study app:** React 18, TypeScript, Vite, Mantine, Redux + Trrack.js
+  (provenance), React Router. Built on top of the ReVISit framework.
+- **Analysis apps:** SvelteKit (Svelte 5), TypeScript, D3, Vega / Vega-Lite,
+  Tailwind, jstat.
+- **Testing:** Vitest (unit), Playwright (end-to-end).
+- **Storage:** Firebase or Supabase, selected via `.env`.
+
+See `AGENTS.md` for project conventions when contributing code.
+
+---
+
+## License
+
+BSD 3-Clause — see [`LICENSE`](./LICENSE). The ReVISit framework that powers
+the study runner is also BSD 3-Clause licensed and developed by the
+[reVISit-studies](https://revisit.dev) team.
