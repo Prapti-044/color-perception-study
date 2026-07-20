@@ -2,7 +2,14 @@
 
 // Excluded participant IDs (to be removed from all analyses and data files)
 export const EXCLUDED_PARTICIPANT_IDS: string[] = [
-	'58599369-a707-46df-b949-63b3fcacdd9b'
+	// a*: incomplete (43/72 answers) and near-chance accuracy — never usable
+	'58599369-a707-46df-b949-63b3fcacdd9b',
+	// a*: completed flag but zero scatterplot answers
+	'36956173-0846-4a76-8cf6-93b065ada362',
+	// L*: worst engagement (3 wrong samecolor/largediff checks)
+	'670d816961bebcb45b53b929',
+	// L*: next-worst (2 engagement fails + 1 attention-check fail)
+	'5d57062817ee8d0001cda0f6'
 ];
 
 // Attention check questions mapping

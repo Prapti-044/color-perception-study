@@ -1,0 +1,25 @@
+[project]
+name = "color-analysis"
+version = "0.1.0"
+description = "Jupyter notebook analysis for the color perception study (exp1 colormap/makeup JND, exp2 color-vision ellipsoids)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "colorspacious>=1.1.2",
+    "ipykernel>=7.3.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.1",
+    "orjson>=3.11.9",
+    "pandas>=3.0.3",
+    "scipy>=1.18.0",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/color_analysis"]

@@ -43,3 +43,6 @@ __pycache__/
 analysis/exp2/static/color-vision-data/*.json
 
 analysis/exp1/data/colormap-makeup-*.json
+
+analysis/.venv/
+.ipynb_checkpoints/
