@@ -3,6 +3,7 @@
 	import { renderHistogramChart } from '$lib/d3/histogramChart';
 	import { renderMultiColorScatterChart } from '$lib/d3/multiColorScatterChart';
 	import { downloadSvgElement } from '$lib/svgDownload';
+	import { AXIS_COLORS } from '$lib/colors';
 
 	interface ShadeData {
 		brand: string;
@@ -247,7 +248,7 @@
 				title: 'L* (Lightness) Distribution',
 				xAxisLabel: 'L* (Lightness)',
 				values: labValues.map((lab) => lab.L),
-				accentColor: '#667eea'
+				accentColor: AXIS_COLORS.L.main
 			},
 			{ width: 520, height: 300 }
 		);
@@ -257,7 +258,7 @@
 				title: 'a* (Red-Green) Distribution',
 				xAxisLabel: 'a* (Red-Green)',
 				values: labValues.map((lab) => lab.A),
-				accentColor: '#e74c3c'
+				accentColor: AXIS_COLORS.a.main
 			},
 			{ width: 520, height: 300 }
 		);
@@ -267,7 +268,7 @@
 				title: 'b* (Yellow-Blue) Distribution',
 				xAxisLabel: 'b* (Yellow-Blue)',
 				values: labValues.map((lab) => lab.B),
-				accentColor: '#f39c12'
+				accentColor: AXIS_COLORS.b.main
 			},
 			{ width: 520, height: 300 }
 		);

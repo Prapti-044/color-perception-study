@@ -130,7 +130,7 @@ export async function loadAllData(): Promise<{
 
 				// Extract experiment-level info
 				const metadataInfo = participant.metadata ?? {};
-				const resolution = metadataInfo.resolution ?? {};
+				const resolution = metadataInfo.resolution;
 				const searchParams = participant.searchParams ?? {};
 
 				// Calculate total experiment duration
@@ -160,8 +160,8 @@ export async function loadAllData(): Promise<{
 				const colorBlindnessResults: ColorBlindnessResult[] = [];
 				for (const [key, val] of Object.entries(answers)) {
 					if (key.toLowerCase().includes('color-blindness') && val && typeof val === 'object') {
-						const answer = (val as Record<string, unknown>).answer as Record<string, unknown> | undefined;
-						const correctAnswers = (val as Record<string, unknown>).correctAnswer as Array<{ id: string; answer: string }> | undefined;
+						const answer = val.answer;
+						const correctAnswers = val.correctAnswer;
 
 						if (answer) {
 							for (const [responseKey, responseVal] of Object.entries(answer)) {
@@ -195,10 +195,10 @@ export async function loadAllData(): Promise<{
 				experimentInfoByParticipant[pid] = {
 					browser: parseBrowserInfo(metadataInfo.userAgent ?? ''),
 					language: metadataInfo.language ?? 'N/A',
-					screen_width: resolution.width ?? null,
-					screen_height: resolution.height ?? null,
-					color_depth: resolution.colorDepth ?? null,
-					orientation: resolution.orientation ?? 'N/A',
+					screen_width: resolution?.width ?? null,
+					screen_height: resolution?.height ?? null,
+					color_depth: resolution?.colorDepth ?? null,
+					orientation: resolution?.orientation ?? 'N/A',
 					duration_minutes: durationMinutes,
 					start_timestamp: startTimestamp,
 					stage: participant.stage ?? 'N/A',
@@ -215,7 +215,7 @@ export async function loadAllData(): Promise<{
 
 				for (const [key, value] of Object.entries(answers)) {
 					if (key.toLowerCase().includes('demographic-questionnaire-color-theory')) {
-						const demoAnswer = (value as Record<string, unknown>).answer as Record<string, unknown> | undefined;
+						const demoAnswer = value.answer;
 						if (demoAnswer) {
 							demoData.strategies = (demoAnswer.strategies as string) ?? 'Not specified';
 							const colorHobby = demoAnswer['color-hobby'] as string[] | undefined;
@@ -230,7 +230,7 @@ export async function loadAllData(): Promise<{
 								(demoAnswer['color-theory-knowledge-2'] as string) ?? 'Not specified';
 						}
 					} else if (key.toLowerCase().includes('demographic-questionnaire-makeup')) {
-						const demoAnswer = (value as Record<string, unknown>).answer as Record<string, unknown> | undefined;
+						const demoAnswer = value.answer;
 						if (demoAnswer) {
 							demoData.makeup_familiarity =
 								(demoAnswer['makeup-familiarity'] as string) ?? 'Not specified';
@@ -247,7 +247,7 @@ export async function loadAllData(): Promise<{
 						!key.toLowerCase().includes('color-theory') &&
 						!key.toLowerCase().includes('makeup')
 					) {
-						const demoAnswer = (value as Record<string, unknown>).answer as Record<string, unknown> | undefined;
+						const demoAnswer = value.answer;
 						if (demoAnswer) {
 							demoData.gender = (demoAnswer.gender as string) ?? 'Not specified';
 							demoData.age = (demoAnswer.age as string) ?? 'Not specified';
@@ -259,11 +259,8 @@ export async function loadAllData(): Promise<{
 						const acMatch = key.match(/attention-check-(\d+)_(\d+)/);
 						if (acMatch) {
 							const acNumber = parseInt(acMatch[1]);
-							const acAnswer = (value as Record<string, unknown>).answer as Record<string, unknown> | undefined;
-							const acCorrectAnswerList = (value as Record<string, unknown>).correctAnswer as Array<{
-								id: string;
-								answer: string;
-							}> | undefined;
+							const acAnswer = value.answer;
+							const acCorrectAnswerList = value.correctAnswer;
 
 							let participantAnswer: string | null = null;
 							let correctAnswer: string | null = null;
@@ -312,25 +309,21 @@ export async function loadAllData(): Promise<{
 				const trialType = (idMatch[2] as 'samecolor' | 'largediff') ?? 'standard';
 				const trialOrder = parseInt(idMatch[3]);
 
-				const vegaPath =
-					((value as Record<string, unknown>).parameters as Record<string, string> | undefined)?.vegaSpecPath ?? '';
+				const vegaPath = value.parameters?.vegaSpecPath ?? '';
 				const vegaMatch = vegaPath.match(/scatterplot_(\d+)\.json/);
 
 				if (!vegaMatch) continue;
 
 				const scatterIndex = parseInt(vegaMatch[1]);
 
-				const answerDict = (value as Record<string, unknown>).answer as Record<string, string> | undefined;
-				const answer = answerDict?.['scatterplot-response'] ?? null;
+				const answerValue = value.answer['scatterplot-response'];
+				const answer = typeof answerValue === 'string' ? answerValue : null;
 
-				const correctAnswerList = (value as Record<string, unknown>).correctAnswer as Array<{
-					id: string;
-					answer: string;
-				}> | undefined;
+				const correctAnswerList = value.correctAnswer;
 				const correctAnswer = correctAnswerList?.[0]?.answer ?? null;
 
-				const startTime = ((value as Record<string, unknown>).startTime as number) ?? 0;
-				const endTime = ((value as Record<string, unknown>).endTime as number) ?? -1;
+				const startTime = value.startTime ?? 0;
+				const endTime = value.endTime ?? -1;
 				const rtMs = endTime > startTime ? endTime - startTime : null;
 
 				allResponses.push({
@@ -587,4 +580,3 @@ export function generateParticipantSummary(participantData: TrialDetails[]): {
 		n_no_diff: noDiffTrials.length
 	};
 }
-

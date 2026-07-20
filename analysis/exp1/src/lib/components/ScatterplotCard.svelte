@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { isMakeupColorMatch } from '$lib/makeup';
+
 	interface LabColor {
 		L: number;
 		a: number;
@@ -55,10 +57,9 @@
 		return `L*: ${lab.L.toFixed(1)}, a*: ${lab.a.toFixed(1)}, b*: ${lab.b.toFixed(1)}`;
 	}
 
-	// Check if either target color is close to a makeup/foundation color (deltaE < 10)
+	// Check if either target color is close to a makeup/foundation color.
 	const hasMakeupColor = $derived(
-		(nearestFoundation1 && nearestFoundation1.deltaE < 10) ||
-		(nearestFoundation2 && nearestFoundation2.deltaE < 10)
+		isMakeupColorMatch(nearestFoundation1) || isMakeupColorMatch(nearestFoundation2)
 	);
 </script>
 

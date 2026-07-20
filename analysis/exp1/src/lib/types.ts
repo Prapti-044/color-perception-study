@@ -269,10 +269,13 @@ export interface NDLinearFitRow {
 	nd_se_values: number[];
 }
 
+export type BetterModel = 'current' | 'reference' | 'tie';
+
 export interface RegressionComparison {
 	axis: string;
 	size_deg: number;
 	current_slope: number;
+	current_slope_se: number;
 	ref_slope: number;
 	slope_diff: number;
 	slope_pct_diff: number;
@@ -280,9 +283,45 @@ export interface RegressionComparison {
 	ref_r2: number;
 	r2_diff: number;
 	current_nd50: number;
+	current_nd50_se: number;
 	ref_nd50: number;
 	nd50_diff: number;
+	nd50_pct_diff: number;
 	ref_size_matched: number;
+	// Per-row statistical comparison between current and Szafir et al.
+	slope_z: number; // Wald: (current - ref) / SE_current
+	slope_p: number; // two-tailed p-value using regression df
+	slope_cohens_d: number; // standardized effect size on the slope (Wald-based)
+	nd50_z: number;
+	nd50_p: number;
+	nd50_cohens_d: number;
+	// Which model reports better human discriminability at this condition.
+	// Higher slope (equivalently lower ND50) means our participants achieved
+	// higher discriminability per unit ΔE, so we mark them the "winner".
+	better: BetterModel;
+}
+
+export interface ParticipantAccuracyRow {
+	participantId: string;
+	group: ExpertiseGroup;
+	accuracy: number;
+	n_trials: number;
+	n_correct: number;
+}
+
+export interface WelchTTestResult {
+	group1Label: string;
+	group2Label: string;
+	group1Mean: number;
+	group2Mean: number;
+	meanDifference: number;
+	group1N: number;
+	group2N: number;
+	group1Variance: number;
+	group2Variance: number;
+	t: number;
+	df: number;
+	p: number;
 }
 
 export interface InverseModelComparison {
@@ -296,6 +335,32 @@ export interface InverseModelComparison {
 	current_r2: number;
 	ref_r2: number;
 	r2_diff: number;
+}
+
+export interface PairedStats {
+	n: number;
+	current_mean: number;
+	ref_mean: number;
+	mean_diff: number;
+	sd_diff: number;
+	t: number;
+	df: number;
+	p: number;
+	cohens_dz: number; // Cohen's d for paired samples: mean(diff) / sd(diff)
+	pearson_r: number;
+	rmse: number;
+	mae: number;
+	ccc: number; // Lin's concordance correlation coefficient
+}
+
+export interface AxisComparisonSummary {
+	axis: string;
+	n_sizes: number;
+	slope: PairedStats;
+	nd50: PairedStats;
+	// Which model reports better human discriminability on this axis (across sizes).
+	// Uses the direction of the mean paired slope difference (current − ref).
+	better: BetterModel;
 }
 
 export interface ParticipantReportSummary {

@@ -1,4 +1,11 @@
 import * as d3 from 'd3';
+import {
+	CHART_FONT,
+	CHART_FONT_FAMILY,
+	CHART_MUTED_FILL,
+	CHART_TEXT_FILL,
+	styleAxisGroup
+} from './chartTheme';
 
 export type MultiScatterPoint = {
 	x: number;
@@ -21,7 +28,7 @@ export function renderMultiColorScatterChart(
 	spec: MultiColorScatterSpec,
 	size: { width: number; height: number } = { width: DEFAULT_W, height: DEFAULT_H }
 ): SVGSVGElement {
-	const margin = { top: 44, right: 20, bottom: 52, left: 52 };
+	const margin = { top: 48, right: 20, bottom: 58, left: 58 };
 	const width = size.width;
 	const height = size.height;
 	const innerW = width - margin.left - margin.right;
@@ -53,36 +60,42 @@ export function renderMultiColorScatterChart(
 	svg
 		.append('text')
 		.attr('x', width / 2)
-		.attr('y', 22)
+		.attr('y', 24)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 12)
+		.attr('font-size', CHART_FONT.titleCompact)
+		.attr('font-family', CHART_FONT_FAMILY)
 		.attr('font-weight', '600')
-		.attr('fill', '#334155')
+		.attr('fill', CHART_TEXT_FILL)
 		.text(spec.title);
 
 	const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
 	g.append('g')
 		.attr('transform', `translate(0,${innerH})`)
-		.call(d3.axisBottom(xScale).ticks(8));
+		.call(d3.axisBottom(xScale).ticks(8))
+		.call((sel) => styleAxisGroup(sel, CHART_FONT.tickCompact));
 
-	g.append('g').call(d3.axisLeft(yScale).ticks(8));
+	g.append('g')
+		.call(d3.axisLeft(yScale).ticks(8))
+		.call((sel) => styleAxisGroup(sel, CHART_FONT.tickCompact));
 
 	g.append('text')
 		.attr('x', innerW / 2)
-		.attr('y', innerH + 40)
+		.attr('y', innerH + 44)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 11)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(spec.xLabel);
 
 	g.append('text')
 		.attr('transform', 'rotate(-90)')
 		.attr('x', -innerH / 2)
-		.attr('y', -38)
+		.attr('y', -44)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 11)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(spec.yLabel);
 
 	g.selectAll('circle.pt')

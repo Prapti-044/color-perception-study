@@ -88,6 +88,11 @@ export function formatNumber(value: number | null | undefined, decimals: number 
 	return formatted;
 }
 
+/** Display label for a CIELAB axis in plots (L → L*, a → a*, b → b*). */
+export function formatLabAxis(axis: string): string {
+	return `${axis}*`;
+}
+
 /**
  * Format a percentage.
  */
@@ -224,6 +229,14 @@ const USE_MAKEUP_OPTIONS = [
 	'I use it regularly',
 	'I use it professionally'
 ] as const;
+const REGULAR_OR_PROFESSIONAL_MAKEUP_USE_OPTIONS = new Set<string>([
+	'I use it regularly',
+	'I use it professionally'
+]);
+const NONE_OR_OCCASIONAL_MAKEUP_USE_OPTIONS = new Set<string>([
+	'I do not use makeup',
+	'I use it occasionally'
+]);
 const MAKEUP_PRODUCT_OPTIONS = [
 	'Foundation',
 	'Concealer',
@@ -242,7 +255,7 @@ const COLOR_HOBBY_OPTIONS = [
 	'Drawing',
 	'Graphic Design',
 	'Photography',
-		"I don't participate in any of the above"
+	"I don't participate in any of the above"
 ] as const;
 const COLOR_THEORY_CLASS_OPTIONS = ['Yes', 'No'] as const;
 
@@ -566,6 +579,72 @@ export function getParticipantsByExpertClause(
 	}
 
 	return { colorExpert, nonExpert };
+}
+
+/**
+ * Group participant IDs by makeup-use frequency for the fixed makeup-use t-test.
+ */
+export function getParticipantsByMakeupUse(demographics: Demographics[]): {
+	regularOrProfessional: Set<string>;
+	noneOrOccasional: Set<string>;
+	unclassified: Set<string>;
+} {
+	const regularOrProfessional = new Set<string>();
+	const noneOrOccasional = new Set<string>();
+	const unclassified = new Set<string>();
+
+	for (const demo of demographics) {
+		const useMakeup = demo.use_makeup.trim();
+
+		if (REGULAR_OR_PROFESSIONAL_MAKEUP_USE_OPTIONS.has(useMakeup)) {
+			regularOrProfessional.add(demo.participantId);
+		} else if (NONE_OR_OCCASIONAL_MAKEUP_USE_OPTIONS.has(useMakeup)) {
+			noneOrOccasional.add(demo.participantId);
+		} else {
+			unclassified.add(demo.participantId);
+		}
+	}
+
+	return { regularOrProfessional, noneOrOccasional, unclassified };
+}
+
+/**
+ * Group participant IDs by the fixed trained/untrained criteria.
+ */
+export function getParticipantsByTrainingExposure(demographics: Demographics[]): {
+	trained: Set<string>;
+	untrained: Set<string>;
+	unclassified: Set<string>;
+} {
+	const trained = new Set<string>();
+	const untrained = new Set<string>();
+	const unclassified = new Set<string>();
+
+	for (const demo of demographics) {
+		const useMakeup = demo.use_makeup.trim();
+		const colorTheoryClass = demo.color_theory_class.trim();
+		const colorHobbies = parseCheckboxSelections(demo.color_hobby);
+		const hasColorHobby = colorHobbies.some((selection) => selection !== COLOR_HOBBY_NONE_VALUE);
+		const hasTraining =
+			REGULAR_OR_PROFESSIONAL_MAKEUP_USE_OPTIONS.has(useMakeup)
+			|| colorTheoryClass === 'Yes'
+			|| hasColorHobby;
+		const hasExplicitNoTraining =
+			NONE_OR_OCCASIONAL_MAKEUP_USE_OPTIONS.has(useMakeup)
+			&& colorTheoryClass === 'No'
+			&& colorHobbies.includes(COLOR_HOBBY_NONE_VALUE)
+			&& !hasColorHobby;
+
+		if (hasTraining) {
+			trained.add(demo.participantId);
+		} else if (hasExplicitNoTraining) {
+			untrained.add(demo.participantId);
+		} else {
+			unclassified.add(demo.participantId);
+		}
+	}
+
+	return { trained, untrained, unclassified };
 }
 
 function isValidPredicateOperatorForField(

@@ -1,4 +1,11 @@
 import * as d3 from 'd3';
+import {
+	CHART_FONT,
+	CHART_FONT_FAMILY,
+	CHART_MUTED_FILL,
+	CHART_TEXT_FILL,
+	styleAxisGroup
+} from './chartTheme';
 
 export type GroupedBarChartSpec = {
 	title: string;
@@ -20,7 +27,7 @@ export function renderGroupedBarChart(
 	spec: GroupedBarChartSpec,
 	size: { width: number; height: number } = { width: DEFAULT_W, height: DEFAULT_H }
 ): SVGSVGElement {
-	const margin = { top: 44, right: 20, bottom: 72, left: 52 };
+	const margin = { top: 48, right: 16, bottom: 60, left: 58 };
 	const width = size.width;
 	const height = size.height;
 	const innerW = width - margin.left - margin.right;
@@ -61,11 +68,12 @@ export function renderGroupedBarChart(
 	svg
 		.append('text')
 		.attr('x', width / 2)
-		.attr('y', 22)
+		.attr('y', 24)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 13)
+		.attr('font-size', CHART_FONT.titleCompact)
+		.attr('font-family', CHART_FONT_FAMILY)
 		.attr('font-weight', '600')
-		.attr('fill', '#334155')
+		.attr('fill', CHART_TEXT_FILL)
 		.text(spec.title);
 
 	const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
@@ -78,7 +86,9 @@ export function renderGroupedBarChart(
 		.style('text-anchor', 'end')
 		.attr('dx', '-0.35em')
 		.attr('dy', '0.35em')
-		.attr('font-size', 10);
+		.attr('font-size', CHART_FONT.tickCompact)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL);
 
 	g.append('g')
 		.call(
@@ -87,15 +97,17 @@ export function renderGroupedBarChart(
 				.ticks(6)
 				.tickFormat((d) => fmt(d as number))
 		)
-		.call((sel) => sel.selectAll('path,line').attr('stroke', '#cbd5e1'));
+		.call((sel) => sel.selectAll('path,line').attr('stroke', '#cbd5e1'))
+		.call((sel) => styleAxisGroup(sel, CHART_FONT.tickCompact));
 
 	g.append('text')
 		.attr('transform', 'rotate(-90)')
 		.attr('x', -innerH / 2)
-		.attr('y', -40)
+		.attr('y', -44)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 11)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(spec.yLabel);
 
 	const cat = g
@@ -123,24 +135,44 @@ export function renderGroupedBarChart(
 		.attr('stroke', (d) => d.color)
 		.attr('stroke-width', 0.5);
 
-	const legend = g
-		.append('g')
-		.attr('transform', `translate(0,${innerH + 48})`);
+	const legendPadding = 8;
+	const legendRowHeight = 20;
+	const legend = g.append('g').attr('class', 'legend');
 
 	[0, 1].forEach((i) => {
-		const lg = legend.append('g').attr('transform', `translate(${i * 150},0)`);
+		const lg = legend.append('g').attr('transform', `translate(0,${i * legendRowHeight})`);
 		lg.append('rect')
 			.attr('width', 12)
 			.attr('height', 12)
 			.attr('rx', 2)
 			.attr('fill', spec.groupColors[i as 0 | 1]);
 		lg.append('text')
-			.attr('x', 18)
+			.attr('x', 16)
 			.attr('y', 10)
-			.attr('font-size', 10)
-			.attr('fill', '#334155')
+			.attr('font-size', CHART_FONT.legend)
+			.attr('font-family', CHART_FONT_FAMILY)
+			.attr('fill', CHART_TEXT_FILL)
 			.text(spec.groupLabels[i as 0 | 1]);
 	});
+
+	const legendNode = legend.node() as SVGGElement | null;
+	if (legendNode) {
+		const bbox = legendNode.getBBox();
+		legend
+			.insert('rect', ':first-child')
+			.attr('x', bbox.x - 5)
+			.attr('y', bbox.y - 3)
+			.attr('width', bbox.width + 10)
+			.attr('height', bbox.height + 6)
+			.attr('fill', '#ffffff')
+			.attr('fill-opacity', 0.9)
+			.attr('stroke', '#e2e8f0')
+			.attr('rx', 3);
+		legend.attr(
+			'transform',
+			`translate(${innerW - bbox.width - legendPadding}, ${legendPadding})`
+		);
+	}
 
 	return svg.node() as SVGSVGElement;
 }

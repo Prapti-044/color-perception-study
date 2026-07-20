@@ -17,6 +17,12 @@ const foundationColors = parseFoundationColorsCsv(foundationCsv);
 const scatterplotMetadata = metadata as MetadataFile;
 
 describe('makeup stimulus classification', () => {
+	it('reproduces the scatterplot page makeup subset across all scatterplots', () => {
+		const keys = buildMakeupStimulusKeySet(scatterplotMetadata.scatterplots, foundationColors);
+
+		expect(keys.size).toBe(84);
+	});
+
 	it('reproduces the scatterplot page makeup subset for small-difference stimuli', () => {
 		const smallDiffScatterplots = scatterplotMetadata.scatterplots.filter(
 			(scatterplot): scatterplot is ScatterplotMetadata =>

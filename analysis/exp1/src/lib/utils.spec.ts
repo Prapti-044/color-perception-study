@@ -13,6 +13,8 @@ import {
 	getDefaultExpertClause,
 	getExpertClauseSummary,
 	getParticipantsByExpertClause,
+	getParticipantsByMakeupUse,
+	getParticipantsByTrainingExposure,
 	serializeExpertClause
 } from './utils';
 
@@ -223,5 +225,92 @@ describe('getParticipantsByExpertClause', () => {
 
 		expect([...groups.colorExpert]).toEqual(['expert-1', 'expert-2']);
 		expect([...groups.nonExpert]).toEqual(['non-expert-1']);
+	});
+});
+
+describe('getParticipantsByMakeupUse', () => {
+	it('groups regular/professional makeup users separately from none/occasional users', () => {
+		const demographics = [
+			createDemographics({
+				participantId: 'none',
+				use_makeup: 'I do not use makeup'
+			}),
+			createDemographics({
+				participantId: 'occasional',
+				use_makeup: 'I use it occasionally'
+			}),
+			createDemographics({
+				participantId: 'regular',
+				use_makeup: 'I use it regularly'
+			}),
+			createDemographics({
+				participantId: 'professional',
+				use_makeup: 'I use it professionally'
+			}),
+			createDemographics({
+				participantId: 'missing',
+				use_makeup: 'Not specified'
+			})
+		];
+
+		const groups = getParticipantsByMakeupUse(demographics);
+
+		expect([...groups.regularOrProfessional]).toEqual(['regular', 'professional']);
+		expect([...groups.noneOrOccasional]).toEqual(['none', 'occasional']);
+		expect([...groups.unclassified]).toEqual(['missing']);
+	});
+});
+
+describe('getParticipantsByTrainingExposure', () => {
+	it('groups trained participants by makeup use, color theory class, or color hobbies', () => {
+		const demographics = [
+			createDemographics({
+				participantId: 'makeup-regular',
+				use_makeup: 'I use it regularly'
+			}),
+			createDemographics({
+				participantId: 'makeup-professional',
+				use_makeup: 'I use it professionally'
+			}),
+			createDemographics({
+				participantId: 'color-theory',
+				use_makeup: 'I do not use makeup',
+				color_theory_class: 'Yes'
+			}),
+			createDemographics({
+				participantId: 'color-hobby',
+				use_makeup: 'I do not use makeup',
+				color_hobby: 'Photography'
+			}),
+			createDemographics({
+				participantId: 'untrained-none',
+				use_makeup: 'I do not use makeup',
+				color_theory_class: 'No',
+				color_hobby: "I don't participate in any of the above"
+			}),
+			createDemographics({
+				participantId: 'untrained-occasional',
+				use_makeup: 'I use it occasionally',
+				color_theory_class: 'No',
+				color_hobby: "I don't participate in any of the above"
+			}),
+			createDemographics({
+				participantId: 'missing',
+				use_makeup: 'Not specified',
+				color_theory_class: 'No',
+				color_hobby: "I don't participate in any of the above"
+			})
+		];
+
+		const groups = getParticipantsByTrainingExposure(demographics);
+
+		expect([...groups.trained]).toEqual([
+			'makeup-regular',
+			'makeup-professional',
+			'color-theory',
+			'color-hobby'
+		]);
+		expect([...groups.untrained]).toEqual(['untrained-none', 'untrained-occasional']);
+		expect([...groups.unclassified]).toEqual(['missing']);
 	});
 });

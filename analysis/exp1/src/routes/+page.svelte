@@ -19,10 +19,14 @@
 		getDefaultExpertClause,
 		getExpertClauseSummary,
 		getParticipantsByExpertClause,
+		getParticipantsByMakeupUse,
+		getParticipantsByTrainingExposure,
 		loadFoundationColors,
-		serializeExpertClause
+		serializeExpertClause,
+		GROUP_COLORS
 	} from '$lib';
 	import type {
+		AxisComparisonSummary,
 		ExpertClauseGroupNode,
 		MetadataFile,
 		Demographics,
@@ -63,6 +67,8 @@
 		{ id: 'jnd-model', title: '50% JND Model' },
 		{ id: 'jnd-expertise', title: 'JND by Expertise' },
 		{ id: 'jnd-expertise-makeup', title: 'JND by Expertise (Makeup Colors Only)' },
+		{ id: 'makeup-use-ttest', title: 'Makeup Use t-test' },
+		{ id: 'training-ttest', title: 'Training t-test' },
 		{ id: 'comparison', title: 'Comparison to Paper' },
 		{ id: 'participant-reports', title: 'Participant Reports' }
 	];
@@ -94,6 +100,7 @@
 	let ndLinearFit = $state<NDLinearFitRow[]>([]);
 	let regressionComparison = $state<RegressionComparison[]>([]);
 	let inverseModelComparison = $state<InverseModelComparison[]>([]);
+	let axisComparison = $state<AxisComparisonSummary[]>([]);
 	let makeupStimulusKeys = $state<Set<string>>(new Set());
 
 	// Expertise group analysis
@@ -254,20 +261,59 @@
 			expertParticipantGroups.nonExpert
 		);
 	});
-	const makeupExpertiseAnalysis = $derived.by(() => {
+	const makeupAnalysisTrials = $derived.by(() => {
 		if (demographics.length === 0 || analysisTrials.length === 0 || makeupStimulusKeys.size === 0) {
-			return createEmptyExpertiseAnalysis();
+			return [];
 		}
 
-		const makeupAnalysisTrials = analysisTrials.filter((trial) => {
+		return analysisTrials.filter((trial) => {
 			const key = getStandardTrialKey(trial);
 			return key !== null && makeupStimulusKeys.has(key);
 		});
+	});
+	const makeupAnalysisStimulusCount = $derived.by(() => {
+		const keys = new Set<string>();
+		for (const trial of makeupAnalysisTrials) {
+			const key = getStandardTrialKey(trial);
+			if (key !== null) {
+				keys.add(key);
+			}
+		}
+		return keys.size;
+	});
+	const makeupExpertiseAnalysis = $derived.by(() => {
+		if (demographics.length === 0 || makeupAnalysisTrials.length === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
 
 		return createExpertiseAnalysis(
 			makeupAnalysisTrials,
 			expertParticipantGroups.colorExpert,
 			expertParticipantGroups.nonExpert
+		);
+	});
+	const makeupUseParticipantGroups = $derived.by(() => getParticipantsByMakeupUse(demographics));
+	const makeupUseAnalysis = $derived.by(() => {
+		if (demographics.length === 0 || makeupAnalysisTrials.length === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
+
+		return createExpertiseAnalysis(
+			makeupAnalysisTrials,
+			makeupUseParticipantGroups.regularOrProfessional,
+			makeupUseParticipantGroups.noneOrOccasional
+		);
+	});
+	const trainingParticipantGroups = $derived.by(() => getParticipantsByTrainingExposure(demographics));
+	const trainingAnalysis = $derived.by(() => {
+		if (demographics.length === 0 || makeupAnalysisTrials.length === 0) {
+			return createEmptyExpertiseAnalysis();
+		}
+
+		return createExpertiseAnalysis(
+			makeupAnalysisTrials,
+			trainingParticipantGroups.trained,
+			trainingParticipantGroups.untrained
 		);
 	});
 
@@ -285,10 +331,7 @@
 			demographics = data.demographics;
 			attentionChecks = data.attentionChecks;
 			experimentInfo = data.experimentInfo;
-			makeupStimulusKeys = buildMakeupStimulusKeySet(
-				data.metadata.scatterplots.filter((scatterplot) => scatterplot.diff_type === 'small'),
-				foundationColors
-			);
+			makeupStimulusKeys = buildMakeupStimulusKeySet(data.metadata.scatterplots, foundationColors);
 
 			// Build trial dataframe
 			const allTrials = buildTrialDataframe(data.responses, data.metadata);
@@ -315,6 +358,7 @@
 			const comparison = compareToReference(regression, inverseModel);
 			regressionComparison = comparison.regressionComparison;
 			inverseModelComparison = comparison.inverseModelComparison;
+			axisComparison = comparison.axisComparison;
 
 			loading = false;
 		} catch (err) {
@@ -519,8 +563,8 @@
 							group2Trials={expertiseAnalysis.trialsNonExpert}
 							group1Label="Expert"
 							group2Label="Non-Expert"
-							group1Color="rgb(59, 130, 246)"
-							group2Color="rgb(147, 197, 253)"
+							group1Color={GROUP_COLORS.expertise.group1}
+							group2Color={GROUP_COLORS.expertise.group2}
 							title="Performance Breakdown: Expert vs Non-Expert (All Scatterplots)"
 						/>
 					{/if}
@@ -540,17 +584,126 @@
 							nonExpertCount={makeupExpertiseAnalysis.nonExpertParticipantCount}
 							{expertClauseSummary}
 							sectionTitle="50% JND by Expertise (Makeup Colors Only)"
-							chartTitle="50% JND Comparison: Expert vs Non-Expert (Makeup Colors Only)"
+							chartTitle="50% JND Comparison: Trained vs Untrained (Makeup Colors Only)"
 							figureScopeDescription="using only scatterplots classified as With Makeup Colors on the Scatterplots page and the active expert clause shown above."
+						/>
+					{/if}
+					{#if makeupExpertiseAnalysis.trialsColorExpert.length > 0 || makeupExpertiseAnalysis.trialsNonExpert.length > 0}
+						<GroupPerformanceCharts
+							group1Trials={makeupExpertiseAnalysis.trialsColorExpert}
+							group2Trials={makeupExpertiseAnalysis.trialsNonExpert}
+							group1Label="Expert"
+							group2Label="Non-Expert"
+							group1Color={GROUP_COLORS.expertise.group1}
+							group2Color={GROUP_COLORS.expertise.group2}
+							title="Performance Breakdown: Expert vs Non-Expert (Makeup Colors Only)"
 						/>
 					{/if}
 				</div>
 			{/if}
 
+			<!-- Makeup-use t-test (Makeup Colors Only) -->
+			{#if demographics.length > 0}
+				<section id="makeup-use-ttest" class="mb-6 scroll-mt-20 rounded-xl border border-slate-200 bg-white p-7 shadow-sm">
+					<div class="mb-6">
+						<h2 class="text-xl font-semibold text-slate-800">Makeup Use t-test (Makeup Colors Only)</h2>
+						<p class="mt-1 text-sm text-slate-500">
+							Participants who use makeup regularly or professionally are compared with participants who do not use makeup or use it occasionally.
+						</p>
+					</div>
+
+					<div class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-pink-700">{makeupStimulusKeys.size}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Makeup-color Scatterplots</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-blue-700">{makeupAnalysisStimulusCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Standard Stimuli in Test</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-pink-700">{makeupUseAnalysis.expertParticipantCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Regular/Professional</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-teal-700">{makeupUseAnalysis.nonExpertParticipantCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">No/Occasional</div>
+						</div>
+					</div>
+
+					{#if makeupUseAnalysis.trialsColorExpert.length > 0 || makeupUseAnalysis.trialsNonExpert.length > 0}
+						<GroupPerformanceCharts
+							group1Trials={makeupUseAnalysis.trialsColorExpert}
+							group2Trials={makeupUseAnalysis.trialsNonExpert}
+							group1Label="Regular/Professional"
+							group2Label="No/Occasional"
+							group1Color={GROUP_COLORS.makeupUse.group1}
+							group2Color={GROUP_COLORS.makeupUse.group2}
+							title="Performance Breakdown: Makeup Use Groups (Makeup Colors Only)"
+						/>
+					{:else}
+						<p class="text-sm text-slate-500">
+							No answered makeup-color analysis trials are available for these makeup-use groups.
+						</p>
+					{/if}
+				</section>
+			{/if}
+
+			<!-- Training t-test (Makeup Colors Only) -->
+			{#if demographics.length > 0}
+				<section id="training-ttest" class="mb-6 scroll-mt-20 rounded-xl border border-slate-200 bg-white p-7 shadow-sm">
+					<div class="mb-6">
+						<h2 class="text-xl font-semibold text-slate-800">Trained vs Untrained t-test (Makeup Colors Only)</h2>
+						<p class="mt-1 text-sm text-slate-500">
+							Trained participants include regular/professional makeup users, participants who took a color theory class, or participants with color hobbies. Untrained participants report no/occasional makeup use, no color theory class, and no color hobbies.
+						</p>
+					</div>
+
+					<div class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-pink-700">{makeupStimulusKeys.size}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Makeup-color Scatterplots</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-blue-700">{makeupAnalysisStimulusCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Standard Stimuli in Test</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-indigo-700">{trainingAnalysis.expertParticipantCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Trained</div>
+						</div>
+						<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+							<div class="text-2xl font-bold text-amber-700">{trainingAnalysis.nonExpertParticipantCount}</div>
+							<div class="mt-1 text-xs font-medium text-slate-500">Untrained</div>
+						</div>
+					</div>
+
+					{#if trainingAnalysis.trialsColorExpert.length > 0 || trainingAnalysis.trialsNonExpert.length > 0}
+						<GroupPerformanceCharts
+							group1Trials={trainingAnalysis.trialsColorExpert}
+							group2Trials={trainingAnalysis.trialsNonExpert}
+							group1Label="Trained"
+							group2Label="Untrained"
+							group1Color={GROUP_COLORS.training.group1}
+							group2Color={GROUP_COLORS.training.group2}
+							title="Performance Breakdown: Trained vs Untrained (Makeup Colors Only)"
+						/>
+					{:else}
+						<p class="text-sm text-slate-500">
+							No answered makeup-color analysis trials are available for these trained/untrained groups.
+						</p>
+					{/if}
+				</section>
+			{/if}
+
 			<!-- Comparison to Original Paper -->
 			{#if regressionComparison.length > 0}
 				<div id="comparison" class="mb-6 scroll-mt-20">
-					<ComparisonSection {regressionComparison} {inverseModelComparison} />
+					<ComparisonSection
+						{regressionComparison}
+						{inverseModelComparison}
+						{axisComparison}
+					/>
 				</div>
 			{/if}
 

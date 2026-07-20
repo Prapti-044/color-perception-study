@@ -8,6 +8,10 @@
 	import PooledNormalityAnalysis from '$lib/components/PooledNormalityAnalysis.svelte';
 	import PaperVolumeDistributionFigure from '$lib/components/PaperVolumeDistributionFigure.svelte';
 	import PerceptionHistogram from '$lib/components/PerceptionHistogram.svelte';
+	import StudyMeanEquivalenceFigure from '$lib/components/StudyMeanEquivalenceFigure.svelte';
+	import DistributionComparisonFigure from '$lib/components/DistributionComparisonFigure.svelte';
+	import { buildVolumeEquivalenceComparison } from '$lib/studyMeanEquivalence';
+	import { buildDistributionComparison } from '$lib/distributionComparison';
 	import {
 		deserializeExpertClause,
 		EXPERT_CLAUSE_QUERY_PARAM,
@@ -69,7 +73,32 @@
 			: 'exact'
 	);
 	const participantRecords = $derived(data.participantRecordsByMode[ellipseMode]);
+	const includeFittedParticipantRecords = $derived(
+		data.participantRecordsByMode['include-fitted']
+	);
 	const analysis = $derived(buildColorVisionAnalysis(participantRecords, expertClause));
+	const includeFittedAnalysis = $derived(
+		buildColorVisionAnalysis(includeFittedParticipantRecords, expertClause)
+	);
+	const volumeEquivalenceComparison = $derived(
+		buildVolumeEquivalenceComparison({
+			label: 'This study',
+			mean: includeFittedAnalysis.overallEllipsoidVolume.mean,
+			n: includeFittedParticipantRecords.length,
+			sd: includeFittedAnalysis.overallEllipsoidVolume.sd
+		})
+	);
+	const distributionComparisonModeLabel = $derived(
+		ellipseMode === 'exact' ? 'exact-ellipse mode' : 'include-fitted mode'
+	);
+	const distributionComparison = $derived.by(() => {
+		const volumes = analysis.histogram.participantVolumes;
+		if (volumes.length < 3) {
+			return null;
+		}
+
+		return buildDistributionComparison(volumes, 'This study');
+	});
 	const groups = $derived(analysis.groups);
 	const expertGroup = $derived(groups[0]);
 	const nonExpertGroup = $derived(groups[1]);
@@ -606,6 +635,34 @@
 		<section class="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-sm sm:p-8">
 			<div class="flex flex-wrap items-end justify-between gap-4">
 				<div>
+					<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+						Study comparison
+					</p>
+					<h2 class="mt-1 font-display text-2xl font-semibold text-slate-950">
+						Original-study mean equivalence
+					</h2>
+				</div>
+				<p class="max-w-sm text-sm text-slate-500">
+					Fixed to include-fitted mode so the comparison always uses the full 394-participant
+					sample requested for the original-study check.
+				</p>
+			</div>
+
+			<p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600">
+				The figure compares this study's participant-level ellipsoid-volume mean against the
+				original study summary (n = 29,044, mean = 3,670.43, SD = 13,728.03). The lower panel
+				shows the TOST 90% confidence interval for the mean difference against a default
+				equivalence margin of +/-0.2 times the original-study SD.
+			</p>
+
+			<div class="mt-8">
+				<StudyMeanEquivalenceFigure comparison={volumeEquivalenceComparison} />
+			</div>
+		</section>
+
+		<section class="rounded-3xl border border-slate-200/90 bg-white/95 p-6 shadow-sm sm:p-8">
+			<div class="flex flex-wrap items-end justify-between gap-4">
+				<div>
 					<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Distribution</p>
 					<h2 class="mt-1 font-display text-2xl font-semibold text-slate-950">
 						Ellipsoid volume
@@ -638,6 +695,33 @@
 					visibleParticipantCount={analysis.histogram.visibleParticipantCount}
 				/>
 			</div>
+
+			{#if distributionComparison}
+				<div class="mt-10 border-t border-slate-200/80 pt-8">
+					<div class="flex flex-wrap items-end justify-between gap-4">
+						<div>
+							<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+								Distribution comparison
+							</p>
+							<h3 class="mt-1 font-display text-xl font-semibold text-slate-950">
+								Original vs this study
+							</h3>
+						</div>
+						<p class="max-w-md text-sm text-slate-500">
+							Descriptives and hypothesis tests contrasting the reconstructed ellipsoid-volume
+							distribution above ({distributionComparisonModeLabel}) with the original study's
+							published summary.
+						</p>
+					</div>
+
+					<div class="mt-6">
+						<DistributionComparisonFigure
+							comparison={distributionComparison}
+							modeLabel={distributionComparisonModeLabel}
+						/>
+					</div>
+				</div>
+			{/if}
 		</section>
 	</div>
 </div>

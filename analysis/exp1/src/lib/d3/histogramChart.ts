@@ -1,4 +1,11 @@
 import * as d3 from 'd3';
+import {
+	CHART_FONT,
+	CHART_FONT_FAMILY,
+	CHART_MUTED_FILL,
+	CHART_TEXT_FILL,
+	styleAxisGroup
+} from './chartTheme';
 
 export type HistogramChartSpec = {
 	title: string;
@@ -35,7 +42,7 @@ export function renderHistogramChart(
 		counts[binIndex]++;
 	}
 
-	const margin = { top: 44, right: 16, bottom: 88, left: 48 };
+	const margin = { top: 48, right: 16, bottom: 96, left: 54 };
 	const width = size.width;
 	const height = size.height;
 	const innerW = width - margin.left - margin.right;
@@ -63,11 +70,12 @@ export function renderHistogramChart(
 	svg
 		.append('text')
 		.attr('x', width / 2)
-		.attr('y', 22)
+		.attr('y', 24)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 12)
+		.attr('font-size', CHART_FONT.titleCompact)
+		.attr('font-family', CHART_FONT_FAMILY)
 		.attr('font-weight', '600')
-		.attr('fill', '#334155')
+		.attr('fill', CHART_TEXT_FILL)
 		.text(spec.title);
 
 	const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
@@ -80,25 +88,31 @@ export function renderHistogramChart(
 		.style('text-anchor', 'end')
 		.attr('dx', '-0.5em')
 		.attr('dy', '0.2em')
-		.attr('font-size', 7);
+		.attr('font-size', CHART_FONT.tickCompact)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL);
 
-	g.append('g').call(d3.axisLeft(y).ticks(5));
+	g.append('g')
+		.call(d3.axisLeft(y).ticks(5))
+		.call((sel) => styleAxisGroup(sel, CHART_FONT.tickCompact));
 
 	g.append('text')
 		.attr('x', innerW / 2)
-		.attr('y', innerH + 72)
+		.attr('y', innerH + 76)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 11)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(spec.xAxisLabel);
 
 	g.append('text')
 		.attr('transform', 'rotate(-90)')
 		.attr('x', -innerH / 2)
-		.attr('y', -36)
+		.attr('y', -40)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 11)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text('Count');
 
 	g.selectAll('rect')

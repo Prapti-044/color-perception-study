@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { TrialDetails } from '$lib/types';
 	import { formatNumber, formatPercent } from '$lib/utils';
+	import { computeParticipantAccuracyRows, welchTTest } from '$lib/statistics';
 	import { renderGroupedBarChart } from '$lib/d3/groupedBarChart';
 	import { downloadSvgElement } from '$lib/svgDownload';
 
@@ -80,6 +81,20 @@
 
 	const group1Metrics = $derived(computeMetrics(group1Trials));
 	const group2Metrics = $derived(computeMetrics(group2Trials));
+	const group1ParticipantAccuracy = $derived(
+		computeParticipantAccuracyRows(group1Trials, 'colorExpert')
+	);
+	const group2ParticipantAccuracy = $derived(
+		computeParticipantAccuracyRows(group2Trials, 'nonExpert')
+	);
+	const accuracyTTest = $derived(
+		welchTTest(
+			group1ParticipantAccuracy.map((row) => row.accuracy),
+			group2ParticipantAccuracy.map((row) => row.accuracy),
+			group1Label,
+			group2Label
+		)
+	);
 
 	const groupPair: [string, string] = $derived([group1Label, group2Label]);
 	const colorPair: [string, string] = $derived([group1Color, group2Color]);
@@ -158,6 +173,13 @@
 		const svg = axisHost?.querySelector('svg');
 		if (svg) downloadSvgElement(svg, 'group-performance-accuracy-by-axis.svg');
 	}
+
+	function formatPValue(value: number | null | undefined): string {
+		if (value === null || value === undefined || isNaN(value)) {
+			return 'N/A';
+		}
+		return value < 0.001 ? '< 0.001' : value.toFixed(3);
+	}
 </script>
 
 <div class="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-6">
@@ -228,6 +250,75 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
+
+	<div class="mb-6 rounded-lg border border-slate-200 bg-white p-4">
+		<h4 class="mb-2 text-sm font-semibold text-slate-700">
+			Welch t-test on Participant-Level Accuracy
+		</h4>
+		<p class="mb-3 text-xs leading-5 text-slate-500">
+			Each participant contributes one accuracy value computed from answered standard different-color trials.
+		</p>
+		{#if accuracyTTest}
+			<div class="overflow-x-auto">
+				<table class="w-full text-sm">
+					<thead>
+						<tr>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold text-slate-700">
+								Comparison
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								n
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								Mean Accuracy
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								Mean Difference
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								t
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								df
+							</th>
+							<th class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-center text-xs font-semibold text-slate-700">
+								p
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-3 py-2 text-slate-600">
+								{accuracyTTest.group1Label} vs {accuracyTTest.group2Label}
+							</td>
+							<td class="px-3 py-2 text-center text-slate-700">
+								{accuracyTTest.group1N} / {accuracyTTest.group2N}
+							</td>
+							<td class="px-3 py-2 text-center text-slate-700">
+								{formatPercent(accuracyTTest.group1Mean)} / {formatPercent(accuracyTTest.group2Mean)}
+							</td>
+							<td class="px-3 py-2 text-center text-slate-700">
+								{formatNumber(accuracyTTest.meanDifference * 100, 1, true)}%
+							</td>
+							<td class="px-3 py-2 text-center text-slate-700">
+								{formatNumber(accuracyTTest.t, 2)}
+							</td>
+							<td class="px-3 py-2 text-center text-slate-700">
+								{formatNumber(accuracyTTest.df, 1)}
+							</td>
+							<td class="px-3 py-2 text-center font-semibold text-slate-700">
+								{formatPValue(accuracyTTest.p)}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		{:else}
+			<p class="text-sm text-slate-500">
+				Not enough participant-level observations or variance to compute the Welch t-test.
+			</p>
+		{/if}
 	</div>
 
 	<div class="grid gap-6 md:grid-cols-3">

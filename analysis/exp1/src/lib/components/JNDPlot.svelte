@@ -1,14 +1,18 @@
 <script lang="ts">
 	import type { RegressionRow, InverseModelRow, NDLinearFitRow } from '$lib/types';
-	import { formatNumber } from '$lib/utils';
+	import { formatNumber, formatLabAxis } from '$lib/utils';
 	import { ORIGINAL_PAPER_RESULTS } from '$lib/constants';
+	import { AXIS_COLORS, type AxisColor } from '$lib/colors';
 	import Section from './Section.svelte';
 	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
 	import {
 		renderJndComparisonChart,
 		type JndLineSeries,
-		type JndScatterSeries
+		type JndScatterSeries,
+		JND_PLOT_X_MIN,
+		JND_PLOT_Y_MIN,
+		JND_DASH_PATTERN
 	} from '$lib/d3/jndComparisonChart';
 	import { downloadSvgElement } from '$lib/svgDownload';
 
@@ -23,12 +27,11 @@
 	let chartHost = $state<HTMLDivElement | undefined>();
 	let showReference = $state(true);
 
-	// Axis colors matching the original paper
-	const axisColors: Record<string, { main: string; light: string; ref: string }> = {
-		L: { main: 'rgb(59, 130, 246)', light: 'rgba(59, 130, 246, 0.15)', ref: 'rgba(59, 130, 246, 0.5)' }, // Blue
-		a: { main: 'rgb(34, 197, 94)', light: 'rgba(34, 197, 94, 0.15)', ref: 'rgba(34, 197, 94, 0.5)' }, // Green
-		b: { main: 'rgb(168, 85, 247)', light: 'rgba(168, 85, 247, 0.15)', ref: 'rgba(168, 85, 247, 0.5)' } // Purple
-	};
+	const OUR_STUDY_LABEL = 'Our Study';
+	const SZAFIR_STUDY_LABEL = "Szafir's Study";
+
+	// Colorblind-safe (Okabe–Ito) per-axis palette shared across all plots.
+	const axisColors: Record<string, AxisColor> = AXIS_COLORS;
 
 	// Reference data from original paper
 	const refInverseModel = ORIGINAL_PAPER_RESULTS.inverse_model;
@@ -126,11 +129,12 @@
 		const allSizes = regression.map((r) => r.size_deg);
 		const refSizes = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0];
 		const allSizesWithRef = [...allSizes, ...refSizes];
-		const minSize = Math.min(...allSizesWithRef) * 0.9;
+		const minSize = Math.max(JND_PLOT_X_MIN, Math.min(...allSizesWithRef) * 0.9);
 		const maxSize = Math.max(...allSizesWithRef) * 1.1;
 
 		const lineSeries: JndLineSeries[] = [];
 		const scatterSeries: JndScatterSeries[] = [];
+		const colorItems: { label: string; color: string }[] = [];
 		let yHi = 0;
 
 		for (const axis of axisOrder) {
@@ -141,10 +145,11 @@
 			if (!invModel || !linModel || !axisData) continue;
 
 			const colors = axisColors[axis];
+			colorItems.push({ label: formatLabAxis(axis), color: colors.main });
 
 			const linearCurvePoints = generateLinearModelCurve(linModel.A, linModel.B, minSize, maxSize);
 			lineSeries.push({
-				label: `${axis}-axis (Current)`,
+				label: `${formatLabAxis(axis)} (${OUR_STUDY_LABEL})`,
 				color: colors.main,
 				points: linearCurvePoints
 			});
@@ -157,7 +162,7 @@
 				yMax: r.ND50 + r.ND50_se
 			}));
 			scatterSeries.push({
-				label: `${axis}-axis data (current)`,
+				label: `${formatLabAxis(axis)} data (${OUR_STUDY_LABEL})`,
 				color: colors.main,
 				shape: 'circle',
 				points: currentPts
@@ -170,9 +175,9 @@
 				const refModel = refInverseModel[axis];
 				const refCurvePoints = generateRefModelCurve(refModel.c, refModel.k, minSize, maxSize);
 				lineSeries.push({
-					label: `${axis}-axis (Szafir et al.)`,
-					color: colors.ref,
-					strokeDasharray: '8 4',
+					label: `${formatLabAxis(axis)} (${SZAFIR_STUDY_LABEL})`,
+					color: colors.muted,
+					strokeDasharray: JND_DASH_PATTERN,
 					points: refCurvePoints
 				});
 				for (const p of refCurvePoints) yHi = Math.max(yHi, p.y);
@@ -184,8 +189,8 @@
 						y: data.nd50
 					}));
 					scatterSeries.push({
-						label: `${axis}-axis data (Szafir)`,
-						color: colors.ref,
+						label: `${formatLabAxis(axis)} data (${SZAFIR_STUDY_LABEL})`,
+						color: colors.muted,
 						shape: 'diamond',
 						points: refPts
 					});
@@ -196,11 +201,19 @@
 
 		const yTop = Math.max(5, Math.ceil(yHi / 5) * 5);
 
+		const styleItems: { label: string; dash?: string; shape?: 'circle' | 'diamond' }[] = [
+			{ label: OUR_STUDY_LABEL, shape: 'circle' }
+		];
+		if (showReference) {
+			styleItems.push({ label: SZAFIR_STUDY_LABEL, dash: JND_DASH_PATTERN, shape: 'diamond' });
+		}
+
 		return {
 			lineSeries,
 			scatterSeries,
-			xDomain: [0, maxSize] as [number, number],
-			yDomain: [0, yTop] as [number, number],
+			legend: { colorItems, styleItems },
+			xDomain: [JND_PLOT_X_MIN, maxSize] as [number, number],
+			yDomain: [JND_PLOT_Y_MIN, yTop] as [number, number],
 			hasData: lineSeries.length > 0
 		};
 	});
@@ -210,11 +223,12 @@
 		if (!chartHost || !jndSvgModel.hasData) return;
 
 		renderJndComparisonChart(chartHost, {
-			title: '50% JND for Points (Current Study vs. Szafir et al.)',
+			title: `50% JND Comparison: ${OUR_STUDY_LABEL} vs. ${SZAFIR_STUDY_LABEL}`,
 			xLabel: 'Point Diameter (Visual Angle °)',
-			yLabel: 'ND(50%, s) in ΔE',
+			yLabel: 'JND (50%) in ΔE',
 			lineSeries: jndSvgModel.lineSeries,
 			scatterSeries: jndSvgModel.scatterSeries,
+			legend: jndSvgModel.legend,
 			xDomain: jndSvgModel.xDomain,
 			yDomain: jndSvgModel.yDomain
 		});
@@ -471,10 +485,10 @@
 	<!-- Reference Comparison Section -->
 	<div class="mt-8 rounded-lg bg-amber-50 p-6 border border-amber-200">
 		<h3 class="mb-3 text-lg font-semibold text-amber-800">
-			Comparison with Szafir et al.
+			Comparison with {SZAFIR_STUDY_LABEL}
 		</h3>
 		<p class="mb-4 text-slate-700">
-			For reference, the original paper (Szafir et al., "Modeling Color Difference for Visualization Design") 
+			For reference, the original paper (Szafir, "Modeling Color Difference for Visualization Design") 
 			reported the following inverse-size models for scatterplots:
 		</p>
 
@@ -516,10 +530,8 @@
 	<!-- Chart -->
 	<div class="mt-8 rounded-lg bg-white p-6 shadow-sm border border-slate-200">
 		<!-- Chart controls -->
-		<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-			<h3 class="text-lg font-semibold text-slate-700">50% JND Comparison Plot</h3>
-			<div class="flex flex-wrap items-center gap-4">
-				<button
+		<div class="mb-4 flex flex-wrap items-center justify-end gap-4">
+			<button
 					type="button"
 					class="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400"
 					onclick={downloadJndSvg}>Download SVG</button
@@ -530,9 +542,8 @@
 						bind:checked={showReference}
 						class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
 					/>
-					<span class="text-sm text-slate-600">Show Szafir et al. reference</span>
+					<span class="text-sm text-slate-600">Show {SZAFIR_STUDY_LABEL} reference</span>
 				</label>
-			</div>
 		</div>
 
 		<div class="h-[500px]">
@@ -541,33 +552,37 @@
 	</div>
 
 	<!-- Legend explanation -->
-	<div class="mt-4 flex flex-wrap gap-6 text-sm text-slate-600">
+	<p class="mt-4 text-xs text-slate-500">
+		Axes are distinguished by a colorblind-safe (Okabe–Ito) palette; study is distinguished
+		redundantly by line style and marker shape so the figure stays readable in grayscale.
+	</p>
+	<div class="mt-2 flex flex-wrap gap-6 text-sm text-slate-600">
 		<div class="flex items-center gap-2">
-			<div class="w-8 h-0.5 bg-blue-500"></div>
-			<span>Current study (solid lines)</span>
+			<div class="w-8 h-0.5 bg-slate-700"></div>
+			<span>{OUR_STUDY_LABEL} (solid lines)</span>
 		</div>
 		<div class="flex items-center gap-2">
-			<div class="w-8 h-0.5 bg-blue-300 border-dashed border-t-2 border-blue-400"></div>
-			<span>Szafir et al. (dashed lines)</span>
+			<div class="w-8 h-0.5 border-dashed border-t-2 border-slate-500"></div>
+			<span>{SZAFIR_STUDY_LABEL} (dashed lines)</span>
 		</div>
 		<div class="flex items-center gap-2">
-			<div class="w-3 h-3 rounded-full bg-slate-500"></div>
-			<span>Current data points (with SE error bars)</span>
+			<div class="w-3 h-3 rounded-full bg-slate-700"></div>
+			<span>{OUR_STUDY_LABEL} data points (with SE error bars)</span>
 		</div>
 		<div class="flex items-center gap-2">
-			<div class="w-3 h-3 rotate-45 border-2 border-slate-400 bg-transparent"></div>
-			<span>Szafir et al. data points</span>
+			<div class="w-3 h-3 rotate-45 border-2 border-slate-500 bg-transparent"></div>
+			<span>{SZAFIR_STUDY_LABEL} data points</span>
 		</div>
 	</div>
 
 	<!-- Caption -->
 	<p class="mt-4 text-sm text-slate-600 italic">
 		<strong>Figure:</strong> 50% JND (ND(50%, s)) as a function of point diameter. 
-		<strong>Solid lines</strong> show our fitted linear approximation {@html renderLatex('ND_x(50\\%, s) = A_x + B_x/s')}; 
-		<strong>filled circles</strong> show our empirical ND(50%) values with standard error bars.
+		<strong>Solid lines</strong> show {OUR_STUDY_LABEL}'s fitted linear approximation {@html renderLatex('ND_x(50\\%, s) = A_x + B_x/s')}; 
+		<strong>filled circles</strong> show {OUR_STUDY_LABEL}'s empirical ND(50%) values with standard error bars.
 		{#if showReference}
-			<strong>Dashed lines</strong> show the original Szafir et al. model; 
-			<strong>hollow diamonds</strong> show their empirical data points.
+			<strong>Dashed lines</strong> show {SZAFIR_STUDY_LABEL}'s model; 
+			<strong>hollow diamonds</strong> show its empirical data points.
 		{/if}
 	</p>
 </Section>

@@ -1,4 +1,11 @@
 import * as d3 from 'd3';
+import {
+	CHART_FONT,
+	CHART_FONT_FAMILY,
+	CHART_MUTED_FILL,
+	CHART_TEXT_FILL,
+	styleAxisGroup
+} from './chartTheme';
 
 export type JndLineSeries = {
 	label: string;
@@ -14,12 +21,31 @@ export type JndScatterSeries = {
 	points: { x: number; y: number; yMin?: number; yMax?: number }[];
 };
 
+/** Color channel encodes the axis (one entry per L*, a*, b*). */
+export type JndLegendColorItem = { label: string; color: string };
+/** Line-style + marker channel encodes the study/group (solid vs dashed, circle vs diamond). */
+export type JndLegendStyleItem = {
+	label: string;
+	dash?: string;
+	shape?: 'circle' | 'diamond';
+};
+
+/**
+ * Compact, de-duplicated legend: the color sub-legend lists axes once, and the
+ * style sub-legend lists studies/groups once, instead of the axis×study cross product.
+ */
+export type JndLegend = {
+	colorItems: JndLegendColorItem[];
+	styleItems: JndLegendStyleItem[];
+};
+
 type JndChartOptions = {
 	title: string;
 	xLabel: string;
 	yLabel: string;
 	lineSeries: JndLineSeries[];
 	scatterSeries: JndScatterSeries[];
+	legend: JndLegend;
 	/** Required so the x-axis matches the fitted model range (e.g. 0 to max point diameter). */
 	xDomain: [number, number];
 	yDomain?: [number, number];
@@ -29,7 +55,16 @@ type JndChartOptions = {
 
 const DEFAULT_W = 880;
 const DEFAULT_H = 480;
-const MARGIN = { top: 56, right: 200, bottom: 56, left: 64 };
+const MARGIN = { top: 32, right: 28, bottom: 72, left: 80 };
+
+/** Minimum point diameter (visual angle °) shown on JND comparison plots. */
+export const JND_PLOT_X_MIN = 0.2;
+
+/** Minimum y-axis value for JND comparison plots. */
+export const JND_PLOT_Y_MIN = 3.5;
+
+/** Dash pattern for reference / comparison curves (plot + legend). */
+export const JND_DASH_PATTERN = '10 6';
 
 /**
  * Renders the main JND comparison plot as SVG and returns the root element.
@@ -83,40 +118,34 @@ export function renderJndComparisonChart(
 
 	const g = svg.append('g').attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
 
-	svg
-		.append('text')
-		.attr('x', outerW / 2)
-		.attr('y', 28)
-		.attr('text-anchor', 'middle')
-		.attr('font-size', 16)
-		.attr('font-weight', '700')
-		.attr('fill', '#334155')
-		.text(opts.title);
-
 	g.append('g')
 		.attr('transform', `translate(0,${innerH})`)
 		.call(d3.axisBottom(xScale).ticks(12))
-		.call((sel) => sel.selectAll('path,line').attr('stroke', '#94a3b8'));
+		.call((sel) => sel.selectAll('path,line').attr('stroke', '#94a3b8'))
+		.call((sel) => styleAxisGroup(sel));
 
 	g.append('g')
 		.call(d3.axisLeft(yScale).ticks(8))
-		.call((sel) => sel.selectAll('path,line').attr('stroke', '#94a3b8'));
+		.call((sel) => sel.selectAll('path,line').attr('stroke', '#94a3b8'))
+		.call((sel) => styleAxisGroup(sel));
 
 	g.append('text')
 		.attr('x', innerW / 2)
-		.attr('y', innerH + 44)
+		.attr('y', innerH + 54)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 13)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(opts.xLabel);
 
 	g.append('text')
 		.attr('transform', 'rotate(-90)')
 		.attr('x', -innerH / 2)
-		.attr('y', -48)
+		.attr('y', -44)
 		.attr('text-anchor', 'middle')
-		.attr('font-size', 13)
-		.attr('fill', '#475569')
+		.attr('font-size', CHART_FONT.axisLabel)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('fill', CHART_MUTED_FILL)
 		.text(opts.yLabel);
 
 	for (const series of opts.lineSeries) {
@@ -184,33 +213,127 @@ export function renderJndComparisonChart(
 		}
 	}
 
-	const legendX = innerW + 12;
-	let legendY = 8;
-	const legendItems = opts.lineSeries.map((s) => ({
-		label: s.label,
-		color: s.color,
-		dash: s.strokeDasharray
-	}));
+	const legendPadding = 8;
+	const legendRowHeight = 28;
+	const sectionGap = 8;
+	const titleLegendGap = 36;
+	const colorSwatchW = 26;
+	const styleSwatchW = 50;
+	const styleLineEnd = 36;
+	const styleMarkerX = 44;
+	const styleStrokeW = 3;
+	const colorTextX = colorSwatchW + 8;
+	const styleTextX = styleSwatchW + 8;
+	const styleStroke = CHART_TEXT_FILL;
 
-	for (const item of legendItems) {
-		const row = g.append('g').attr('transform', `translate(${legendX},${legendY})`);
+	const legendBlock = g.append('g').attr('class', 'legend-block');
+
+	const title = legendBlock
+		.append('text')
+		.attr('class', 'chart-inset-title')
+		.attr('font-size', CHART_FONT.titleInset)
+		.attr('font-family', CHART_FONT_FAMILY)
+		.attr('font-weight', '600')
+		.attr('fill', CHART_TEXT_FILL)
+		.text(opts.title);
+
+	const legend = legendBlock.append('g').attr('class', 'legend');
+	let legendY = 0;
+
+	for (const item of opts.legend.colorItems) {
+		const row = legend.append('g').attr('transform', `translate(0,${legendY})`);
 		row
 			.append('line')
 			.attr('x1', 0)
-			.attr('x2', 28)
+			.attr('x2', colorSwatchW)
 			.attr('y1', 7)
 			.attr('y2', 7)
 			.attr('stroke', item.color)
-			.attr('stroke-width', 2.5)
-			.attr('stroke-dasharray', item.dash ?? '');
+			.attr('stroke-width', styleStrokeW)
+			.attr('stroke-linecap', 'round');
 		row
 			.append('text')
-			.attr('x', 34)
-			.attr('y', 11)
-			.attr('font-size', 10.5)
-			.attr('fill', '#334155')
+			.attr('x', colorTextX)
+			.attr('y', 13)
+			.attr('font-size', CHART_FONT.legend)
+			.attr('font-family', CHART_FONT_FAMILY)
+			.attr('fill', CHART_TEXT_FILL)
 			.text(item.label);
-		legendY += 22;
+		legendY += legendRowHeight;
+	}
+
+	if (opts.legend.colorItems.length > 0 && opts.legend.styleItems.length > 0) {
+		legendY += sectionGap;
+	}
+
+	for (const item of opts.legend.styleItems) {
+		const row = legend.append('g').attr('transform', `translate(0,${legendY})`);
+		const dash = item.dash ?? '';
+		row
+			.append('line')
+			.attr('x1', 0)
+			.attr('x2', styleLineEnd)
+			.attr('y1', 7)
+			.attr('y2', 7)
+			.attr('stroke', styleStroke)
+			.attr('stroke-width', styleStrokeW)
+			.attr('stroke-linecap', 'round')
+			.attr('stroke-dasharray', dash);
+		if (item.shape === 'circle') {
+			row
+				.append('circle')
+				.attr('cx', styleMarkerX)
+				.attr('cy', 7)
+				.attr('r', 4.5)
+				.attr('fill', styleStroke)
+				.attr('stroke', styleStroke)
+				.attr('stroke-width', 1);
+		} else if (item.shape === 'diamond') {
+			const s = 4.5;
+			row
+				.append('path')
+				.attr(
+					'd',
+					`M ${styleMarkerX} ${7 - s} L ${styleMarkerX + s} 7 L ${styleMarkerX} ${7 + s} L ${styleMarkerX - s} 7 Z`
+				)
+				.attr('fill', 'none')
+				.attr('stroke', styleStroke)
+				.attr('stroke-width', 2);
+		}
+		row
+			.append('text')
+			.attr('x', styleTextX)
+			.attr('y', 13)
+			.attr('font-size', CHART_FONT.legend)
+			.attr('font-family', CHART_FONT_FAMILY)
+			.attr('fill', CHART_TEXT_FILL)
+			.text(item.label);
+		legendY += legendRowHeight;
+	}
+
+	const legendNode = legend.node() as SVGGElement | null;
+	const titleNode = title.node() as SVGTextElement | null;
+	if (legendNode && titleNode) {
+		const titleBbox = titleNode.getBBox();
+		const legendBbox = legendNode.getBBox();
+		const blockWidth = Math.max(titleBbox.width, legendBbox.width);
+		const legendStartY = titleBbox.y + titleBbox.height + titleLegendGap;
+
+		title.attr('x', blockWidth).attr('y', CHART_FONT.titleInset).attr('text-anchor', 'end');
+
+		legend.attr(
+			'transform',
+			`translate(${blockWidth - legendBbox.width}, ${legendStartY})`
+		);
+
+		const blockNode = legendBlock.node() as SVGGElement | null;
+		const blockBbox = blockNode?.getBBox();
+		if (blockBbox) {
+			legendBlock.attr(
+				'transform',
+				`translate(${innerW - blockBbox.width - legendPadding}, ${legendPadding})`
+			);
+		}
 	}
 
 	return svg.node() as SVGSVGElement;
